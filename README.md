@@ -24,4 +24,4 @@ CMS Framework for Laravel 4
 * Frontend slug resolver
 * Manage Categories and Tags
 * Manage Collections, Attachments and Galleries
-* Sample blogging platform ([thor-starter](https://github.com/mjolnic/thor-starter) project)
+* Sample blogging platform ([thor-starter](https://github.com/mjolnic/Laravel-4-CMS-Starter) project)
