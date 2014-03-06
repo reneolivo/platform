@@ -8,7 +8,7 @@ use Route,
 class Thor {
 
     const VERSION = '1.0.0-dev';
-    const PACKAGE = 'mjolnic/thorcms';
+    const PACKAGE = 'mjolnic/thor';
     const NS = 'thor';
 
     public static function getViewName($name) {

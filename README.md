@@ -1,4 +1,4 @@
-ThorCMS
+Thor
 =======
 
 CMS Framework for Laravel 4
@@ -24,4 +24,4 @@ CMS Framework for Laravel 4
 * Frontend slug resolver
 * Manage Categories and Tags
 * Manage Collections, Attachments and Galleries
-* Sample blogging platform ([thorcms-starter](https://github.com/mjolnic/thorcms-starter) project)
+* Sample blogging platform ([thor-starter](https://github.com/mjolnic/thor-starter) project)

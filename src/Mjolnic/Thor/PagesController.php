@@ -10,7 +10,7 @@ use View,
 | Pages controller
 |--------------------------------------------------------------------------
 |
-| This is a default ThorCMS controller template for resource management.
+| This is a default Thor controller template for resource management.
 | Feel free to change to your needs.
 |
 */
