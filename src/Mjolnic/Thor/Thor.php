@@ -7,7 +7,7 @@ use Route,
 
 class Thor {
 
-    const VERSION = '1.0.0-dev';
+    const VERSION = '0.1.0-dev';
     const PACKAGE = 'mjolnic/thor';
     const NS = 'thor';
 

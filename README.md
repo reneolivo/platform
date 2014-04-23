@@ -7,6 +7,11 @@ CMS Framework for Laravel 4
 * PHP 5.4+
 * SQL database connection
 
+## Getting Started
+
+Follow the steps of the  [starter project](https://github.com/mjolnic/Laravel-4-CMS-Starter) readme
+
+
 ## Features
 
 * [Bootstrap 3](https://github.com/patricktalmadge/bootstrapper/tree/develop) and [Bootswatch](http://www.bootstrapcdn.com/#bootswatch_tab) support
@@ -24,4 +29,7 @@ CMS Framework for Laravel 4
 * Frontend slug resolver
 * Manage Categories and Tags
 * Manage Collections, Attachments and Galleries
-* Sample blogging platform ([thor-starter](https://github.com/mjolnic/Laravel-4-CMS-Starter) project)
+* Sample blogging platform
+
+
+IMPORTANT: This project is still in a very early stage and is not ready for production.
