@@ -1,15 +1,17 @@
 Thor
-=======
+======
 
 CMS Framework for Laravel 4
+  
+## IMPORTANT NOTE
+
+This project is being rewritten as the [Thor CMS Framework](https://github.com/thorfw), under the   **thorfw** organisation, with separated, tested and reusable components.
+
+If you still want the an usable demo of the old version, use [this downloadable](https://github.com/thorfw/starter/releases/download/0.1.0/thorfw-0.1.0.zip) that includes all the needed dependencies.
 
 ## Requirements
 * PHP 5.4+
 * SQL database connection
-
-## Getting Started
-
-Follow the steps of the  [starter project](https://github.com/mjolnic/Laravel-4-CMS-Starter) readme
 
 
 ## Features
