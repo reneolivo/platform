@@ -21,8 +21,9 @@ function array_sortby($field, &$arr, $sorting = SORT_ASC, $case_insensitive = tr
                     return call_user_func($strcmp_fn, $a->$field, $b->$field);
                 } else if (is_array($a) && is_array($b) && isset($a[$field]) && isset($b[$field])) {
                     return call_user_func($strcmp_fn, $a[$field], $b[$field]);
-                } else
+                } else {
                     return 0;
+                }
             };
         } else {
             $fn = function($a, $b) use ($field) {
@@ -30,8 +31,9 @@ function array_sortby($field, &$arr, $sorting = SORT_ASC, $case_insensitive = tr
                     return call_user_func($strcmp_fn, $b->$field, $a->$field);
                 } else if (is_array($a) && is_array($b) && isset($a[$field]) && isset($b[$field])) {
                     return call_user_func($strcmp_fn, $b[$field], $a[$field]);
-                } else
+                } else {
                     return 0;
+                }
             };
         }
         usort($arr, $fn);

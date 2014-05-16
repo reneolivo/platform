@@ -4,16 +4,9 @@ namespace Thor\Support;
 
 class Reflection {
 
-    public static function factory($className, array $ctorArgs = array(), $callback = null, array $callbackArgs = array()) {
+    public static function create($className, array $args = array()) {
         $rClass = new \ReflectionClass($className);
-        $obj = $rClass->newInstanceArgs($ctorArgs);
-
-        if (!empty($callback) and is_callable($callback)) {
-            array_push($callbackArgs, $obj, $rClass, $className, $ctorArgs);
-            return call_user_func_array($callback, $callbackArgs);
-        } else {
-            return $obj;
-        }
+        return $rClass->newInstanceArgs($args);
     }
 
     /**
@@ -47,19 +40,19 @@ class Reflection {
     /**
      * Retrieves all constants (or the specified one) from a class using Reflection
      * 
-     * @param string $class_name
-     * @param string $constant_name specific constant value
+     * @param string $className
+     * @param string $constantName specific constant value
      * @return mixed 
      */
-    public static function getConstants($class_name = null, $constant_name = null) {
-        if (empty($class_name)) {
-            $class_name = get_called_class();
+    public static function getConstants($className = null, $constantName = null) {
+        if (empty($className)) {
+            $className = get_called_class();
         }
-        $reflect = new \ReflectionClass($class_name);
+        $reflect = new \ReflectionClass($className);
         $constants = $reflect->getConstants();
 
-        if (!empty($constant_name)) {
-            return $constants[$constant_name];
+        if (!empty($constantName)) {
+            return $constants[$constantName];
         } else {
             return $constants;
         }

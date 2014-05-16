@@ -1,6 +1,6 @@
 <?php
 
-namespace Thor\Foundation;
+namespace Thor;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -11,7 +11,7 @@ class ThorServiceProvider extends ServiceProvider {
      *
      * @var bool
      */
-    protected $defer = false;
+    //protected $defer = false;
 
     /**
      * Bootstrap the application events.
@@ -19,7 +19,7 @@ class ThorServiceProvider extends ServiceProvider {
      * @return void
      */
     public function boot() {
-        $this->package('thorfw/core', 'thor');
+        $this->package('thorfw/framework', 'thor');
     }
 
     /**
@@ -28,7 +28,7 @@ class ThorServiceProvider extends ServiceProvider {
      * @return void
      */
     public function register() {
-        //
+        // 
     }
 
     /**

@@ -1,7 +1,8 @@
 {
-    "name": "thorfw/core",
-    "description": "Thor Framework core package",
-    "keywords": ["laravel", "cms", "framework", "thor", "thorfw"],
+    "name": "thorfw/framework",
+    "description": "Thor CMS Framework core package for Laravel 4",
+    "keywords": ["laravel", "cms", "framework", "thor", "thorfw", "multilingual"],
+    "license": "MIT",
     "authors": [
         {
             "name": "Javier Aguilar",
@@ -10,9 +11,9 @@
         }
     ],
     "require": {
-        "php": ">=5.3.0",
+        "php": ">=5.4",
         "illuminate/support": "4.1.*",
-        "thorfw/i18n": "1.0.*"
+        "thorfw/language": "dev-master"
     },
     "autoload": {
         "classmap": [

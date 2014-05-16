@@ -63,10 +63,6 @@ class Object implements \ArrayAccess {
         return $this->__unset($offset);
     }
 
-    public function __toString() {
-        return '(' . Reflection::getType($this) . ' instance)';
-    }
-
     /**
      * 
      * @param array $properties
