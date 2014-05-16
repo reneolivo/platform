@@ -1,5 +1,5 @@
 {
-    "name": "thorfw/framework",
+    "name": "thor/framework",
     "description": "Thor CMS Framework core package for Laravel 4",
     "keywords": ["laravel", "cms", "framework", "thor", "thorfw", "multilingual"],
     "license": "MIT",
@@ -13,7 +13,7 @@
     "require": {
         "php": ">=5.4",
         "illuminate/support": "4.1.*",
-        "thorfw/language": "dev-master"
+        "thor/language": "dev-master"
     },
     "autoload": {
         "classmap": [

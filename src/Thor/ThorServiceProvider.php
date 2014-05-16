@@ -19,7 +19,7 @@ class ThorServiceProvider extends ServiceProvider {
      * @return void
      */
     public function boot() {
-        $this->package('thorfw/framework', 'thor');
+        $this->package('thor/framework', 'thor');
     }
 
     /**
