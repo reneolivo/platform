@@ -13,7 +13,7 @@
     "require": {
         "php": ">=5.4",
         "illuminate/support": "4.1.*",
-        "thor/language": "dev-master"
+        "thor/translate": "dev-master"
     },
     "autoload": {
         "classmap": [
