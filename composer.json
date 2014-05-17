@@ -20,7 +20,7 @@
             "src/migrations"
         ],
         "files": [
-            "src/Thor/helpers.php"
+            "src/helpers.php"
         ],
         "psr-0": {
             "Thor": "src/"
