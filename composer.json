@@ -13,7 +13,7 @@
     "require": {
         "php": ">=5.4",
         "illuminate/support": "4.1.*",
-        "thor/translate": "dev-master"
+        "thor/translate": "dev-master@dev"
     },
     "autoload": {
         "classmap": [
@@ -26,6 +26,5 @@
             "Thor": "src/"
         }
     },
-    "prefer-stable": true,
-    "minimum-stability": "stable"
+    "minimum-stability": "dev"
 }
