@@ -1,27 +1,31 @@
 {
-    "name": "mjolnic/thor",
-    "description": "Multilingual CMS framework for Laravel 4",
-    "keywords": ["framework", "laravel", "cms", "blog", "thor", "thorcms", "backend", "multilingual"],
+    "name": "thor/framework",
+    "description": "Thor CMS Framework core package for Laravel 4",
+    "keywords": ["laravel", "cms", "framework", "thor", "thorfw", "multilingual"],
+    "license": "MIT",
     "authors": [
         {
             "name": "Javier Aguilar",
-            "email": "mjolnic@gmail.com"
+            "homepage": "http://www.mjolnic.com/",
+            "role": "Developer"
         }
     ],
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.4",
         "illuminate/support": "4.1.*",
-        "zizaco/confide": "dev-master",
-        "zizaco/entrust": "dev-master"
+        "thor/translate": "dev-master"
     },
     "autoload": {
         "classmap": [
             "src/migrations"
         ],
+        "files": [
+            "src/helpers.php"
+        ],
         "psr-0": {
-            "Mjolnic\\Thor\\": "src/"
+            "Thor": "src/"
         }
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "minimum-stability": "stable"
 }
