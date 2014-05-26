@@ -1,7 +1,7 @@
 {
     "name": "thor/framework",
     "description": "Thor CMS Framework core package for Laravel 4",
-    "keywords": ["laravel", "cms", "framework", "thor", "thorfw", "multilingual"],
+    "keywords": ["laravel", "cms", "framework", "thor", "thorcms", "multilingual"],
     "license": "MIT",
     "authors": [
         {
