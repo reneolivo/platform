@@ -2,40 +2,46 @@
 
 namespace Thor\Support;
 
-class Date {
+class Date
+{
 
-    public static function utc($time = null) {
-        if ($time == null) {
+    public static function utc($time = null)
+    {
+        if($time == null) {
             $time = time();
         }
         return date('Y-m-d\\TH:i:s\\.000\\Z', $time - date('Z'));
     }
 
-    public static function fromStr($str_timestamp, $format = 'd/m/Y') {
+    public static function fromStr($str_timestamp, $format = 'd/m/Y')
+    {
         return date($format, strtotime($str_timestamp));
     }
 
-    public static function daysInBetween($from, $to, $return_ts = false) {
+    public static function daysInBetween($from, $to, $return_ts = false)
+    {
         $start = strtotime($from);
         $end = strtotime($to);
         $num_days = round(($end - $start) / 86400 /* day in seconds */) + 1;
         $days = array();
-        for ($d = 0; $d < $num_days; $d++) {
+        for($d = 0; $d < $num_days; $d++) {
             $days[] = $start + ($d * 86400);
         }
         // Return days
-        if (!$return_ts)
+        if(!$return_ts)
             return count($days);
         else
             return $days;
     }
 
-    public static function isInRange($date, $from, $to) {
+    public static function isInRange($date, $from, $to)
+    {
         $times = self::daysInBetween($from, $to);
         return in_array(strtotime($date), $times);
     }
 
-    public static function secondsToHms($sec, $padHours = false) {
+    public static function secondsToHms($sec, $padHours = false)
+    {
 
 // start with a blank string
         $hms = '';
@@ -74,14 +80,15 @@ class Date {
      * @param   int  the year, leave empty for current
      * @return  int  the number of days in the month
      */
-    public static function daysInMonth($month = null, $year = null) {
+    public static function daysInMonth($month = null, $year = null)
+    {
         $year = !empty($year) ? (int) $year : (int) date('Y');
         $month = !empty($month) ? (int) $month : (int) date('n');
 
-        if ($month < 1 or $month > 12) {
+        if($month < 1 or $month > 12) {
             throw new UnexpectedValueException('Invalid input for given month.');
-        } elseif ($month == 2) {
-            if ($year % 400 == 0 or ( $year % 4 == 0 and $year % 100 != 0)) {
+        } elseif($month == 2) {
+            if($year % 400 == 0 or ( $year % 4 == 0 and $year % 100 != 0)) {
                 return 29;
             }
         }
@@ -98,16 +105,17 @@ class Date {
      * @param	string	Unit to return the result in
      * @return	string	Time ago
      */
-    public static function timeAgo($timestamp, $from_timestamp = null, $unit = null, $periods = array(), $periods_plural = array()) {
-        if ($timestamp === null) {
+    public static function timeAgo($timestamp, $from_timestamp = null, $unit = null, $periods = array(), $periods_plural = array())
+    {
+        if($timestamp === null) {
             return '';
         }
-        if (!is_numeric($timestamp))
+        if(!is_numeric($timestamp))
             $timestamp = strtotime($timestamp);
 
-        if (empty($from_timestamp))
+        if(empty($from_timestamp))
             $from_timestamp = time();
-        elseif (!is_numeric($from_timestamp))
+        elseif(!is_numeric($from_timestamp))
             $from_timestamp = strtotime($from_timestamp);
 
         $difference = $from_timestamp - $timestamp;
@@ -117,13 +125,13 @@ class Date {
 
         $lengths = array(60, 60, 24, 7, 4.35, 12, 10);
 
-        for ($j = 0; isset($lengths[$j]) and $difference >= $lengths[$j] and ( empty($unit) or $unit != $periods[$j]); $j++) {
+        for($j = 0; isset($lengths[$j]) and $difference >= $lengths[$j] and ( empty($unit) or $unit != $periods[$j]); $j++) {
             $difference /= $lengths[$j];
         }
 
         $difference = round($difference);
 
-        if ($difference != 1) {
+        if($difference != 1) {
             $periods[$j] = $periods_plural[$j];
         }
 

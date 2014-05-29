@@ -8,18 +8,19 @@
  * @param boolean $case_insensitive
  * @return boolean 
  */
-function array_sortby($field, &$arr, $sorting = SORT_ASC, $case_insensitive = true) {
-    if (is_array($arr) && (count($arr) > 0)) {
-        if ($case_insensitive == true) {
+function array_sortby($field, &$arr, $sorting = SORT_ASC, $case_insensitive = true)
+{
+    if(is_array($arr) && (count($arr) > 0)) {
+        if($case_insensitive == true) {
             $strcmp_fn = 'strnatcasecmp';
         } else {
             $strcmp_fn = 'strnatcmp';
         }
-        if ($sorting == SORT_ASC) {
+        if($sorting == SORT_ASC) {
             $fn = function($a, $b) use ($field) {
-                if (is_object($a) && is_object($b) && isset($a->$field) && isset($b->$field)) {
+                if(is_object($a) && is_object($b) && isset($a->$field) && isset($b->$field)) {
                     return call_user_func($strcmp_fn, $a->$field, $b->$field);
-                } else if (is_array($a) && is_array($b) && isset($a[$field]) && isset($b[$field])) {
+                } else if(is_array($a) && is_array($b) && isset($a[$field]) && isset($b[$field])) {
                     return call_user_func($strcmp_fn, $a[$field], $b[$field]);
                 } else {
                     return 0;
@@ -27,9 +28,9 @@ function array_sortby($field, &$arr, $sorting = SORT_ASC, $case_insensitive = tr
             };
         } else {
             $fn = function($a, $b) use ($field) {
-                if (is_object($a) && is_object($b) && isset($a->$field) && isset($b->$field)) {
+                if(is_object($a) && is_object($b) && isset($a->$field) && isset($b->$field)) {
                     return call_user_func($strcmp_fn, $b->$field, $a->$field);
-                } else if (is_array($a) && is_array($b) && isset($a[$field]) && isset($b[$field])) {
+                } else if(is_array($a) && is_array($b) && isset($a[$field]) && isset($b[$field])) {
                     return call_user_func($strcmp_fn, $b[$field], $a[$field]);
                 } else {
                     return 0;
@@ -49,9 +50,10 @@ function array_sortby($field, &$arr, $sorting = SORT_ASC, $case_insensitive = tr
  * @param bool $url_safe
  * @return string The base64 ASCII string
  */
-function base64_encode_safe($data, $url_safe = false) {
+function base64_encode_safe($data, $url_safe = false)
+{
     $data = base64_encode($data);
-    if ($url_safe) {
+    if($url_safe) {
         $data = str_replace(array('+', '/', '='), array('-', '_', ''), $data);
     }
     return $data;
@@ -63,25 +65,29 @@ function base64_encode_safe($data, $url_safe = false) {
  * @param bool $url_safe
  * @return string The binary string
  */
-function base64_decode_safe($data, $url_safe = false) {
-    if ($url_safe) {
+function base64_decode_safe($data, $url_safe = false)
+{
+    if($url_safe) {
         $data = str_replace(array('-', '_'), array('+', '/'), $data);
         $mod4 = strlen($data) % 4;
-        if ($mod4) {
+        if($mod4) {
             $data .= substr('====', $mod4);
         }
     }
     return base64_decode($data);
 }
 
-function str_is_regex($str) {
+function str_is_regex($str)
+{
     return is_string($str) and ( (preg_match('/^\/.*\/[imsxeADSUXJu]*$/', $str)) > 0);
 }
 
-function str_is_json($str) {
+function str_is_json($str)
+{
     return is_string($str) and is_object(@json_decode($str, false, 1));
 }
 
-function str_is_html($str) {
+function str_is_html($str)
+{
     return is_string($str) and ( preg_match('/<\/?\w+((\s+\w+(\s*=\s*(?:".*?"|\'.*?\'|[^\'">\s]+))?)+\s*|\s*)\/?>/i', $str) > 0);
 }

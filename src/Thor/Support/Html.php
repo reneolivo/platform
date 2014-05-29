@@ -114,7 +114,8 @@ namespace Thor\Support;
  * @method string video(array $attr = array(), string $content = null)
  * @method string wbr(array $attr = array(), string $content = null)
  */
-class Html {
+class Html
+{
 
     /**
      * List of HTML5 void elements (self closing tag)
@@ -133,8 +134,9 @@ class Html {
      * Returns an instance so you can see IDE completion
      * @return Html
      */
-    public static function getInstance() {
-        if (is_null(self::$instance)) {
+    public static function getInstance()
+    {
+        if(is_null(self::$instance)) {
             self::$instance = new static();
         }
         return self::$instance;
@@ -145,20 +147,21 @@ class Html {
      * @param array $arr
      * @return string 
      */
-    public static function htmlAttr($arr) {
-        if (is_string($arr)) {
+    public static function htmlAttr($arr)
+    {
+        if(is_string($arr)) {
             return $arr;
         }
-        if (is_object($arr)) {
+        if(is_object($arr)) {
             $arr = (array) $arr;
         }
 
-        if (!is_array($arr) || (count($arr) == 0)) {
+        if(!is_array($arr) || (count($arr) == 0)) {
             return '';
         }
 
         $str = '';
-        foreach ($arr as $key => $value) {
+        foreach($arr as $key => $value) {
             $str.=($key . '="' . $value . '" ');
         }
         $str = trim($str);
@@ -171,25 +174,26 @@ class Html {
      * @param string|array $content String or array (for selects, uls, tables, navs, audio or video sources, ...
      * @return string
      */
-    public static function htmlContent($tagname, $content) {
+    public static function htmlContent($tagname, $content)
+    {
         $tagname = strtolower($tagname);
         $str = '';
-        if (is_array($content)) {
-            foreach ($content as $i => $c) {
+        if(is_array($content)) {
+            foreach($content as $i => $c) {
                 //option
-                if (($tagname == 'select') or ( $tagname == 'optgroup') or ( $tagname == 'datalist')) {
+                if(($tagname == 'select') or ( $tagname == 'optgroup') or ( $tagname == 'datalist')) {
                     $str .= self::option(array('value' => $i), $c) . "\n";
                     //li
-                } elseif (($tagname == 'ul') or ( $tagname == 'ol')) {
+                } elseif(($tagname == 'ul') or ( $tagname == 'ol')) {
                     $str .= self::li(null, $c) . "\n";
                     //td
-                } elseif ($tagname == 'tr') {
+                } elseif($tagname == 'tr') {
                     $str .= self::td(null, $c) . "\n";
                     //tr + td
-                } elseif (($tagname == 'table') or ( $tagname == 'thead') or ( $tagname == 'tbody') or ( $tagname == 'tfoot')) {
-                    if (is_array($c)) {
+                } elseif(($tagname == 'table') or ( $tagname == 'thead') or ( $tagname == 'tbody') or ( $tagname == 'tfoot')) {
+                    if(is_array($c)) {
                         $str .= self::trOpen() . "\n";
-                        foreach ($c as $j => $tdc) {
+                        foreach($c as $j => $tdc) {
                             $str .= "\t" . self::td(null, $tdc);
                         }
                         $str .= self::trClose() . "\n";
@@ -197,10 +201,10 @@ class Html {
                         $str .= self::tr(null, self::td(null, $c)) . "\n";
                     }
                     //a
-                } elseif ($tagname == 'nav') {
+                } elseif($tagname == 'nav') {
                     $str .= self::a(array('href' => $i), $c) . "\n";
                     //source
-                } elseif (($tagname == 'audio') or ( $tagname == 'video')) {
+                } elseif(($tagname == 'audio') or ( $tagname == 'video')) {
                     $str .= self::source(array('src' => $i, 'type' => $c)) . "\n";
                 } else {
                     $str .= strval($c) . ' ';
@@ -220,74 +224,82 @@ class Html {
      * @param string|array $content String or array (for selects, uls, tables, navs, audio or video sources, ...
      * @return type
      */
-    public static function htmlTag($tagname, $attr = array(), $content = null) {
+    public static function htmlTag($tagname, $attr = array(), $content = null)
+    {
         $tagname = strtolower($tagname);
         return self::htmlTagOpen($tagname, $attr) . self::htmlContent($tagname, $content) . self::htmlTagClose($tagname);
     }
 
-    public static function htmlTagOpen($tagname, $attr = array()) {
+    public static function htmlTagOpen($tagname, $attr = array())
+    {
         $tagname = strtolower($tagname);
-        if (!in_array($tagname, self::$void_elements)) {
+        if(!in_array($tagname, self::$void_elements)) {
             return "<$tagname" . rtrim(self::htmlAttr($attr)) . ">";
         } else {
             return "<$tagname" . self::htmlAttr($attr);
         }
     }
 
-    public static function htmlTagClose($tagname) {
+    public static function htmlTagClose($tagname)
+    {
         $tagname = strtolower($tagname);
-        if (in_array($tagname, self::$void_elements))
+        if(in_array($tagname, self::$void_elements))
             return " />\n";
         else
             return "</{$tagname}>\n";
     }
 
-    public static function htmlAttrPluck($str, $tagname = 'a|img', $attrname = 'href|src') {
+    public static function htmlAttrPluck($str, $tagname = 'a|img', $attrname = 'href|src')
+    {
         $tagname = strtolower($tagname);
         preg_match_all('/<' . $tagname . '[^>]+>/i', $str, $result);
         $elems = array();
-        foreach ($result as $i => $elem) {
+        foreach($result as $i => $elem) {
             preg_match_all('/(' . $attrname . ')=("[^"]*")/i', $elem, $elems[$i]);
         }
         $values = array();
-        foreach ($elems as $i => $elem) {
-            if (isset($elem[2]) && isset($elem[2][0])) {
+        foreach($elems as $i => $elem) {
+            if(isset($elem[2]) && isset($elem[2][0])) {
                 $values[] = $elem[2][0];
             }
         }
         return $values;
     }
 
-    public static function addLinks($str, $target_blank = false) {
+    public static function addLinks($str, $target_blank = false)
+    {
         $target_blank = $target_blank ? ' target="_blank" ' : '';
         return str_replace('&', '&amp;', preg_replace('/([\w]+:\/\/[\w-?&;#~=\.\/\@]+[\w\/])/i', '<a' .
                         $target_blank . ' href="$1">$1</a>', $str));
     }
 
-    public static function wrapWith($tagName, $string, $words, $tagAttrs = array()) {
-        if (!is_array($words)) {
+    public static function wrapWith($tagName, $string, $words, $tagAttrs = array())
+    {
+        if(!is_array($words)) {
             $words = array($words);
         }
         $string = strip_tags($string);
-        foreach ($words as $word) {
+        foreach($words as $word) {
             $string = str_ireplace($word, self::htmlTag($tagName, $tagAttrs, $word), $string);
         }
         return $string;
     }
 
-    public static function __callStatic($name, $arguments) {
+    public static function __callStatic($name, $arguments)
+    {
         array_unshift($arguments, str_replace(array('Open', 'Close'), '', $name));
 
-        if (preg_match('/Open$/i', $name)) {
+        if(preg_match('/Open$/i', $name)) {
             return call_user_func_array(__CLASS__ . '::htmlTagOpen', $arguments);
-        } elseif (preg_match('/Close$/i', $name)) {
+        } elseif(preg_match('/Close$/i', $name)) {
             return call_user_func_array(__CLASS__ . '::htmlTagClose', $arguments);
         } else {
             return call_user_func_array(__CLASS__ . '::htmlTag', $arguments);
         }
     }
 
-    public function __call($name, $arguments) {
+    public function __call($name, $arguments)
+    {
         return self::__callStatic($name, $arguments);
     }
 

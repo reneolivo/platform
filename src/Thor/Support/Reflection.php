@@ -2,9 +2,11 @@
 
 namespace Thor\Support;
 
-class Reflection {
+class Reflection
+{
 
-    public static function create($className, array $args = array()) {
+    public static function create($className, array $args = array())
+    {
         $rClass = new \ReflectionClass($className);
         return $rClass->newInstanceArgs($args);
     }
@@ -16,10 +18,11 @@ class Reflection {
      * @param   string  classname to check
      * @return  string  real classname
      */
-    public static function getRealClass($class) {
+    public static function getRealClass($class)
+    {
         static $classes = array();
 
-        if (!array_key_exists($class, $classes)) {
+        if(!array_key_exists($class, $classes)) {
             $reflect = new \ReflectionClass($class);
             $classes[$class] = $reflect->getName();
         }
@@ -33,7 +36,8 @@ class Reflection {
      *
      * @return	array
      */
-    public static function getPublicVars($obj) {
+    public static function getPublicVars($obj)
+    {
         return get_object_vars($obj);
     }
 
@@ -44,14 +48,15 @@ class Reflection {
      * @param string $constantName specific constant value
      * @return mixed 
      */
-    public static function getConstants($className = null, $constantName = null) {
-        if (empty($className)) {
+    public static function getConstants($className = null, $constantName = null)
+    {
+        if(empty($className)) {
             $className = get_called_class();
         }
         $reflect = new \ReflectionClass($className);
         $constants = $reflect->getConstants();
 
-        if (!empty($constantName)) {
+        if(!empty($constantName)) {
             return $constants[$constantName];
         } else {
             return $constants;
@@ -63,7 +68,8 @@ class Reflection {
      * @param mixed $var
      * @return string primitive type or class name
      */
-    public static function getType($var) {
+    public static function getType($var)
+    {
         return is_object($var) ? get_class($var) : gettype($var);
     }
 

@@ -4,8 +4,8 @@ namespace Thor;
 
 use Illuminate\Support\ServiceProvider;
 
-class ThorServiceProvider extends ServiceProvider {
-
+class ThorServiceProvider extends ServiceProvider
+{
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -18,7 +18,8 @@ class ThorServiceProvider extends ServiceProvider {
      *
      * @return void
      */
-    public function boot() {
+    public function boot()
+    {
         $this->package('thor/framework', 'thor');
     }
 
@@ -27,7 +28,8 @@ class ThorServiceProvider extends ServiceProvider {
      *
      * @return void
      */
-    public function register() {
+    public function register()
+    {
         // 
     }
 
@@ -36,7 +38,8 @@ class ThorServiceProvider extends ServiceProvider {
      *
      * @return array
      */
-    public function provides() {
+    public function provides()
+    {
         return array();
     }
 

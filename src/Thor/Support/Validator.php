@@ -5,7 +5,8 @@ namespace Thor\Support;
 /**
  * Alternate validator
  */
-class Validator {
+class Validator
+{
 
     /**
      * Checks if a variable exists inside an array and matches the given php filter or regular expression.
@@ -17,21 +18,22 @@ class Validator {
      * @param mixed $validation FILTER_* constant value, regular expression or callable method/function (that returns a boolean i.e. is_string)
      * @return mixed The variable value
      */
-    public static function check(array $arr, $key, $default = null, $validation = null) {
-        if ($validation === true) {
+    public static function check(array $arr, $key, $default = null, $validation = null)
+    {
+        if($validation === true) {
             // has
             return isset($arr[$key]);
         }
-        if (isset($arr[$key])) {
+        if(isset($arr[$key])) {
             $value = $arr[$key];
-            if ($validation != null) {
-                if (is_string($validation) && ($validation{0} == '/')) {
+            if($validation != null) {
+                if(is_string($validation) && ($validation{0} == '/')) {
                     //regexp
                     return (preg_match($validation, $value) > 0) ? $value : $default;
-                } elseif (is_int($validation)) {
+                } elseif(is_int($validation)) {
                     // FILTER_* constant
                     return filter_var($value, $validation) ? $value : $default;
-                } elseif (is_callable($validation)) {
+                } elseif(is_callable($validation)) {
                     // validation function
                     return $validation($value) ? $value : $default;
                 } else {
@@ -46,50 +48,52 @@ class Validator {
         }
     }
 
-    public static function sanitize(array $arr, $removeHtml = true, $replacement = ' ', $replaceChars = array('>', '<', '\\', '/', '"', '\''), $trimChars = ' .,-_') {
-        if ($removeHtml) {
-            foreach ($arr as $k => $v) {
+    public static function sanitize(array $arr, $removeHtml = true, $replacement = ' ', $replaceChars = array('>', '<', '\\', '/', '"', '\''), $trimChars = ' .,-_')
+    {
+        if($removeHtml) {
+            foreach($arr as $k => $v) {
                 $arr[$k] = trim(str_replace($replaceChars, $replacement, strip_tags($v)), $trimChars);
             }
         } else {
-            foreach ($arr as $k => $v) {
+            foreach($arr as $k => $v) {
                 $arr[$k] = trim(str_replace($replaceChars, $replacement, $v), $trimChars);
             }
         }
         return $arr;
     }
 
-    public static function validate(array $arr, array $validations) {
+    public static function validate(array $arr, array $validations)
+    {
         $errors = array();
 
-        foreach ($validations as $field => $validation) {
-            if (empty($validation)) {
+        foreach($validations as $field => $validation) {
+            if(empty($validation)) {
                 continue;
             }
-            if (!isset($arr[$field])) {
+            if(!isset($arr[$field])) {
                 $errors[] = $field;
                 continue;
             }
-            if (($validation == 'notempty') and empty($arr[$field])) {
+            if(($validation == 'notempty') and empty($arr[$field])) {
                 $errors[] = $field;
                 continue;
             }
-            if (is_callable($validation) and ( call_user_func($arr[$field]) == false)) {
+            if(is_callable($validation) and ( call_user_func($arr[$field]) == false)) {
                 $errors[] = $field;
                 continue;
             }
-            if (is_numeric($validation) and ( !filter_var($arr[$field], $validation))) {
+            if(is_numeric($validation) and ( !filter_var($arr[$field], $validation))) {
                 $errors[] = $field;
                 continue;
             }
             //die($validation);
-            if (is_string($validation) and ( $validation{0} == '/') and ( preg_match($validation, $arr[$field]) == false)) {
+            if(is_string($validation) and ( $validation{0} == '/') and ( preg_match($validation, $arr[$field]) == false)) {
                 $errors[] = $field;
                 continue;
             }
         }
 
-        if (empty($errors)) {
+        if(empty($errors)) {
             return true;
         }
         return $errors;
