@@ -1,5 +1,18 @@
 <?php
 
+if (!function_exists('_d')) {
+
+    /**
+     * Decode html code (HTML::decode alias)
+     * @param string $value
+     * @return string
+     */
+    function _d($value) {
+        return HTML::decode($value);
+    }
+
+}
+
 /**
  * Sorts an array of associative arrays or objects by field
  * @param string $field
