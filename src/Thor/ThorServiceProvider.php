@@ -30,7 +30,8 @@ class ThorServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // 
+        $this->registerBag();
+        $this->registerDocument();
     }
 
     /**
@@ -40,7 +41,29 @@ class ThorServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return array();
+        return array('thor.bag', 'thor.document');
+    }
+
+    /**
+     *
+     * @return void
+     */
+    protected function registerBag()
+    {
+        $this->app->bindShared('thor.bag', function($app) {
+            return new Support\Bag($app);
+        });
+    }
+
+    /**
+     *
+     * @return void
+     */
+    protected function registerDocument()
+    {
+        $this->app->bindShared('thor.document', function($app) {
+            return new Support\Document($app);
+        });
     }
 
 }

@@ -76,6 +76,16 @@ class Object implements \ArrayAccess
         return $this->__unset($offset);
     }
 
+    public function keys()
+    {
+        return array_keys($this->props);
+    }
+
+    public function has($key)
+    {
+        return isset($this->props[$key]);
+    }
+
     /**
      * 
      * @param array $properties
