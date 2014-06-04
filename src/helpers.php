@@ -1,5 +1,19 @@
 <?php
 
+if(!function_exists('lang_url')) {
+
+    /**
+     * Decode html code (HTML::decode alias)
+     * @param string $value
+     * @return string
+     */
+    function lang_url($path = '', $extra = array(), $secure = null, $langCode = null)
+    {
+        return URL::langTo($path, $extra, $secure, $langCode);
+    }
+
+}
+
 if(!function_exists('_d')) {
 
     /**
@@ -188,12 +202,13 @@ if(!function_exists('array_sanitize')) {
 }
 
 if(!function_exists('array_validate')) {
-/**
- * 
- * @param array $arr
- * @param array $validations key value pairs of array key and validation (e=not empty, callable, filter constant, regex)
- * @return array|true The keys that produced an error or true if success
- */
+
+    /**
+     * 
+     * @param array $arr
+     * @param array $validations key value pairs of array key and validation (e=not empty, callable, filter constant, regex)
+     * @return array|true The keys that produced an error or true if success
+     */
     function array_validate(array $arr, array $validations)
     {
         $errors = array();

@@ -41,8 +41,9 @@ class Document extends Object
     {
         if($set === true) {
             $this->$prop = $value;
+            return $this;
         }
-        return $this->$prop;
+        return isset($this->$prop) ? $this->$prop : null;
     }
 
     /**
@@ -58,7 +59,7 @@ class Document extends Object
     /**
      * Is this document an error page?
      * @param int $value
-     * @return int
+     * @return int|static
      */
     public function error($value = null)
     {
@@ -68,7 +69,7 @@ class Document extends Object
     /**
      * 
      * @param string $value
-     * @return string
+     * @return string|static
      */
     public function name($value = null)
     {
@@ -78,7 +79,7 @@ class Document extends Object
     /**
      * 
      * @param string $value
-     * @return string
+     * @return string|static
      */
     public function charset($value = null)
     {
@@ -88,7 +89,7 @@ class Document extends Object
     /**
      * 
      * @param string $value
-     * @return string
+     * @return string|static
      */
     public function lang($value = null)
     {
@@ -98,7 +99,7 @@ class Document extends Object
     /**
      * 
      * @param array $value
-     * @return string
+     * @return string|static
      */
     public function classes(array $value = null)
     {
@@ -111,7 +112,7 @@ class Document extends Object
     /**
      * 
      * @param string $value
-     * @return string
+     * @return string|static
      */
     public function viewport($value = null)
     {
@@ -121,7 +122,7 @@ class Document extends Object
     /**
      * 
      * @param string $value
-     * @return string
+     * @return string|static
      */
     public function title($value = null)
     {
@@ -131,7 +132,7 @@ class Document extends Object
     /**
      * 
      * @param string $value
-     * @return string
+     * @return string|static
      */
     public function description($value = null)
     {
@@ -141,7 +142,7 @@ class Document extends Object
     /**
      * 
      * @param string $value
-     * @return string
+     * @return string|static
      */
     public function keywords($value = null)
     {
@@ -151,7 +152,7 @@ class Document extends Object
     /**
      * 
      * @param string $value
-     * @return string
+     * @return string|static
      */
     public function robots($value = null)
     {
@@ -161,7 +162,7 @@ class Document extends Object
     /**
      * 
      * @param string $value
-     * @return string
+     * @return string|static
      */
     public function generator($value = null)
     {
@@ -171,7 +172,7 @@ class Document extends Object
     /**
      * 
      * @param string $value
-     * @return string
+     * @return string|static
      */
     public function author($value = null)
     {
@@ -181,7 +182,7 @@ class Document extends Object
     /**
      * 
      * @param string $value
-     * @return string
+     * @return string|static
      */
     public function canonical($value = null)
     {
@@ -191,7 +192,7 @@ class Document extends Object
     /**
      * 
      * @param array $value
-     * @return string
+     * @return string|static
      */
     public function alternateLangs(array $value = null)
     {
@@ -201,7 +202,7 @@ class Document extends Object
     /**
      * 
      * @param string $value
-     * @return string
+     * @return string|static
      */
     public function favicon($value = null)
     {
@@ -211,7 +212,7 @@ class Document extends Object
     /**
      * 
      * @param string $value
-     * @return \Thor\Models\IPageable
+     * @return \Thor\Models\IPageable|static
      */
     public function pageable(\Thor\Models\IPageable $value = null)
     {
@@ -221,11 +222,17 @@ class Document extends Object
     /**
      * Current document view name
      * @param string $value
-     * @return string
+     * @return string|static
      */
     public function view($value = null)
     {
         return $this->getOrSet(__FUNCTION__, (func_num_args() > 0), $value);
+    }
+    
+    public function __call($name, $arguments)
+    {
+        $set = (count($arguments) > 0);
+        return $this->getOrSet($name, $set, ($set ? $arguments[0] : null));
     }
 
     public function addClass($classname)
