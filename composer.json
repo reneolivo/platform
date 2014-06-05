@@ -1,7 +1,7 @@
 {
     "name": "thor/framework",
-    "description": "Thor CMS Framework base & support package for Laravel 4",
-    "keywords": ["laravel", "cms", "framework", "thor", "thorcms", "multilingual"],
+    "description": "Thor CMS base & support package",
+    "keywords": ["laravel", "cms", "framework", "thorcms", "multilingual", "crud"],
     "license": "MIT",
     "authors": [
         {
@@ -13,13 +13,9 @@
     "require": {
         "php": ">=5.4",
         "illuminate/support": "4.1.*",
-        "thor/language": "dev-master",
         "thor/models": "dev-master"
     },
     "autoload": {
-        "classmap": [
-            "src/migrations"
-        ],
         "files": [
             "src/helpers.php"
         ],
