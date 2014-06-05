@@ -101,14 +101,14 @@ class Document extends Object
     /**
      * 
      * @param array $value
-     * @return string|static
+     * @return array|static
      */
     public function classes(array $value = null)
     {
         if(func_num_args() > 0) {
             $this->classes = $value;
         }
-        return implode(' ', $this->classes);
+        return $this->classes;
     }
 
     /**

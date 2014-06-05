@@ -26,7 +26,8 @@ class ThorServiceProvider extends ServiceProvider
         // Always expose the current view name and all the Document vars
         View::composer('*', function($view) {
             Doc::view($view->getName());
-            $view->with(array_key_prefix(Doc::toArray(), 'doc_'));
+            Doc::view_slug(\Str::slug(str_replace(array('.', '::'), '-', $view->getName()), '-'));
+            View::share(array_key_prefix(Doc::toArray(), 'doc_'));
         });
     }
 
