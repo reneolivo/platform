@@ -201,6 +201,32 @@ if(!function_exists('array_sanitize')) {
 
 }
 
+if(!function_exists('array_key_prefix')) {
+
+    function array_key_prefix(array $arr, $prefix)
+    {
+        $newArr = array();
+        foreach($arr as $k => $v) {
+            $newArr[$prefix . $k] = $v;
+        }
+        return $newArr;
+    }
+
+}
+
+if(!function_exists('array_key_suffix')) {
+
+    function array_key_suffix(array $arr, $suffix)
+    {
+        $newArr = array();
+        foreach($arr as $k => $v) {
+            $newArr[$k . $suffix] = $v;
+        }
+        return $newArr;
+    }
+
+}
+
 if(!function_exists('array_validate')) {
 
     /**

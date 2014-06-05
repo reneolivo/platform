@@ -2,8 +2,10 @@
 
 namespace Thor\Support;
 
+use View;
+
 /**
- * HTML Document helper for interoperability
+ * Helper for HTML common variables
  */
 class Document extends Object
 {
@@ -228,7 +230,7 @@ class Document extends Object
     {
         return $this->getOrSet(__FUNCTION__, (func_num_args() > 0), $value);
     }
-    
+
     public function __call($name, $arguments)
     {
         $set = (count($arguments) > 0);

@@ -2,7 +2,8 @@
 
 namespace Thor;
 
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\ServiceProvider,
+    View, Doc;
 
 class ThorServiceProvider extends ServiceProvider
 {
@@ -21,6 +22,12 @@ class ThorServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->package('thor/framework', 'thor');
+
+        // Always expose the current view name and all the Document vars
+        View::composer('*', function($view) {
+            Doc::view($view->getName());
+            $view->with(array_key_prefix(Doc::toArray(), 'doc_'));
+        });
     }
 
     /**

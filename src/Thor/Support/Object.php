@@ -83,7 +83,7 @@ class Object implements \ArrayAccess
 
     public function has($key)
     {
-        return isset($this->props[$key]);
+        return $this->__isset($key);
     }
 
     /**
