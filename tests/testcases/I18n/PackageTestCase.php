@@ -10,7 +10,7 @@ abstract class PackageTestCase extends AppTestCase
 
     protected function getPackageProviders()
     {
-        return array('Thor\\I18n\\I18nServiceProvider');
+        return array('Thor\\ThorServiceProvider');
     }
 
     /**
@@ -22,10 +22,10 @@ abstract class PackageTestCase extends AppTestCase
     protected function getEnvironmentSetUp($app)
     {
         // reset base path to point to our package's src directory
-        $app['path.base'] = realpath(__DIR__ . '/../../../src');
+        $app['path.package_src'] = realpath(__DIR__ . '/../../../src');
 
         // load package config
-        $config = include $app['path.base'] . '/config/i18n.php';
+        $config = include $app['path.package_src'] . '/config/i18n.php';
         foreach($config as $k => $v) {
             $app['config']->set('thor::i18n.' . $k, $v);
         }
@@ -37,6 +37,8 @@ abstract class PackageTestCase extends AppTestCase
             'database' => ':memory:',
             'prefix' => '',
         ));
+        
+        $app['config']->set('thor::i18n.use_database', false);
     }
 
     /**
@@ -61,43 +63,24 @@ abstract class PackageTestCase extends AppTestCase
      */
     protected function prepareDatabase()
     {
+        $migrations_dest = $this->app['path'].'/database/migrations';
+        
+        // Copy migrations
+        $this->app['files']->copyDirectory($this->app['path.package_src'].'/../vendor/thor/models/src/migrations/',
+                $migrations_dest);
+
         // create an artisan object for calling migrations
         $artisan = $this->app->make('artisan');
-
         // Migrate and seed
         $artisan->call('migrate', array(
-            '--database' => 'testbench',
-            '--path' => 'migrations',
+            '--database' => 'testbench'
         ));
         $artisan->call('db:seed', array(
-            '--class' => 'Thor\\Models\\LanguagesTableSeeder',
+            '--class' => 'Thor\\Models\\Seeders\\LanguagesTableSeeder',
         ));
-    }
-
-    /**
-     * Rollback migrations
-     */
-    protected function resetDatabase()
-    {
-        // create an artisan object for calling migrations
-        $artisan = $this->app->make('artisan');
-
-        // Migrate and seed
-        $artisan->call('migrate:reset');
-    }
-
-    /**
-     * Removes seeds
-     */
-    protected function nukeDatabaseData()
-    {
-        $this->resetDatabase();
-        // create an artisan object for calling migrations
-        $artisan = $this->app->make('artisan');
-        $artisan->call('migrate', array(
-            '--database' => 'testbench',
-            '--path' => 'migrations',
-        ));
+        
+        // Delete copied migrations
+        $this->app['files']->deleteDirectory($migrations_dest);
     }
 
     public function setUp()

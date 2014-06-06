@@ -26,7 +26,7 @@ class LanguageTest extends PackageTestCase
     }
 
     /**
-     * @covers \Thor\I18n\Language::scopeSorted
+     * @covers \Thor\Models\Language::scopeSorted
      */
     public function testScopeSorted()
     {

@@ -19,7 +19,7 @@ class TranslatorDbTest extends TranslatorTestCase
      */
     public function testExceptionDbIsEmpty()
     {
-        $this->nukeDatabaseData();
+        \DB::table('languages')->delete();
         $this->prepareRequest('/');
     }
 

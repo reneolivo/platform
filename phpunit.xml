@@ -22,13 +22,12 @@
             <directory>src/Thor</directory>
             <exclude>
                 <file>src/Thor/ThorServiceProvider.php</file>
-                <file>src/Thor/I18n/I18nServiceProvider.php</file>
             </exclude>
         </whitelist>
     </filter>
 
     <testsuites>
-        <testsuite name="Thor Test Suite">
+        <testsuite name="Thor CMS Test Suite">
             <directory suffix="Test.php">tests</directory>
         </testsuite>
     </testsuites>

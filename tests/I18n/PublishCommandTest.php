@@ -17,7 +17,7 @@ class PublishCommandTest extends PackageTestCase
 
         // Publish lang
         // We need to specify the lang path here because the tests base_path() is the package src folder
-        $artisan->call('lang:publish', array('package' => 'thor/framework', '--path' => 'lang'));
+        $artisan->call('lang:publish', array('package' => 'thor/framework', '--path' => '/../../src/lang'));
 
         // Check files
         $this->assertFileExists($this->app['path'] . '/lang/packages/en/framework/header.php');
@@ -39,7 +39,7 @@ class PublishCommandTest extends PackageTestCase
     public function testPublishWithoutPath()
     {
         // reset base path to point to our package's src directory
-        $this->app['path.base'] = realpath(dirname(__FILE__) . '/../');
+        $this->app['path.base'] = realpath(dirname(__FILE__) . '/../../');
         $artisan = $this->app->make('artisan');
         $artisan->call('lang:publish', array('package' => 'thor/framework'));
     }

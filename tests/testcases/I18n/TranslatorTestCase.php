@@ -85,10 +85,11 @@ class TranslatorTestCase extends PackageTestCase
     {
         $use_db = $this->app['config']->get('thor::i18n.use_database');
         $activeLangs = $this->app['translator']->getActiveLanguages();
-        $this->assertInstanceOf('Illuminate\\Database\\Eloquent\\Collection', $activeLangs);
         if($use_db) {
+            $this->assertInstanceof('Illuminate\\Database\\Eloquent\\Collection', $activeLangs);
             $this->assertCount(5, $activeLangs);
         } else {
+            $this->assertTrue(is_array($activeLangs));
             $this->assertCount(0, $activeLangs);
         }
     }

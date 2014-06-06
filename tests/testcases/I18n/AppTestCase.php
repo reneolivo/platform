@@ -141,7 +141,7 @@ abstract class AppTestCase extends \Illuminate\Foundation\Testing\TestCase
      */
     protected function getApplicationPaths()
     {
-        $basePath = realpath(__DIR__ . '/../fixture');
+        $basePath = realpath(__DIR__ . '/../../fixture');
 
         return array(
             'app' => "{$basePath}/app",
