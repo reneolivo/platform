@@ -26,7 +26,7 @@ class LangPublishCommand extends Command
     /**
      * The lang publisher instance.
      *
-     * @var Publisher
+     * @var LangPublisher
      */
     protected $lang;
 
@@ -36,7 +36,7 @@ class LangPublishCommand extends Command
      * @param  Publisher  $lang
      * @return void
      */
-    public function __construct(Publisher $lang)
+    public function __construct(LangPublisher $lang)
     {
         parent::__construct();
 

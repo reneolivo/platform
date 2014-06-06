@@ -102,7 +102,7 @@ class Translator extends \Illuminate\Translation\Translator
      */
     public function resolveWith($langCode)
     {
-        if($this->app['config']->get('thor::i18n.use_database') === true) {
+        if(($this->app['config']->get('thor::i18n.use_database') === true) and (\Schema::hasTable('languages'))) {
             return $this->resolveFromDb($langCode);
         } else {
             return $this->resolveFromConfig($langCode);

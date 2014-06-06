@@ -12,7 +12,7 @@ class ThorServiceProvider extends ServiceProvider
      *
      * @var bool
      */
-    //protected $defer = false;
+    protected $defer = false;
 
     /**
      * Bootstrap the application events.
@@ -22,7 +22,7 @@ class ThorServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->package('thor/framework', 'thor');
-
+        
         // Always expose the current view name and all the Document vars
         View::composer('*', function($view) {
             Doc::view($view->getName());

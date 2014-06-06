@@ -22,6 +22,7 @@ class I18nServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->package('thor/framework', 'thor');
         Facades\Lang::swap($this->app['thor.translator']);
         Facades\Route::swap($this->app['thor.router']);
         Facades\URL::swap($this->app['thor.url']);
