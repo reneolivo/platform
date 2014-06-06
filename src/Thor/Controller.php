@@ -2,7 +2,7 @@
 
 namespace Thor;
 
-class Controller extends \Controller
+class Controller extends \Illuminate\Routing\Controller
 {
     
 }

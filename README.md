@@ -1,3 +1,3 @@
 thor/framework
 =====
-Thor CMS base & support package
+Thor CMS core package
