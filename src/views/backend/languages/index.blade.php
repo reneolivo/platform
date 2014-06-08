@@ -1,11 +1,11 @@
-@extends('admin::layout')
+@extends('thor::backend.layout')
 @section('main')
 
 <div class="row">
     <div class="col-lg-12">
         <h1 class="page-header">All Languages</h1>
 
-        <p>{{ _d(link_to_route('admin.languages.create', '<i class="fa fa-plus"></i> Add new language')) }}</p>
+        <p>{{ _d(link_to_route('backend.languages.create', '<i class="fa fa-plus"></i> Add new language')) }}</p>
 
         @if ($languages->count())
         <table class="table table-striped table-hover table-responsive">
@@ -35,9 +35,9 @@
                                         <td>{{{ $language->created_at }}}</td>
                     <td>{{{ $language->updated_at }}}</td>
                     <td class="al-r">
-                        {{ link_to_route('admin.languages.show', 'Show', array($language->id), array('class' => 'btn btn-sm btn-default')) }}
-                        {{ link_to_route('admin.languages.edit', 'Edit', array($language->id), array('class' => 'btn btn-sm btn-info')) }}
-                        {{ Form::open(array('method' => 'DELETE', 'class' => 'inl-bl', 'route' => array('admin.languages.do_delete', $language->id))) }}
+                        {{ link_to_route('backend.languages.show', 'Show', array($language->id), array('class' => 'btn btn-sm btn-default')) }}
+                        {{ link_to_route('backend.languages.edit', 'Edit', array($language->id), array('class' => 'btn btn-sm btn-info')) }}
+                        {{ Form::open(array('method' => 'DELETE', 'class' => 'inl-bl', 'route' => array('backend.languages.do_delete', $language->id))) }}
                         {{ Form::submit('Delete', array('class' => 'btn btn-sm btn-danger btn-destroy')) }}
                         {{ Form::close() }}
                     </td>

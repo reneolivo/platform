@@ -2,7 +2,7 @@
 
 namespace Thor\Models\Seeders;
 
-use Seeder,
+use Seeder, Backend,
     \Thor\Models\User,
     \Thor\Models\Role,
     \Thor\Models\Permission;
@@ -15,7 +15,7 @@ class PermissionsTableSeeder extends Seeder
         $date = date('Y-m-d H:i:s');
 
         $perms = array(
-            'access_admin',
+            Backend::ACCESS_PERMISSION_NAME,
             'list_languages', 'create_languages', 'read_languages', 'update_languages', 'delete_languages',
             'list_pages', 'create_pages', 'read_pages', 'update_pages', 'delete_pages',
             'list_roles', 'create_roles', 'read_roles', 'update_roles', 'delete_roles',
@@ -38,7 +38,7 @@ class PermissionsTableSeeder extends Seeder
         $developerRole = Role::where('name', '=', 'developer')->first();
 
         $administratorRole->perms()->sync(array_merge(
-                        array($perms_ids['access_admin']),
+                        array($perms_ids[Backend::ACCESS_PERMISSION_NAME]),
                         $this->resourcePerms($perms_ids, 'languages'),
                         $this->resourcePerms($perms_ids, 'pages'),
                         $this->resourcePerms($perms_ids, 'users')

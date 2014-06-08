@@ -1,5 +1,5 @@
 <?php
-namespace Thor\Admin;
+namespace Thor\Backend;
 
 use View,
     Redirect,
@@ -7,10 +7,10 @@ use View,
     Form;
 /*
 |--------------------------------------------------------------------------
-| \Thor\Models\Language admin controller
+| \Thor\Models\Language backend controller
 |--------------------------------------------------------------------------
 |
-| This is a default Thor Framework admin controller template for resource management.
+| This is a default Thor CMS backend controller template for resource management.
 | Feel free to change it to your needs.
 |
 */
@@ -34,7 +34,7 @@ class LanguagesController extends \Controller {
     public function index() {
         $languages = $this->language->all();
 
-        return View::make('admin::languages.index', compact('languages'));
+        return View::make('thor::backend.languages.index', compact('languages'));
     }
 
     /**
@@ -43,7 +43,7 @@ class LanguagesController extends \Controller {
      * @return Response
      */
     public function create() {
-        return View::make('admin::languages.create');
+        return View::make('thor::backend.languages.create');
     }
 
     /**
@@ -56,10 +56,10 @@ class LanguagesController extends \Controller {
         
         if ($this->language->validate($input)) {
             $this->language->create($input);
-            return Redirect::route('admin.languages.index');
+            return Redirect::route('backend.languages.index');
         }
 
-        return Redirect::route('admin.languages.create')
+        return Redirect::route('backend.languages.create')
                         ->withInput()
                         ->withErrors($this->language->errors())
                         ->with('message', 'There were validation errors.');
@@ -73,7 +73,7 @@ class LanguagesController extends \Controller {
      */
     public function show(\Thor\Models\Language $language) {
 
-        return View::make('admin::languages.show', compact('language'));
+        return View::make('thor::backend.languages.show', compact('language'));
     }
 
     /**
@@ -85,10 +85,10 @@ class LanguagesController extends \Controller {
     public function edit(\Thor\Models\Language $language) {
 
         if (is_null($language)) {
-            return Redirect::route('admin.languages.index');
+            return Redirect::route('backend.languages.index');
         }
 
-        return View::make('admin::languages.edit', compact('language'));
+        return View::make('thor::backend.languages.edit', compact('language'));
     }
 
     /**
@@ -103,10 +103,10 @@ class LanguagesController extends \Controller {
         if ($language->validate($input)) {
             $language->update($input);
 
-            return Redirect::route('admin.languages.edit', $language->id);
+            return Redirect::route('backend.languages.edit', $language->id);
         }
         
-        return Redirect::route('admin.languages.edit', $language->id)
+        return Redirect::route('backend.languages.edit', $language->id)
                         ->withInput()
                         ->withErrors($language->errors())
                         ->with('message', 'There were validation errors.');
@@ -121,7 +121,7 @@ class LanguagesController extends \Controller {
     public function do_delete(\Thor\Models\Language $language) {
         $language->delete();
 
-        return Redirect::route('admin.languages.index');
+        return Redirect::route('backend.languages.index');
     }
 
 }

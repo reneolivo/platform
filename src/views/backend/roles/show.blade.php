@@ -1,11 +1,11 @@
-@extends('admin::layout')
+@extends('thor::backend.layout')
 @section('main')
 
 <div class="row">
     <div class="col-lg-12">
         <h1 class="page-header">Show </h1>
 
-        <p>{{ link_to_route('admin.roles.index', 'Return to all roles') }}</p>
+        <p>{{ link_to_route('backend.roles.index', 'Return to all roles') }}</p>
 
         <section class="resource-show">
             <div class="form-group">
@@ -26,8 +26,8 @@
             </div>
 
             <div class="form-group">
-                {{ _d(link_to_route('admin.roles.edit', '<i class="fa fa-pencil"></i> Edit', array($role->id), array('class' => 'btn btn-info'))) }}
-                {{ link_to_route('admin.roles.index', 'Cancel', null, array('class' => 'btn btn-default')) }}
+                {{ _d(link_to_route('backend.roles.edit', '<i class="fa fa-pencil"></i> Edit', array($role->id), array('class' => 'btn btn-info'))) }}
+                {{ link_to_route('backend.roles.index', 'Cancel', null, array('class' => 'btn btn-default')) }}
             </div>
         </section>
     </div><!-- /.col-lg-12 -->

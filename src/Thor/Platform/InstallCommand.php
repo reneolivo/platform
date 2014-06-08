@@ -57,7 +57,7 @@ class InstallCommand extends Command
         $this->call('config:publish', array('package' => 'thor/platform'));
         $this->call('lang:publish', array('package' => 'thor/platform'));
 
-        $this->output->writeln('<info>Thor CMS admin has been installed successfully.</info>');
+        $this->output->writeln('<info>Thor CMS has been installed successfully.</info>');
     }
 
     /**

@@ -21,7 +21,7 @@ class GenerateCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Generates basic CRUD files for a resource: migration, model, controller and admin views.';
+    protected $description = 'Generates basic CRUD files for a resource: migration, model, controller and backend views.';
 
     /**
      * Create a new command instance.

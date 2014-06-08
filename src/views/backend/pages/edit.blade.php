@@ -1,14 +1,14 @@
-@extends('admin::layout')
+@extends('thor::backend.layout')
 @section('main')
 
 <div class="row">
     <div class="col-lg-12">
         <h1 class="page-header">Edit Page</h1>
 
-        <p>{{ link_to_route('admin.pages.index', 'Return to all pages') }}</p>
+        <p>{{ link_to_route('backend.pages.index', 'Return to all pages') }}</p>
 
         {{ Form::model($page, array('method' => 'PATCH'
-    , 'route' => array('admin.pages.do_edit', $page->id), 'role'=>'form')) }}
+    , 'route' => array('backend.pages.do_edit', $page->id), 'role'=>'form')) }}
 <?php
     $transl = $page->translation();
 ?>{{ Form::hidden('translation[id]', $transl->id) }}
@@ -43,7 +43,7 @@
         
         <div class="form-group">
             {{ Form::button('<i class="fa fa-floppy-o"></i> Save', array('class' => 'btn btn-primary', 'type'=>'submit', 'value'=>'update')) }}
-            {{ link_to_route('admin.pages.index', 'Cancel', array($page->id), array('class' => 'btn btn-default')) }}
+            {{ link_to_route('backend.pages.index', 'Cancel', array($page->id), array('class' => 'btn btn-default')) }}
         </div>
 
         {{ Form::close() }}

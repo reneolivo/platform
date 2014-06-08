@@ -8,10 +8,10 @@ use View,
     Form;
 /*
 |--------------------------------------------------------------------------
-| {{$model['classFullName']}} admin controller
+| {{$model['classFullName']}} backend controller
 |--------------------------------------------------------------------------
 |
-| This is a default Thor Framework admin controller template for resource management.
+| This is a default Thor CMS backend controller template for resource management.
 | Feel free to change it to your needs.
 |
 */
@@ -36,7 +36,7 @@ class {{$controller['className']}} extends {{Config::get('generators::controller
     public function index() {
         ${{$plural}} = $this->{{$singular}}->all();
 
-        return View::make('admin::{{$plural}}.index', compact('{{$plural}}'));
+        return View::make('thor::backend.{{$plural}}.index', compact('{{$plural}}'));
     }
 
     /**
@@ -45,7 +45,7 @@ class {{$controller['className']}} extends {{Config::get('generators::controller
      * @return Response
      */
     public function create() {
-        return View::make('admin::{{$plural}}.create');
+        return View::make('thor::backend.{{$plural}}.create');
     }
 
     /**
@@ -59,10 +59,10 @@ class {{$controller['className']}} extends {{Config::get('generators::controller
         if ($this->{{$singular}}->validate($input)) {
             $this->{{$singular}}->create($input);
 
-            return Redirect::route('admin.{{$plural}}.index');
+            return Redirect::route('backend.{{$plural}}.index');
         }
 
-        return Redirect::route('admin.{{$plural}}.create')
+        return Redirect::route('backend.{{$plural}}.create')
                         ->withInput()
                         ->withErrors($this->{{$singular}}->errors())
                         ->with('message', 'There were validation errors.');
@@ -76,7 +76,7 @@ class {{$controller['className']}} extends {{Config::get('generators::controller
      */
     public function show({{$model['classFullName']}} ${{$singular}}) {
 
-        return View::make('admin::{{$plural}}.show', compact('{{$singular}}'));
+        return View::make('thor::backend.{{$plural}}.show', compact('{{$singular}}'));
     }
 
     /**
@@ -88,10 +88,10 @@ class {{$controller['className']}} extends {{Config::get('generators::controller
     public function edit({{$model['classFullName']}} ${{$singular}}) {
 
         if (is_null(${{$singular}})) {
-            return Redirect::route('admin.{{$plural}}.index');
+            return Redirect::route('backend.{{$plural}}.index');
         }
 
-        return View::make('admin::{{$plural}}.edit', compact('{{$singular}}'));
+        return View::make('thor::backend.{{$plural}}.edit', compact('{{$singular}}'));
     }
 
     /**
@@ -106,10 +106,10 @@ class {{$controller['className']}} extends {{Config::get('generators::controller
         if (${{$singular}}->validate($input)) {
             ${{$singular}}->update($input);
 
-            return Redirect::route('admin.{{$plural}}.edit', ${{$singular}}->id);
+            return Redirect::route('backend.{{$plural}}.edit', ${{$singular}}->id);
         }
         
-        return Redirect::route('admin.{{$plural}}.edit', ${{$singular}}->id)
+        return Redirect::route('backend.{{$plural}}.edit', ${{$singular}}->id)
                         ->withInput()
                         ->withErrors(${{$singular}}->errors())
                         ->with('message', 'There were validation errors.');
@@ -124,7 +124,7 @@ class {{$controller['className']}} extends {{Config::get('generators::controller
     public function do_delete({{$model['classFullName']}} ${{$singular}}) {
         ${{$singular}}->delete();
 
-        return Redirect::route('admin.{{$plural}}.index');
+        return Redirect::route('backend.{{$plural}}.index');
     }
 
 }

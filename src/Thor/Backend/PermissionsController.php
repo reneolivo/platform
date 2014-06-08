@@ -1,5 +1,5 @@
 <?php
-namespace Thor\Admin;
+namespace Thor\Backend;
 
 use View,
     Redirect,
@@ -7,10 +7,10 @@ use View,
     Form;
 /*
 |--------------------------------------------------------------------------
-| \Thor\Models\Permission admin controller
+| \Thor\Models\Permission backend controller
 |--------------------------------------------------------------------------
 |
-| This is a default Thor Framework admin controller template for resource management.
+| This is a default Thor CMS backend controller template for resource management.
 | Feel free to change it to your needs.
 |
 */
@@ -34,7 +34,7 @@ class PermissionsController extends \Controller {
     public function index() {
         $permissions = $this->permission->all();
 
-        return View::make('admin::permissions.index', compact('permissions'));
+        return View::make('thor::backend.permissions.index', compact('permissions'));
     }
 
     /**
@@ -43,7 +43,7 @@ class PermissionsController extends \Controller {
      * @return Response
      */
     public function create() {
-        return View::make('admin::permissions.create');
+        return View::make('thor::backend.permissions.create');
     }
 
     /**
@@ -58,10 +58,10 @@ class PermissionsController extends \Controller {
         if ($validation->passes()) {
             $this->permission->create($input);
 
-            return Redirect::route('admin.permissions.index');
+            return Redirect::route('backend.permissions.index');
         }
 
-        return Redirect::route('admin.permissions.create')
+        return Redirect::route('backend.permissions.create')
                         ->withInput()
                         ->withErrors($validation)
                         ->with('message', 'There were validation errors.');
@@ -75,7 +75,7 @@ class PermissionsController extends \Controller {
      */
     public function show(\Thor\Models\Permission $permission) {
 
-        return View::make('admin::permissions.show', compact('permission'));
+        return View::make('thor::backend.permissions.show', compact('permission'));
     }
 
     /**
@@ -87,13 +87,13 @@ class PermissionsController extends \Controller {
     public function edit(\Thor\Models\Permission $permission) {
 
         if (is_null($permission)) {
-            return Redirect::route('admin.permissions.index');
+            return Redirect::route('backend.permissions.index');
         }
         
         $roles = \Role::all();
         $permission_roles = $permission->roles()->get()->lists('id');
 
-        return View::make('admin::permissions.edit', compact('permission', 'roles', 'permission_roles'));
+        return View::make('thor::backend.permissions.edit', compact('permission', 'roles', 'permission_roles'));
     }
 
     /**
@@ -112,10 +112,10 @@ class PermissionsController extends \Controller {
                 $permission->roles()->sync(\Input::get('roles', array()));
             }
 
-            return Redirect::route('admin.permissions.edit', $permission->id);
+            return Redirect::route('backend.permissions.edit', $permission->id);
         }
         
-        return Redirect::route('admin.permissions.edit', $permission->id)
+        return Redirect::route('backend.permissions.edit', $permission->id)
                         ->withInput()
                         ->withErrors($validation)
                         ->with('message', 'There were validation errors.');
@@ -130,7 +130,7 @@ class PermissionsController extends \Controller {
     public function do_delete(\Thor\Models\Permission $permission) {
         $permission->delete();
 
-        return Redirect::route('admin.permissions.index');
+        return Redirect::route('backend.permissions.index');
     }
 
 }

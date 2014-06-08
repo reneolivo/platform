@@ -5,9 +5,9 @@
     <div class="col-lg-12">
         <h1 class="page-header">Create <?php echo ucfirst($singular); ?></h1>
 
-        <p>{{ link_to_route('<?php echo ('admin.' . $plural . '.index'); ?>', 'Return to all <?php echo $plural; ?>') }}</p>
+        <p>{{ link_to_route('<?php echo ('backend.' . $plural . '.index'); ?>', 'Return to all <?php echo $plural; ?>') }}</p>
 
-        {{ Form::open(array('method' => 'POST', 'route' => array('<?php echo ('admin.' . $plural . '.do_create'); ?>'), 'role'=>'form')) }}
+        {{ Form::open(array('method' => 'POST', 'route' => array('<?php echo ('backend.' . $plural . '.do_create'); ?>'), 'role'=>'form')) }}
 
         <!-- Form fields here -->
         {{Form::bsFields([
@@ -38,7 +38,7 @@
 
         <div class="form-group">
             {{ Form::button('<i class="fa fa-plus"></i> Create', array('class' => 'btn btn-primary', 'type'=>'submit', 'value'=>'create')) }}
-            {{ link_to_route('<?php echo ('admin.' . $plural . '.index'); ?>', 'Cancel', null, array('class' => 'btn btn-default')) }}
+            {{ link_to_route('<?php echo ('backend.' . $plural . '.index'); ?>', 'Cancel', null, array('class' => 'btn btn-default')) }}
         </div>
 
         {{ Form::close() }}

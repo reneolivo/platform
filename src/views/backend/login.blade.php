@@ -1,4 +1,4 @@
-@extends('admin::layout')
+@extends('thor::backend.layout')
 @section('main')
 <div class="container">
     <div class="row">
@@ -8,7 +8,7 @@
                     <h3 class="panel-title">Please Sign In</h3>
                 </div>
                 <div class="panel-body">
-                    <form role="form" method="post" action="{{Admin::url('login')}}">
+                    <form role="form" method="post" action="{{Backend::url('login')}}">
                         <fieldset>
                             <div class="form-group">
                                 <input class="form-control" placeholder="E-mail" name="email" type="text" autofocus>
@@ -22,7 +22,7 @@
                                 </label>
                             </div>
                             <div class="form-group">
-                                <a class="form-control-static" href="{{Admin::url('auth/forgot_password')}}">¿Forgot your password?</a>
+                                <a class="form-control-static" href="{{Backend::url('auth/forgot_password')}}">¿Forgot your password?</a>
                             </div>
                             <!-- Change this to a button or input when using this as a form -->
                             <button type="submit" class="btn btn-lg btn-success btn-block">Login</button>

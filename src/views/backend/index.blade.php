@@ -1,4 +1,4 @@
-@extends('admin::layout')
+@extends('thor::backend.layout')
 @section('main')
 <div class="row">
     <div class="col-lg-12">

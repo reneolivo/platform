@@ -1,4 +1,4 @@
-@extends('admin::layout')
+@extends('thor::backend.layout')
 @section('main')
 <div class="container">
     <div class="row">
@@ -8,7 +8,7 @@
                     <h3 class="panel-title">Forgot Password</h3>
                 </div>
                 <div class="panel-body">
-                    <form method="POST" action="{{ (Confide::checkAction('\\Thor\\Admin\\AuthController@do_forgot_password')) ?: Admin::url('/auth/forgot_password') }}" accept-charset="UTF-8">
+                    <form method="POST" action="{{ (Confide::checkAction('\\Thor\\Backend\\AuthController@do_forgot_password')) ?: Backend::url('/auth/forgot_password') }}" accept-charset="UTF-8">
                         <input type="hidden" name="_token" value="{{{ Session::getToken() }}}">
 
                         <div class="form-group">

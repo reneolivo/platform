@@ -1,5 +1,5 @@
 <?php
-namespace Thor\Admin;
+namespace Thor\Backend;
 
 use View,
     Redirect,
@@ -7,10 +7,10 @@ use View,
     Form;
 /*
 |--------------------------------------------------------------------------
-| \Thor\Models\Role admin controller
+| \Thor\Models\Role backend controller
 |--------------------------------------------------------------------------
 |
-| This is a default Thor Framework admin controller template for resource management.
+| This is a default Thor CMS backend controller template for resource management.
 | Feel free to change it to your needs.
 |
 */
@@ -34,7 +34,7 @@ class RolesController extends \Controller {
     public function index() {
         $roles = $this->role->all();
 
-        return View::make('admin::roles.index', compact('roles'));
+        return View::make('thor::backend.roles.index', compact('roles'));
     }
 
     /**
@@ -43,7 +43,7 @@ class RolesController extends \Controller {
      * @return Response
      */
     public function create() {
-        return View::make('admin::roles.create');
+        return View::make('thor::backend.roles.create');
     }
 
     /**
@@ -58,10 +58,10 @@ class RolesController extends \Controller {
         if ($validation->passes()) {
             $this->role->create($input);
 
-            return Redirect::route('admin.roles.index');
+            return Redirect::route('backend.roles.index');
         }
 
-        return Redirect::route('admin.roles.create')
+        return Redirect::route('backend.roles.create')
                         ->withInput()
                         ->withErrors($validation)
                         ->with('message', 'There were validation errors.');
@@ -75,7 +75,7 @@ class RolesController extends \Controller {
      */
     public function show(\Thor\Models\Role $role) {
 
-        return View::make('admin::roles.show', compact('role'));
+        return View::make('thor::backend.roles.show', compact('role'));
     }
 
     /**
@@ -87,7 +87,7 @@ class RolesController extends \Controller {
     public function edit(\Thor\Models\Role $role) {
 
         if (is_null($role)) {
-            return Redirect::route('admin.roles.index');
+            return Redirect::route('backend.roles.index');
         }
         
         $permissions = \Permission::all();
@@ -96,7 +96,7 @@ class RolesController extends \Controller {
         
         $users = \User::all();
         $role_users = $role->users()->get()->lists('id');
-        return View::make('admin::roles.edit', compact('role', 'permissions', 'role_permissions', 'users', 'role_users'));
+        return View::make('thor::backend.roles.edit', compact('role', 'permissions', 'role_permissions', 'users', 'role_users'));
     }
 
     /**
@@ -120,10 +120,10 @@ class RolesController extends \Controller {
                 $role->users()->sync(\Input::get('users', array()));
             }
 
-            return Redirect::route('admin.roles.edit', $role->id);
+            return Redirect::route('backend.roles.edit', $role->id);
         }
         
-        return Redirect::route('admin.roles.edit', $role->id)
+        return Redirect::route('backend.roles.edit', $role->id)
                         ->withInput()
                         ->withErrors($validation)
                         ->with('message', 'There were validation errors.');
@@ -138,7 +138,7 @@ class RolesController extends \Controller {
     public function do_delete(\Thor\Models\Role $role) {
         $role->delete();
 
-        return Redirect::route('admin.roles.index');
+        return Redirect::route('backend.roles.index');
     }
 
 }

@@ -5,7 +5,7 @@
     <div class="col-lg-12">
         <h1 class="page-header">Show <?php $model_name; ?></h1>
 
-        <p>{{ link_to_route('<?php echo ('admin.' . $plural . '.index'); ?>', 'Return to all <?php echo $plural; ?>') }}</p>
+        <p>{{ link_to_route('<?php echo ('backend.' . $plural . '.index'); ?>', 'Return to all <?php echo $plural; ?>') }}</p>
 
         <section class="resource-show">
             <div class="form-group">
@@ -36,8 +36,8 @@
             </div>
 
             <div class="form-group">
-                {{ _d(link_to_route('<?php echo ('admin.' . $plural . '.edit'); ?>', '<i class="fa fa-pencil"></i> Edit', array($<?php echo $singular; ?>->id), array('class' => 'btn btn-info'))) }}
-                {{ link_to_route('<?php echo ('admin.' . $plural . '.index'); ?>', 'Cancel', null, array('class' => 'btn btn-default')) }}
+                {{ _d(link_to_route('<?php echo ('backend.' . $plural . '.edit'); ?>', '<i class="fa fa-pencil"></i> Edit', array($<?php echo $singular; ?>->id), array('class' => 'btn btn-info'))) }}
+                {{ link_to_route('<?php echo ('backend.' . $plural . '.index'); ?>', 'Cancel', null, array('class' => 'btn btn-default')) }}
             </div>
         </section>
     </div><!-- /.col-lg-12 -->

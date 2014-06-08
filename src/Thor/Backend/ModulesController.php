@@ -1,5 +1,5 @@
 <?php
-namespace Thor\Admin;
+namespace Thor\Backend;
 
 use View,
     Redirect,
@@ -7,10 +7,10 @@ use View,
     Form, CRUD, Artisan;
 /*
 |--------------------------------------------------------------------------
-| \Thor\Models\Module admin controller
+| \Thor\Models\Module backend controller
 |--------------------------------------------------------------------------
 |
-| This is a default Thor Framework admin controller template for resource management.
+| This is a default Thor CMS backend controller template for resource management.
 | Feel free to change it to your needs.
 |
 */
@@ -34,7 +34,7 @@ class ModulesController extends \Controller {
     public function index() {
         $modules = $this->module->all();
 
-        return View::make('admin::modules.index', compact('modules'));
+        return View::make('thor::backend.modules.index', compact('modules'));
     }
 
     /**
@@ -43,7 +43,7 @@ class ModulesController extends \Controller {
      * @return Response
      */
     public function create() {
-        return View::make('admin::modules.create');
+        return View::make('thor::backend.modules.create');
     }
 
     /**
@@ -64,13 +64,13 @@ class ModulesController extends \Controller {
             CRUD::createPermissions($module->singular(), true);
             
             if($module->is_active){
-                return Redirect::to(\Admin::url($module->plural()));
+                return Redirect::to(\Backend::url($module->plural()));
             }else{
-                return Redirect::route('admin.modules.index');
+                return Redirect::route('backend.modules.index');
             }
         }
 
-        return Redirect::route('admin.modules.create')
+        return Redirect::route('backend.modules.create')
                         ->withInput()
                         ->withErrors($this->module->errors())
                         ->with('message', 'There were validation errors.');
@@ -84,7 +84,7 @@ class ModulesController extends \Controller {
      */
     public function show(\Thor\Models\Module $module) {
 
-        return View::make('admin::modules.show', compact('module'));
+        return View::make('thor::backend.modules.show', compact('module'));
     }
 
     /**
@@ -96,11 +96,11 @@ class ModulesController extends \Controller {
     public function edit(\Thor\Models\Module $module) {
 
         if (is_null($module)) {
-            return Redirect::route('admin.modules.index');
+            return Redirect::route('backend.modules.index');
         }
         $permissions = $module->permissions()->get();
 
-        return View::make('admin::modules.edit', compact('module', 'permissions'));
+        return View::make('thor::backend.modules.edit', compact('module', 'permissions'));
     }
 
     /**
@@ -124,10 +124,10 @@ class ModulesController extends \Controller {
         if ($module->validate($input)) {
             $module->update($input);
 
-            return Redirect::route('admin.modules.edit', $module->id);
+            return Redirect::route('backend.modules.edit', $module->id);
         }
         
-        return Redirect::route('admin.modules.edit', $module->id)
+        return Redirect::route('backend.modules.edit', $module->id)
                         ->withInput()
                         ->withErrors($module->errors())
                         ->with('message', 'There were validation errors.');
@@ -142,7 +142,7 @@ class ModulesController extends \Controller {
     public function do_delete(\Thor\Models\Module $module) {
         $module->delete();
 
-        return Redirect::route('admin.modules.index');
+        return Redirect::route('backend.modules.index');
     }
 
 }

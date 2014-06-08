@@ -1,14 +1,14 @@
-@extends('admin::layout')
+@extends('thor::backend.layout')
 @section('main')
 
 <div class="row">
     <div class="col-lg-12">
         <h1 class="page-header">Edit Role</h1>
 
-        <p>{{ link_to_route('admin.roles.index', 'Return to all roles') }}</p>
+        <p>{{ link_to_route('backend.roles.index', 'Return to all roles') }}</p>
 
         {{ Form::model($role, array('method' => 'PATCH'
-    , 'route' => array('admin.roles.do_edit', $role->id), 'role'=>'form')) }}
+    , 'route' => array('backend.roles.do_edit', $role->id), 'role'=>'form')) }}
 
         <!-- Form fields here -->
         {{Form::bsFields([
@@ -32,7 +32,7 @@
                         <?php
                             $attrs = array();
                             $containerAttrs = array();
-                            if(((in_array($role->name, array('developer', 'administrator'))) and ($perm->name=='access_admin') )
+                            if(((in_array($role->name, array('developer', 'administrator'))) and ($perm->name==Backend::ACCESS_PERMISSION_NAME) )
                                     or (!Entrust::can('update_permissions'))){
                                 $containerAttrs['class']='form-group text-muted';
                             }
@@ -91,7 +91,7 @@
         
         <div class="form-group">
             {{ Form::button('<i class="fa fa-floppy-o"></i> Save', array('class' => 'btn btn-primary', 'type'=>'submit', 'value'=>'update')) }}
-            {{ link_to_route('admin.roles.index', 'Cancel', array($role->id), array('class' => 'btn btn-default')) }}
+            {{ link_to_route('backend.roles.index', 'Cancel', array($role->id), array('class' => 'btn btn-default')) }}
         </div>
 
         {{ Form::close() }}

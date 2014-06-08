@@ -5,10 +5,10 @@
     <div class="col-lg-12">
         <h1 class="page-header">Edit <?php echo ucfirst($singular); ?></h1>
 
-        <p>{{ link_to_route('<?php echo ('admin.' . $plural . '.index'); ?>', 'Return to all <?php echo $plural; ?>') }}</p>
+        <p>{{ link_to_route('<?php echo ('backend.' . $plural . '.index'); ?>', 'Return to all <?php echo $plural; ?>') }}</p>
 
         {{ Form::model($<?php echo $singular; ?>, array('method' => 'PATCH'
-    , 'route' => array('<?php echo ('admin.' . $plural . '.do_edit'); ?>', $<?php echo $singular; ?>->id), 'role'=>'form')) }}
+    , 'route' => array('<?php echo ('backend.' . $plural . '.do_edit'); ?>', $<?php echo $singular; ?>->id), 'role'=>'form')) }}
 <?php if($isTranslatable): ?>
 <?php echo "<?php\n"; ?>
     $transl = $<?php echo $singular; ?>->translation();
@@ -45,7 +45,7 @@
 
         <div class="form-group">
             {{ Form::button('<i class="fa fa-floppy-o"></i> Save', array('class' => 'btn btn-primary', 'type'=>'submit', 'value'=>'update')) }}
-            {{ link_to_route('<?php echo ('admin.' . $plural . '.index'); ?>', 'Cancel', array($<?php echo $singular; ?>->id), array('class' => 'btn btn-default')) }}
+            {{ link_to_route('<?php echo ('backend.' . $plural . '.index'); ?>', 'Cancel', array($<?php echo $singular; ?>->id), array('class' => 'btn btn-default')) }}
         </div>
 
         {{ Form::close() }}

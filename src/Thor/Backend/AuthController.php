@@ -1,6 +1,6 @@
 <?php
 
-namespace Thor\Admin;
+namespace Thor\Backend;
 
 use View,
     Input,
@@ -10,7 +10,7 @@ use View,
     Config;
 
 /**
- * Administrator authentication controller
+ * Backend authentication controller
  */
 class AuthController extends \Illuminate\Routing\Controller
 {
@@ -48,13 +48,13 @@ class AuthController extends \Illuminate\Routing\Controller
             $notice = Lang::get('confide::confide.alerts.account_created') . ' ' . Lang::get('confide::confide.alerts.instructions_sent');
 
             // Redirect with success message, You may replace "Lang::get(..." for your custom message.
-            return Redirect::action('\\Thor\\Admin\\AuthController@login')
+            return Redirect::action('\\Thor\\Backend\\AuthController@login')
                             ->with('notice', $notice);
         } else {
             // Get validation errors (see Ardent package)
             $error = $user->errors()->all(':message');
 
-            return Redirect::action('\\Thor\\Admin\\AuthController@create')
+            return Redirect::action('\\Thor\\Backend\\AuthController@create')
                             ->withInput(Input::except('password'))
                             ->with('error', $error);
         }
@@ -67,11 +67,10 @@ class AuthController extends \Illuminate\Routing\Controller
     public function login()
     {
         if(Confide::user()) {
-            // If user is logged, redirect to internal 
-            // page, change it to '/admin', '/dashboard' or something
-            return Redirect::to(\Admin::url());
+            // If user is logged, redirect to an internal page
+            return Redirect::to(\Backend::url());
         } else {
-            return View::make('admin::login', array('page' => 'login', 'unwrap' => true));
+            return View::make('thor::backend.login', array('page' => 'login', 'unwrap' => true));
         }
     }
 
@@ -97,7 +96,7 @@ class AuthController extends \Illuminate\Routing\Controller
             // caught by the authentication filter IE Redirect::guest('user/login').
             // Otherwise fallback to '/'
             // Fix pull #145
-            return Redirect::intended(\Admin::url()); // change it to '/admin', '/dashboard' or something
+            return Redirect::intended(\Backend::url());
         } else {
             $user = new \Thor\Models\User;
 
@@ -110,7 +109,7 @@ class AuthController extends \Illuminate\Routing\Controller
                 $err_msg = Lang::get('confide::confide.alerts.wrong_credentials');
             }
 
-            return Redirect::action('\\Thor\\Admin\\AuthController@login')
+            return Redirect::action('\\Thor\\Backend\\AuthController@login')
                             ->withInput(Input::except('password'))
                             ->with('error', $err_msg);
         }
@@ -125,11 +124,11 @@ class AuthController extends \Illuminate\Routing\Controller
     {
         if(Confide::confirm($code)) {
             $notice_msg = Lang::get('confide::confide.alerts.confirmation');
-            return Redirect::action('\\Thor\\Admin\\AuthController@login')
+            return Redirect::action('\\Thor\\Backend\\AuthController@login')
                             ->with('notice', $notice_msg);
         } else {
             $error_msg = Lang::get('confide::confide.alerts.wrong_confirmation');
-            return Redirect::action('\\Thor\\Admin\\AuthController@login')
+            return Redirect::action('\\Thor\\Backend\\AuthController@login')
                             ->with('error', $error_msg);
         }
     }
@@ -140,7 +139,7 @@ class AuthController extends \Illuminate\Routing\Controller
      */
     public function forgot_password()
     {
-        return View::make('admin::forgot_password', array('page' => 'forgot_password', 'unwrap' => true));
+        return View::make('thor::backend.forgot_password', array('page' => 'forgot_password', 'unwrap' => true));
     }
 
     /**
@@ -151,11 +150,11 @@ class AuthController extends \Illuminate\Routing\Controller
     {
         if(Confide::forgotPassword(Input::get('email'))) {
             $notice_msg = Lang::get('confide::confide.alerts.password_forgot');
-            return Redirect::action('\\Thor\\Admin\\AuthController@login')
+            return Redirect::action('\\Thor\\Backend\\AuthController@login')
                             ->with('notice', $notice_msg);
         } else {
             $error_msg = Lang::get('confide::confide.alerts.wrong_password_forgot');
-            return Redirect::action('\\Thor\\Admin\\AuthController@forgot_password')
+            return Redirect::action('\\Thor\\Backend\\AuthController@forgot_password')
                             ->withInput()
                             ->with('error', $error_msg);
         }
@@ -167,7 +166,7 @@ class AuthController extends \Illuminate\Routing\Controller
      */
     public function reset_password($token)
     {
-        return View::make('admin::reset_password', array('page' => 'reset_password', 'unwrap' => true, 'token' => $token));
+        return View::make('thor::backend.reset_password', array('page' => 'reset_password', 'unwrap' => true, 'token' => $token));
     }
 
     /**
@@ -185,11 +184,11 @@ class AuthController extends \Illuminate\Routing\Controller
         // By passing an array with the token, password and confirmation
         if(Confide::resetPassword($input)) {
             $notice_msg = Lang::get('confide::confide.alerts.password_reset');
-            return Redirect::action('\\Thor\\Admin\\AuthController@login')
+            return Redirect::action('\\Thor\\Backend\\AuthController@login')
                             ->with('notice', $notice_msg);
         } else {
             $error_msg = Lang::get('confide::confide.alerts.wrong_password_reset');
-            return Redirect::action('\\Thor\\Admin\\AuthController@reset_password', array('token' => $input['token']))
+            return Redirect::action('\\Thor\\Backend\\AuthController@reset_password', array('token' => $input['token']))
                             ->withInput()
                             ->with('error', $error_msg);
         }
@@ -203,7 +202,7 @@ class AuthController extends \Illuminate\Routing\Controller
     {
         Confide::logout();
 
-        return Redirect::to(\Admin::url('login'));
+        return Redirect::to(\Backend::url('login'));
     }
 
 }

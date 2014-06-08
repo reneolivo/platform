@@ -1,5 +1,5 @@
 <?php
-namespace Thor\Admin;
+namespace Thor\Backend;
 
 use View,
     Redirect,
@@ -7,10 +7,10 @@ use View,
     Form, Input;
 /*
 |--------------------------------------------------------------------------
-| \Thor\Models\User admin controller
+| \Thor\Models\User backend controller
 |--------------------------------------------------------------------------
 |
-| This is a default Thor Framework admin controller template for resource management.
+| This is a default Thor CMS backend controller template for resource management.
 | Feel free to change it to your needs.
 |
 */
@@ -34,7 +34,7 @@ class UsersController extends \Controller {
     public function index() {
         $users = $this->user->all();
 
-        return View::make('admin::users.index', compact('users'));
+        return View::make('thor::backend.users.index', compact('users'));
     }
 
     /**
@@ -43,7 +43,7 @@ class UsersController extends \Controller {
      * @return Response
      */
     public function create() {
-        return View::make('admin::users.create');
+        return View::make('thor::backend.users.create');
     }
 
     /**
@@ -67,10 +67,10 @@ class UsersController extends \Controller {
 
         if ($this->user->id) {
 
-            return Redirect::route('admin.users.index');
+            return Redirect::route('backend.users.index');
         }
 
-        return Redirect::route('admin.users.create')
+        return Redirect::route('backend.users.create')
                         ->withInput()
                         ->withErrors($this->user->errors())
                         ->with('message', 'There were validation errors.');
@@ -84,7 +84,7 @@ class UsersController extends \Controller {
      */
     public function show(\Thor\Models\User $user) {
 
-        return View::make('admin::users.show', compact('user'));
+        return View::make('thor::backend.users.show', compact('user'));
     }
 
     /**
@@ -96,13 +96,13 @@ class UsersController extends \Controller {
     public function edit(\Thor\Models\User $user) {
 
         if (is_null($user)) {
-            return Redirect::route('admin.users.index');
+            return Redirect::route('backend.users.index');
         }
         
         $roles = \Role::all();
         $user_roles = $user->roles()->get()->lists('id');
 
-        return View::make('admin::users.edit', compact('user', 'roles', 'user_roles'));
+        return View::make('thor::backend.users.edit', compact('user', 'roles', 'user_roles'));
     }
 
     /**
@@ -128,10 +128,10 @@ class UsersController extends \Controller {
             if(\Entrust::can('update_roles')){
                 $user->roles()->sync(\Input::get('roles', array()));
             }
-            return Redirect::route('admin.users.edit', $user->id);
+            return Redirect::route('backend.users.edit', $user->id);
         }
 
-        return Redirect::route('admin.users.edit', $user->id)
+        return Redirect::route('backend.users.edit', $user->id)
                         ->withInput()
                         ->withErrors($user->errors())
                         ->with('message', 'There were validation errors.');
@@ -146,7 +146,7 @@ class UsersController extends \Controller {
     public function do_delete(\Thor\Models\User $user) {
         $user->delete();
 
-        return Redirect::route('admin.users.index');
+        return Redirect::route('backend.users.index');
     }
 
 }

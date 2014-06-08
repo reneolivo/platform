@@ -1,11 +1,11 @@
-@extends('admin::layout')
+@extends('thor::backend.layout')
 @section('main')
 
 <div class="row">
     <div class="col-lg-12">
         <h1 class="page-header">Show </h1>
 
-        <p>{{ link_to_route('admin.pages.index', 'Return to all pages') }}</p>
+        <p>{{ link_to_route('backend.pages.index', 'Return to all pages') }}</p>
 
         <section class="resource-show">
             <div class="form-group">
@@ -98,8 +98,8 @@
             </div>
 
             <div class="form-group">
-                {{ _d(link_to_route('admin.pages.edit', '<i class="fa fa-pencil"></i> Edit', array($page->id), array('class' => 'btn btn-info'))) }}
-                {{ link_to_route('admin.pages.index', 'Cancel', null, array('class' => 'btn btn-default')) }}
+                {{ _d(link_to_route('backend.pages.edit', '<i class="fa fa-pencil"></i> Edit', array($page->id), array('class' => 'btn btn-info'))) }}
+                {{ link_to_route('backend.pages.index', 'Cancel', null, array('class' => 'btn btn-default')) }}
             </div>
         </section>
     </div><!-- /.col-lg-12 -->

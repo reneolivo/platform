@@ -1,11 +1,11 @@
-@extends('admin::layout')
+@extends('thor::backend.layout')
 @section('main')
 
 <div class="row">
     <div class="col-lg-12">
         <h1 class="page-header">All Users</h1>
 
-        <p>{{ _d(link_to_route('admin.users.create', '<i class="fa fa-plus"></i> Add new user')) }}</p>
+        <p>{{ _d(link_to_route('backend.users.create', '<i class="fa fa-plus"></i> Add new user')) }}</p>
 
         @if ($users->count())
         <table class="table table-striped table-hover table-responsive">
@@ -31,9 +31,9 @@
                                         <td>{{{ $user->created_at }}}</td>
                     <td>{{{ $user->updated_at }}}</td>
                     <td class="al-r">
-                        {{ link_to_route('admin.users.show', 'Show', array($user->id), array('class' => 'btn btn-sm btn-default')) }}
-                        {{ link_to_route('admin.users.edit', 'Edit', array($user->id), array('class' => 'btn btn-sm btn-info')) }}
-                        {{ Form::open(array('method' => 'DELETE', 'class' => 'inl-bl', 'route' => array('admin.users.do_delete', $user->id))) }}
+                        {{ link_to_route('backend.users.show', 'Show', array($user->id), array('class' => 'btn btn-sm btn-default')) }}
+                        {{ link_to_route('backend.users.edit', 'Edit', array($user->id), array('class' => 'btn btn-sm btn-info')) }}
+                        {{ Form::open(array('method' => 'DELETE', 'class' => 'inl-bl', 'route' => array('backend.users.do_delete', $user->id))) }}
                         {{ Form::submit('Delete', array('class' => 'btn btn-sm btn-danger btn-destroy')) }}
                         {{ Form::close() }}
                     </td>

@@ -1,34 +1,34 @@
 <?php
 
-// Admin basic routes
+// Backend basic routes
 
-$admin_base_route = Admin::config('base_route');
+$backend_base_route = Backend::config('base_route');
 
 // Redirect to a lang
-Route::any('/' . $admin_base_route . '/', array('as' => 'admin.root', 'uses' => function() {
-        return Redirect::to(Admin::url(), 302);
-    }
+Route::any('/' . $backend_base_route . '/', array('as' => 'backend.root', 'uses' => function() {
+return Redirect::to(Backend::url(), 302);
+}
 ));
 
-// Admin routes that doesn't need auth
-Route::langGroup(array('prefix' => $admin_base_route), function() {
-    // Admin Confide routes (that doesn't need auth)
-    Route::get('login', '\\Thor\\Admin\\AuthController@login');
-    Route::post('login', '\\Thor\\Admin\\AuthController@do_login');
-    Route::get( 'auth/confirm/{code}', '\\Thor\\Admin\\AuthController@confirm');
-    Route::get('auth/forgot_password', '\\Thor\\Admin\\AuthController@forgot_password');
-    Route::post('auth/forgot_password', '\\Thor\\Admin\\AuthController@do_forgot_password');
-    Route::get( 'auth/reset_password/{token}', '\\Thor\\Admin\\AuthController@reset_password');
-    Route::post('auth/reset_password', '\\Thor\\Admin\\AuthController@do_reset_password');
+// Backend routes that doesn't need auth
+Route::langGroup(array('prefix' => $backend_base_route), function() {
+    // Backend Confide routes (that doesn't need auth)
+    Route::get('login', array('as' => 'backend.login', 'uses' => '\\Thor\\Backend\\AuthController@login'));
+    Route::post('login', '\\Thor\\Backend\\AuthController@do_login');
+    Route::get('auth/confirm/{code}', '\\Thor\\Backend\\AuthController@confirm');
+    Route::get('auth/forgot_password', array('as' => 'backend.forgot_password', 'uses' => '\\Thor\\Backend\\AuthController@forgot_password'));
+    Route::post('auth/forgot_password', '\\Thor\\Backend\\AuthController@do_forgot_password');
+    Route::get('auth/reset_password/{token}', '\\Thor\\Backend\\AuthController@reset_password');
+    Route::post('auth/reset_password', '\\Thor\\Backend\\AuthController@do_reset_password');
 });
 
-// Admin routes with auth
-Route::langGroup(array('prefix' => $admin_base_route, 'before' => 'auth.admin'), function() {
-    // Admin home
-    Route::any('/', array('as' => 'admin.home', 'uses' => '\\Thor\\Admin\\MainController@index'));
+// Backend routes with auth
+Route::langGroup(array('prefix' => $backend_base_route, 'before' => 'auth.backend'), function() {
+    // Backend home
+    Route::any('/', array('as' => 'backend.home', 'uses' => '\\Thor\\Backend\\MainController@index'));
 
-    // Admin Confide routes
-    Route::get('logout', '\\Thor\\Admin\\AuthController@logout');
+    // Backend Confide routes
+    Route::get('logout', array('as' => 'backend.logout', 'uses' => '\\Thor\\Backend\\AuthController@logout'));
 });
 
 // Base modules
@@ -39,15 +39,15 @@ CRUD::createResourceRoutes('language', true);
 CRUD::createResourceRoutes('module', true);
 
 // Registered modules
-foreach(Admin::modules() as $module){
+foreach (Backend::modules() as $module) {
     CRUD::createResourceRoutes($module->name, true);
 }
 
 // Site 404
 App::missing(function($e) {
-    if(Admin::inAdmin()) {
-        return Response::view('admin::error', array('page' => 'error'), 404);
-    }else{
+    if (Backend::isBackendRequest()) {
+        return Response::view('thor::backend.error', array('page' => 'error'), 404);
+    } else {
         Doc::title('Error 404')->h1('Error 404')->content('Page Not Found')->error(true);
         return Response::view('404', array(), 404);
     }

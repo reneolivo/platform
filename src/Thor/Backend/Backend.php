@@ -11,7 +11,8 @@ use URL,
 
 class Backend
 {
-
+    const ACCESS_PERMISSION_NAME = 'access_backend';
+    
     /**
      * Laravel application
      * 
@@ -22,7 +23,7 @@ class Backend
     protected $modules = null;
 
     /**
-     * Creates a new Admin instance.
+     * Creates a new Backend instance.
      * 
      * @param  \Illuminate\Foundation\Application  $app
      */
@@ -30,8 +31,8 @@ class Backend
     {
         $this->app = $app;
 
-        if ($this->isAuthenticated()) {
-            $this->app['thor.document']->addClass('is-admin');
+        if ($this->canBeAccessed()) {
+            $this->app['thor.document']->addClass('is-backend');
         }
     }
 
@@ -52,7 +53,7 @@ class Backend
     }
 
     /**
-     * Generate a multilingual URL to the given admin path
+     * Generate a multilingual URL to the given backend path
      *
      * @param string  $path
      * @param mixed  $extra
@@ -73,12 +74,12 @@ class Backend
 
     public function config($key, $default = null)
     {
-        return Config::get('admin::' . $key, $default);
+        return Config::get('thor::backend.' . $key, $default);
     }
 
-    public function isAuthenticated()
+    public function canBeAccessed()
     {
-        return Entrust::can('access_admin');
+        return Entrust::can(self::ACCESS_PERMISSION_NAME);
     }
 
     public function isBackendRequest()
@@ -97,7 +98,7 @@ class Backend
 
     public function default404View()
     {
-        return Response::view('admin::error', array('page' => 'error'), 404);
+        return Response::view('thor::backend.error', array('page' => 'error'), 404);
     }
 
 }

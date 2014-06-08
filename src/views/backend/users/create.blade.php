@@ -1,13 +1,13 @@
-@extends('admin::layout')
+@extends('thor::backend.layout')
 @section('main')
 
 <div class="row">
     <div class="col-lg-12">
         <h1 class="page-header">Create User</h1>
 
-        <p>{{ link_to_route('admin.users.index', 'Return to all users') }}</p>
+        <p>{{ link_to_route('backend.users.index', 'Return to all users') }}</p>
 
-        {{ Form::open(array('method' => 'POST', 'route' => array('admin.users.do_create'), 'role'=>'form')) }}
+        {{ Form::open(array('method' => 'POST', 'route' => array('backend.users.do_create'), 'role'=>'form')) }}
 
         <!-- Form fields here -->
         {{Form::bsFields([
@@ -23,7 +23,7 @@
         
         <div class="form-group">
             {{ Form::button('<i class="fa fa-plus"></i> Create', array('class' => 'btn btn-primary', 'type'=>'submit', 'value'=>'create')) }}
-            {{ link_to_route('admin.users.index', 'Cancel', null, array('class' => 'btn btn-default')) }}
+            {{ link_to_route('backend.users.index', 'Cancel', null, array('class' => 'btn btn-default')) }}
         </div>
 
         {{ Form::close() }}

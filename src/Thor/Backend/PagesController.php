@@ -1,5 +1,5 @@
 <?php
-namespace Thor\Admin;
+namespace Thor\Backend;
 
 use View,
     Redirect,
@@ -7,10 +7,10 @@ use View,
     Form;
 /*
 |--------------------------------------------------------------------------
-| \Thor\Models\Page admin controller
+| \Thor\Models\Page backend controller
 |--------------------------------------------------------------------------
 |
-| This is a default Thor Framework admin controller template for resource management.
+| This is a default Thor CMS backend controller template for resource management.
 | Feel free to change it to your needs.
 |
 */
@@ -34,7 +34,7 @@ class PagesController extends \Controller {
     public function index() {
         $pages = $this->page->all();
 
-        return View::make('admin::pages.index', compact('pages'));
+        return View::make('thor::backend.pages.index', compact('pages'));
     }
 
     /**
@@ -43,7 +43,7 @@ class PagesController extends \Controller {
      * @return Response
      */
     public function create() {
-        return View::make('admin::pages.create');
+        return View::make('thor::backend.pages.create');
     }
 
     /**
@@ -58,10 +58,10 @@ class PagesController extends \Controller {
         if ($validation->passes()) {
             $this->page->create($input);
 
-            return Redirect::route('admin.pages.index');
+            return Redirect::route('backend.pages.index');
         }
 
-        return Redirect::route('admin.pages.create')
+        return Redirect::route('backend.pages.create')
                         ->withInput()
                         ->withErrors($validation)
                         ->with('message', 'There were validation errors.');
@@ -75,7 +75,7 @@ class PagesController extends \Controller {
      */
     public function show(\Thor\Models\Page $page) {
 
-        return View::make('admin::pages.show', compact('page'));
+        return View::make('thor::backend.pages.show', compact('page'));
     }
 
     /**
@@ -87,10 +87,10 @@ class PagesController extends \Controller {
     public function edit(\Thor\Models\Page $page) {
 
         if (is_null($page)) {
-            return Redirect::route('admin.pages.index');
+            return Redirect::route('backend.pages.index');
         }
 
-        return View::make('admin::pages.edit', compact('page'));
+        return View::make('thor::backend.pages.edit', compact('page'));
     }
 
     /**
@@ -106,10 +106,10 @@ class PagesController extends \Controller {
         if ($validation->passes()) {
             $page->update($input);
 
-            return Redirect::route('admin.pages.edit', $page->id);
+            return Redirect::route('backend.pages.edit', $page->id);
         }
         
-        return Redirect::route('admin.pages.edit', $page->id)
+        return Redirect::route('backend.pages.edit', $page->id)
                         ->withInput()
                         ->withErrors($validation)
                         ->with('message', 'There were validation errors.');
@@ -124,7 +124,7 @@ class PagesController extends \Controller {
     public function do_delete(\Thor\Models\Page $page) {
         $page->delete();
 
-        return Redirect::route('admin.pages.index');
+        return Redirect::route('backend.pages.index');
     }
 
 }

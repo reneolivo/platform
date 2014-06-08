@@ -7,7 +7,7 @@ use Route,
     Entrust,
     Str,
     Redirect,
-    View, Admin;
+    View, Backend;
 
 class CrudBuilder
 {
@@ -205,12 +205,12 @@ class CrudBuilder
         );
         
         if(empty($notAllowedRedirect)){
-            $notAllowedRedirect = Redirect::to(\Admin::url('/error?code=403'));
+            $notAllowedRedirect = Redirect::to(Backend::url('/error?code=403'));
         }
 
         foreach ($permissions as $perm) {
             Route::filter('entrust.' . $perm, function() use($perm, $notAllowedRedirect) {
-                if ((Entrust::can('access_admin') and Entrust::can($perm)) === false) {
+                if ((Backend::canAccess() and Entrust::can($perm)) === false) {
                     return $notAllowedRedirect;
                 }
             });
@@ -259,11 +259,11 @@ class CrudBuilder
     public function createResourceRoutes($singular, $withPermissionFilters = false)
     {
         $_this = $this;
-        Route::langGroup(array('prefix' => Config::get('generators::admin_base_route'), 'before' => 'auth.admin'), function()
+        Route::langGroup(array('prefix' => Config::get('generators::backend_base_route'), 'before' => 'auth.backend'), function()
                 use($singular, $_this, $withPermissionFilters) {
 
             $plural = Str::plural($singular);
-            $rt = 'admin.' . $plural;
+            $rt = 'backend.' . $plural;
             $ctrl = $this->getControllerClass($singular);
             $model = $this->getModelClass($singular);
 

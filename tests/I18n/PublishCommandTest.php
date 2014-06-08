@@ -52,8 +52,8 @@ class PublishCommandTest extends PackageTestCase
         $this->testPublishLang();
 
         $this->assertEquals('Password reminder sent!', $this->app['translator']->trans('reminders.sent'));
-        $this->assertEquals('Copyright 2014 Thor Framework', $this->app['translator']->trans('thor::footer.copyright'));
-        $this->assertEquals('Thor Framework', $this->app['translator']->trans('thor::header.brand'));
+        $this->assertEquals('Copyright 2014 Thor CMS', $this->app['translator']->trans('thor::footer.copyright'));
+        $this->assertEquals('Thor CMS', $this->app['translator']->trans('thor::header.brand'));
         $this->assertEquals('Lorem Ipsum', $this->app['translator']->trans('thor::header.subtitle'));
 
         // Remove packages folder

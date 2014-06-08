@@ -1,11 +1,11 @@
-@extends('admin::layout')
+@extends('thor::backend.layout')
 @section('main')
 
 <div class="row">
     <div class="col-lg-12">
         <h1 class="page-header">All Roles</h1>
 
-        <p>{{ _d(link_to_route('admin.roles.create', '<i class="fa fa-plus"></i> Add new role')) }}</p>
+        <p>{{ _d(link_to_route('backend.roles.create', '<i class="fa fa-plus"></i> Add new role')) }}</p>
 
         @if ($roles->count())
         <table class="table table-striped table-hover table-responsive">
@@ -27,9 +27,9 @@
                                         <td>{{{ $role->created_at }}}</td>
                     <td>{{{ $role->updated_at }}}</td>
                     <td class="al-r">
-                        {{ link_to_route('admin.roles.show', 'Show', array($role->id), array('class' => 'btn btn-sm btn-default')) }}
-                        {{ link_to_route('admin.roles.edit', 'Edit', array($role->id), array('class' => 'btn btn-sm btn-info')) }}
-                        {{ Form::open(array('method' => 'DELETE', 'class' => 'inl-bl', 'route' => array('admin.roles.do_delete', $role->id))) }}
+                        {{ link_to_route('backend.roles.show', 'Show', array($role->id), array('class' => 'btn btn-sm btn-default')) }}
+                        {{ link_to_route('backend.roles.edit', 'Edit', array($role->id), array('class' => 'btn btn-sm btn-info')) }}
+                        {{ Form::open(array('method' => 'DELETE', 'class' => 'inl-bl', 'route' => array('backend.roles.do_delete', $role->id))) }}
                         {{ Form::submit('Delete', array('class' => 'btn btn-sm btn-danger btn-destroy')) }}
                         {{ Form::close() }}
                     </td>

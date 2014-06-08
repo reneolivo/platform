@@ -1,14 +1,14 @@
-@extends('admin::layout')
+@extends('thor::backend.layout')
 @section('main')
 
 <div class="row">
     <div class="col-lg-12">
         <h1 class="page-header">Edit User</h1>
 
-        <p>{{ link_to_route('admin.users.index', 'Return to all users') }}</p>
+        <p>{{ link_to_route('backend.users.index', 'Return to all users') }}</p>
 
         {{ Form::model($user, array('method' => 'PATCH'
-    , 'route' => array('admin.users.do_edit', $user->id), 'role'=>'form')) }}
+    , 'route' => array('backend.users.do_edit', $user->id), 'role'=>'form')) }}
 
         <!-- Form fields here -->
         {{Form::bsFields([
@@ -52,7 +52,7 @@
 
         <div class="form-group">
             {{ Form::button('<i class="fa fa-floppy-o"></i> Save', array('class' => 'btn btn-primary', 'type'=>'submit', 'value'=>'update')) }}
-            {{ link_to_route('admin.users.index', 'Cancel', array($user->id), array('class' => 'btn btn-default')) }}
+            {{ link_to_route('backend.users.index', 'Cancel', array($user->id), array('class' => 'btn btn-default')) }}
         </div>
 
         {{ Form::close() }}

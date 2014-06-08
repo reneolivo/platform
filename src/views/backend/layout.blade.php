@@ -4,15 +4,15 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <title>{{Admin::config('title')}} | {{ucfirst($doc_view)}}</title>
+        <title>{{Backend::config('title')}} | {{ucfirst($doc_view)}}</title>
 
         <meta name="author" content="Javier Aguilar, mjolnic.com">
         <meta name="robots" content="NOINDEX, NOFOLLOW">
 
-        <link rel="shortcut icon" href="{{Admin::asset('img/logo.jpg')}}">
+        <link rel="shortcut icon" href="{{Backend::asset('img/logo.jpg')}}">
 
         <style type="text/css" id="relativecss">html,body{position:static}body *{position:relative}</style>
-        <link href="{{Admin::asset('css/app.min.css')}}" rel="stylesheet">
+        <link href="{{Backend::asset('css/app.min.css')}}" rel="stylesheet">
 
         @yield('head_append')
     </head>
@@ -21,14 +21,14 @@
         @yield('main')
         <?php else: ?>
         <div id="wrapper">
-            @include('admin::menus')
+            @include('thor::backend.menus')
             <div id="page-wrapper">
                 @yield('main')
             </div><!-- /#page-wrapper -->
         </div><!-- /#wrapper -->
         <?php endif; ?>
         
-        <script src="{{Admin::asset('js/app.min.js')}}"></script>
+        <script src="{{Backend::asset('js/app.min.js')}}"></script>
         @yield('body_append')
     </body>
 </html>

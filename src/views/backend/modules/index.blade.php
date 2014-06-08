@@ -1,11 +1,11 @@
-@extends('admin::layout')
+@extends('thor::backend.layout')
 @section('main')
 
 <div class="row">
     <div class="col-lg-12">
         <h1 class="page-header">All Modules</h1>
 
-        <p>{{ _d(link_to_route('admin.modules.create', '<i class="fa fa-plus"></i> Add new module')) }}</p>
+        <p>{{ _d(link_to_route('backend.modules.create', '<i class="fa fa-plus"></i> Add new module')) }}</p>
 
         @if ($modules->count())
         <table class="table table-striped table-hover table-responsive">
@@ -43,9 +43,9 @@
                                         <td>{{{ $module->created_at }}}</td>
                     <td>{{{ $module->updated_at }}}</td>
                     <td class="al-r">
-                        {{ link_to_route('admin.modules.show', 'Show', array($module->id), array('class' => 'btn btn-sm btn-default')) }}
-                        {{ link_to_route('admin.modules.edit', 'Edit', array($module->id), array('class' => 'btn btn-sm btn-info')) }}
-                        {{ Form::open(array('method' => 'DELETE', 'class' => 'inl-bl', 'route' => array('admin.modules.do_delete', $module->id))) }}
+                        {{ link_to_route('backend.modules.show', 'Show', array($module->id), array('class' => 'btn btn-sm btn-default')) }}
+                        {{ link_to_route('backend.modules.edit', 'Edit', array($module->id), array('class' => 'btn btn-sm btn-info')) }}
+                        {{ Form::open(array('method' => 'DELETE', 'class' => 'inl-bl', 'route' => array('backend.modules.do_delete', $module->id))) }}
                         {{ Form::submit('Delete', array('class' => 'btn btn-sm btn-danger btn-destroy')) }}
                         {{ Form::close() }}
                     </td>

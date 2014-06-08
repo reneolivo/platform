@@ -1,5 +1,6 @@
 {
     "name": "thor/platform",
+    "homepage": "http://thorcms.com",
     "description": "Thor CMS platform package. Laravel 4 multilingual CMS and CRUD Generator.",
     "keywords": ["laravel", "cms", "framework", "thorcms", "multilingual", "i18n", "crud", "generators", "backend", "admin", "acl"],
     "license": "MIT",

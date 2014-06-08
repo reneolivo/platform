@@ -2,17 +2,17 @@
 
 /*
   |--------------------------------------------------------------------------
-  | Admin Filters
+  | Backend Filters
   |--------------------------------------------------------------------------
   |
  */
 
 /*
- * Admin user
+ * Backend user
  */
-Route::filter('auth.admin', function() {
-    if(!Admin::isAuthenticated()){
-        $ctrl = new Thor\Admin\MainController();
+Route::filter('auth.backend', function() {
+    if(!Backend::canBeAccessed()){
+        $ctrl = new Thor\Backend\MainController();
         return $ctrl->login();
     }
 });
