@@ -41,7 +41,7 @@ class InstallCommand extends Command
         if (!Backend::isInstalled()) {
             $this->call('confide:migration');
             $this->call('entrust:migration');
-            $this->call('migrate:publish', array('package' => 'thor/models'));
+            $this->call('migrate:publish', array('package' => 'thor/platform'));
         } else {
             $this->call('migrate:reset');
             \DB::table('migrations')->delete();
@@ -55,7 +55,7 @@ class InstallCommand extends Command
         // Publish assets, configs and langs
         $this->call('asset:publish', array('package' => 'thor/platform'));
         $this->call('config:publish', array('package' => 'thor/platform'));
-        $this->call('lang:publish', array('package' => 'thor/platform'));
+        $this->call('thor:lang-publish', array('package' => 'thor/platform'));
 
         $this->output->writeln('<info>Thor CMS has been installed successfully.</info>');
     }

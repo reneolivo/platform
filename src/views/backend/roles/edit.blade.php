@@ -32,7 +32,7 @@
                         <?php
                             $attrs = array();
                             $containerAttrs = array();
-                            if(((in_array($role->name, array('developer', 'administrator'))) and ($perm->name==Backend::ACCESS_PERMISSION_NAME) )
+                            if(((in_array($role->name, array('developer', 'administrator'))) and ($perm->name==Backend::getAccessPermissionName()) )
                                     or (!Entrust::can('update_permissions'))){
                                 $containerAttrs['class']='form-group text-muted';
                             }

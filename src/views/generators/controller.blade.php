@@ -4,7 +4,6 @@ namespace {{$controller['classNamespace']}};
 
 use View,
     Redirect,
-    Validator,
     Form;
 /*
 |--------------------------------------------------------------------------

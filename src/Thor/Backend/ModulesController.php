@@ -54,7 +54,7 @@ class ModulesController extends Controller {
     public function do_create() {
         $input = Form::allInput();
         if(isset($input['name'])){
-            $input['name'] = strtolower($input['name']);
+            $input['name'] = \Str::singular(strtolower($input['name']));
         }
         if ($this->module->validate($input)) {
             $module = $this->module->create($input);

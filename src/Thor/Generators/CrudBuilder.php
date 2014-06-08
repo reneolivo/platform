@@ -210,7 +210,7 @@ class CrudBuilder
 
         foreach ($permissions as $perm) {
             Route::filter('entrust.' . $perm, function() use($perm, $notAllowedRedirect) {
-                if ((Backend::canAccess() and Entrust::can($perm)) === false) {
+                if ((Backend::canBeAccessed() and Entrust::can($perm)) === false) {
                     return $notAllowedRedirect;
                 }
             });

@@ -11,7 +11,6 @@ use URL,
 
 class Backend
 {
-    const ACCESS_PERMISSION_NAME = 'access_backend';
     
     /**
      * Laravel application
@@ -34,6 +33,10 @@ class Backend
         if ($this->canBeAccessed()) {
             $this->app['thor.document']->addClass('is-backend');
         }
+    }
+    
+    public function getAccessPermissionName(){
+        return 'access_backend';
     }
 
     /**
@@ -79,7 +82,7 @@ class Backend
 
     public function canBeAccessed()
     {
-        return Entrust::can(self::ACCESS_PERMISSION_NAME);
+        return Entrust::can($this->getAccessPermissionName());
     }
 
     public function isBackendRequest()

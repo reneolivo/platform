@@ -26,7 +26,7 @@ class Module extends Base
     protected $guarded = array(
     );
     protected static $rules = array(
-        'name' => 'required|unique:modules,name,{id}',
+        'name' => 'required|not_in:user,role,permission,module,image,auth,language,main|unique:modules,name,{id}',
         'display_name' => 'required',
     );
 

@@ -27,7 +27,7 @@
                         <?php
                             $attrs = array();
                             $containerAttrs = array();
-                            if(((in_array($role->name, array('developer', 'administrator'))) and ($permission->name==Backend::ACCESS_PERMISSION_NAME) )
+                            if(((in_array($role->name, array('developer', 'administrator'))) and ($permission->name==Backend::getAccessPermissionName()) )
                                     or (!Entrust::can('update_roles'))){
                                 //$attrs['disabled']='disabled';
                                 $containerAttrs['class']='form-group text-muted';
