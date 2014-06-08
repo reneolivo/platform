@@ -6,7 +6,7 @@ use URL,
     Config,
     Entrust,
     Request,
-    Response,
+    Route,
     Lang;
 
 class Backend
@@ -67,7 +67,7 @@ class Backend
      */
     public function url($path = '/', $extra = array(), $secure = null, $langCode = null)
     {
-        return URL::langTo($this->config('base_route') . '/' . ltrim($path, '/'), $extra, $secure, $langCode);
+        return URL::langTo($this->config('basepath') . '/' . ltrim($path, '/'), $extra, $secure, $langCode);
     }
 
     public function asset($path, $secure = null)
@@ -87,7 +87,7 @@ class Backend
 
     public function isBackendRequest()
     {
-        $base = $this->config('base_route');
+        $base = $this->config('basepath');
         return (Request::is(Lang::code() . '/' . $base . '/*') or Request::is($base . '/*'));
     }
 
@@ -97,11 +97,6 @@ class Backend
             $this->installed = (\Schema::hasTable('users') === true);
         }
         return $this->installed;
-    }
-
-    public function default404View()
-    {
-        return Response::view('thor::backend.error', array('page' => 'error'), 404);
     }
 
 }

@@ -52,14 +52,14 @@ class ModulesController extends Controller {
      * @return Response
      */
     public function do_create() {
-        $input = Form::allInput();
+        $input = \Input::all();
         if(isset($input['name'])){
             $input['name'] = \Str::singular(strtolower($input['name']));
         }
         if ($this->module->validate($input)) {
             $module = $this->module->create($input);
             
-            CRUD::createResourceFiles($module->singular(), [], [], $module->is_pageable, $module->is_imageable);
+            CRUD::generate($module->singular(), [], [], $module->is_pageable, $module->is_imageable);
             Artisan::call('migrate');
             CRUD::createPermissions($module->singular(), true);
             
@@ -115,8 +115,8 @@ class ModulesController extends Controller {
             'is_translatable'=>false,
             'is_imageable'=>false,
             'is_active'=>false,
-        ),
-                Form::allInput());
+        ), \Input::all());
+        
         if(isset($input['name'])){
             $input['name'] = strtolower($input['name']);
         }

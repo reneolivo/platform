@@ -24,11 +24,6 @@ class FormBuilder extends \Illuminate\Html\FormBuilder
         return $html;
     }
 
-    public function allInput($except = array('_method', 'translation', '_wysihtml5_mode', '_token'))
-    {
-        return array_except(\Input::all(), $except);
-    }
-
     public function bsField($labelText, $name, $options = array(), $type = 'text', $value = null, $containerAttrs = array())
     {
         if ($type == 'datepicker') {

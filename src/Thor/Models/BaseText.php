@@ -30,7 +30,7 @@ abstract class BaseText extends Base
      *
      * @var array 
      */
-    protected $guarded = array();
+    //protected $guarded = array();
 
     public function __construct(array $attributes = array())
     {

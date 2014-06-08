@@ -40,53 +40,32 @@ class GenerateCommand extends Command
      */
     public function fire()
     {
-        $singular = strtolower(trim($this->argument('resource')));
-        $fields = strtolower(trim($this->argument('fields'), ', '));
-        $transFields = strtolower(trim($this->argument('transfields'), ', '));
+        $singular = strtolower(trim($this->argument('singular')));
 
         if(empty($singular)) {
             return $this->error('thor:generate error: Resource (singular) name cannot be empty');
         }
         
-        if($this->option('force') or $this->confirm('Do you wish to create the required classes and views for ' . $singular . '? [yes|no]')) {
-            $fields = $this->parseFields($fields);
-            $transFields = $this->parseFields($transFields);
-
-            \CRUD::createResourceFiles($singular, $fields, $transFields, $this->option('pageable'), $this->option('imageable'));
+        if($this->confirm('Do you wish to create the required classes and views for ' . $singular . '? [yes|no]')) {
+            $behaviours = $this->argument('behaviours');
+            $generalFields = $this->ask('Non-translatable fields:', 'string:label');
+            $translatableFields = $this->ask('Translatable fields (optional):', false);
+            $listableFields = $this->ask('Listable fields for the index view:', false);
+            $resolver = \CRUD::generate($singular, $behaviours, $generalFields, $translatableFields, $listableFields);
 
             if($this->option('create-permissions')) {
-                \CRUD::createPermissions($singular);
-                $this->info("Entrust CRUD permissions created successfully. Remember to add them to some role(s).\n");
+                \CRUD::createPermissions($singular, false);
+                $this->info("Entrust CRUD permissions created successfully. Remember to assign them to some role(s).\n");
             }
 
             $this->line('');
             $this->info("CRUD Generation succeed. Add this line somewhere in your routes.php file:");
-            $this->line("\n\CRUD::createResourceRoutes('{$singular}');\n");
+            $this->line("\n\CRUD::routes('{$singular}');\n");
 
             $this->line("Remember to execute 'php artisan migrate' too.\n");
         } else {
             $this->line('Cancelled');
         }
-    }
-
-    protected function parseFields($fieldsStr)
-    {
-        if(empty($fieldsStr) or ($fieldsStr==false)) {
-            return array();
-        }
-        $fields = explode(',', $fieldsStr);
-        $fieldsAssoc = array();
-        foreach($fields as $k => $v) {
-            $v = explode(':', $v, 3);
-            if(count($v) < 2) {
-                return $this->error('thor:generate error: Wrong fields format');
-            }
-            if(count($v) == 2) {
-                $v[] = 'text';
-            }
-            $fieldsAssoc[$v[1]] = $v;
-        }
-        return $fieldsAssoc;
     }
 
     /**
@@ -98,9 +77,8 @@ class GenerateCommand extends Command
     {
 
         return array(
-            array('resource', InputArgument::REQUIRED, 'Resource (singular) name.'),
-            array('fields', InputArgument::REQUIRED, 'Comma-separated list of blueprintFn:fieldName:inputType,blueprintFn:fieldName:inputType'),
-            array('transfields', InputArgument::OPTIONAL, 'Comma-separated list of blueprintFn:fieldName:inputType,blueprintFn:fieldName:inputType', false)
+            array('singular', InputArgument::REQUIRED, 'Resource singular name.'),
+            array('behaviours', InputArgument::OPTIONAL, 'Resource model behaviours.', false)
         );
     }
 
@@ -112,9 +90,6 @@ class GenerateCommand extends Command
     protected function getOptions()
     {
         return array(
-            array('force', 'f', InputOption::VALUE_NONE, 'Forces the command without confirmation.'),
-            array('pageable', 'p', InputOption::VALUE_NONE, 'Generates a pageable resource (with _texts table and common pageable fields).'),
-            array('imageable', 'i', InputOption::VALUE_NONE, 'Generates an imageable resource.'),
             array('create-permissions', 'c', InputOption::VALUE_NONE, 'Creates CRUD permission entries for this resource in the database, using Entrust.'),
         );
     }

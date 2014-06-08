@@ -52,7 +52,7 @@ class RolesController extends Controller {
      * @return Response
      */
     public function do_create() {
-        $input = Form::allInput();
+        $input = \Input::all();
         $validation = Validator::make($input, \Thor\Models\Role::$rules);
 
         if ($validation->passes()) {
@@ -106,7 +106,7 @@ class RolesController extends Controller {
      * @return Response
      */
     public function do_edit(\Thor\Models\Role $role) {
-        $input = Form::allInput();
+        $input = \Input::all();
         $validation = Validator::make($input, \Thor\Models\Role::$rules);
 
         if ($validation->passes()) {

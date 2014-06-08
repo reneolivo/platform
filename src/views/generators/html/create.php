@@ -9,32 +9,35 @@
 
         {{ Form::open(array('method' => 'POST', 'route' => array('<?php echo ('backend.' . $plural . '.do_create'); ?>'), 'role'=>'form')) }}
 
-        <!-- Form fields here -->
-        {{Form::bsFields([
-    //label, name, attributes, type, value, containerAttributes
-        <?php
-        foreach($fields as $i => $f):
-            $field = $f[1];
-            $fieldType = ($f[0] == 'boolean') ? 'checkbox' : (($f[0] == 'integer') ? 'number' : 'text');
-            $fieldValue = ($f[0] == 'boolean') ? '1' : 'null';
-            ?>
-            ['<?php echo Str::title($field); ?>', '<?php echo $field; ?>', [], '<?php echo $fieldType; ?>', <?php echo $fieldValue; ?>, []],
-        <?php endforeach; ?>
-        ])}}
+        <!--FORM_FIELDS-->
         
-        <?php if($isTranslatable): ?>
-        {{Form::bsFields([
-    //label, name, attributes, type, value, containerAttributes
         <?php
-        foreach($transFields as $i => $f):
-            $field = $f[1];
-            $fieldType = ($f[0] == 'boolean') ? 'checkbox' : (($f[0] == 'integer') ? 'number' : 'text');
-            $fieldValue = ($f[0] == 'boolean') ? '1' : 'null';
+        foreach($generalFields as $name => $f):
+            $inputValue = 'null';
+            if($f->data_type=='boolean'){
+                $inputType = '1';
+            }
+            //bsField params: labelText, name, inputAttributes, type, value, containerAttributes
             ?>
-            ['<?php echo Str::title($field); ?> ('.Lang::code().')', 'translation[<?php echo $field; ?>]', [], '<?php echo $fieldType; ?>', <?php echo $fieldValue; ?>, []],
+        {{Form::bsField(array('<?php echo $f->label ?>', '<?php echo $f->name ?>', [], '<?php echo $f->control_type ?>',<?php echo $inputValue ?>, []))}}
+        
         <?php endforeach; ?>
-        ])}}
+        
+        <?php
+        if($isTranslatable):
+        foreach($translatableFields as $name => $f):
+            $inputValue = 'null';
+            if($f->data_type=='boolean'){
+                $inputType = '1';
+            }
+            //bsField params: labelText, name, inputAttributes, type, value, containerAttributes
+            ?>
+        {{Form::bsField(array('<?php echo $f->label ?> ('.Lang::code().')', 'translation[<?php echo $f->name ?>]', [], '<?php echo $f->control_type ?>',<?php echo $inputValue ?>, []))}}
+        
+        <?php endforeach; ?>
         <?php endif; ?>
+        
+        <!--FORM_FIELDS_END-->
 
         <div class="form-group">
             {{ Form::button('<i class="fa fa-plus"></i> Create', array('class' => 'btn btn-primary', 'type'=>'submit', 'value'=>'create')) }}

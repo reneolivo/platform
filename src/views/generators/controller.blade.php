@@ -1,30 +1,30 @@
 <?php echo '<?php'; ?>
 
-namespace {{$controller['classNamespace']}};
+namespace {{$controllerNamespace}};
 
 use View,
     Redirect,
     Form;
 /*
 |--------------------------------------------------------------------------
-| {{$model['classFullName']}} backend controller
+| Backend controller for {{$modelFullName}}
 |--------------------------------------------------------------------------
 |
 | This is a default Thor CMS backend controller template for resource management.
 | Feel free to change it to your needs.
 |
 */
-class {{$controller['className']}} extends {{Config::get('thor::generators.controller_extends')}} {
+class {{$controllerShortName}} extends \Thor\Backend\Controller {
 
     /**
-     * Repository
+     * Model repository
      *
-     * @var {{$model['classFullName']}}
+     * @var {{$modelFullName}}
      */
-    protected ${{$singular}};
+    protected $model;
 
-    public function __construct({{$model['classFullName']}} ${{$singular}}) {
-        $this->{{$singular}} = ${{$singular}};
+    public function __construct({{$modelFullName}} $model) {
+        $this->model = $model;
     }
 
     /**
@@ -33,7 +33,7 @@ class {{$controller['className']}} extends {{Config::get('thor::generators.contr
      * @return Response
      */
     public function index() {
-        ${{$plural}} = $this->{{$singular}}->all();
+        ${{$plural}} = $this->model->all();
 
         return View::make('thor::backend.{{$plural}}.index', compact('{{$plural}}'));
     }
@@ -53,27 +53,40 @@ class {{$controller['className']}} extends {{Config::get('thor::generators.contr
      * @return Response
      */
     public function do_create() {
-        $input = Form::allInput();
+        $input = \Input::all();
+        @if($isTranslatable)
+        $transl_model = new {{$modelFullName}}Text();
+        $transl_input = array_except(Input::get('translation'), 'id');
+        $transl_errors = array();
+        @endif
 
-        if ($this->{{$singular}}->validate($input)) {
-            $this->{{$singular}}->create($input);
-
-            return Redirect::route('backend.{{$plural}}.index');
+        if ($this->model->validate($input)) {
+            $model = $this->model->create($input);
+            @if($isTranslatable)if ($transl_model->validate($transl_input)) {
+                $transl_model = $transl_model->create(array_merge(array('language_id' => \Lang::id(), '{{$singular}}_id' => $model->id), $transl_input));
+            @endif
+                return Redirect::route('backend.{{$plural}}.index');
+            @if($isTranslatable)
+            }else{
+                $transl_errors = $transl_model->errors()
+            }
+            @endif
         }
 
         return Redirect::route('backend.{{$plural}}.create')
                         ->withInput()
-                        ->withErrors($this->{{$singular}}->errors())
+                        ->withErrors($this->model->errors())
+                        @if($isTranslatable)->withErrors($transl_errors)@endif
                         ->with('message', 'There were validation errors.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  {{$model['classFullName']}}  ${{$singular}} 
+     * @param  {{$modelFullName}}  $model 
      * @return Response
      */
-    public function show({{$model['classFullName']}} ${{$singular}}) {
+    public function show({{$modelFullName}} $model) {
 
         return View::make('thor::backend.{{$plural}}.show', compact('{{$singular}}'));
     }
@@ -81,12 +94,12 @@ class {{$controller['className']}} extends {{Config::get('thor::generators.contr
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  {{$model['classFullName']}}  ${{$singular}} 
+     * @param  {{$modelFullName}}  $model 
      * @return Response
      */
-    public function edit({{$model['classFullName']}} ${{$singular}}) {
+    public function edit({{$modelFullName}} $model) {
 
-        if (is_null(${{$singular}})) {
+        if (is_null($model)) {
             return Redirect::route('backend.{{$plural}}.index');
         }
 
@@ -96,32 +109,66 @@ class {{$controller['className']}} extends {{Config::get('thor::generators.contr
     /**
      * Update the specified resource in storage.
      *
-     * @param  {{$model['classFullName']}}  ${{$singular}} 
+     * @param  {{$modelFullName}}  $model 
      * @return Response
      */
-    public function do_edit({{$model['classFullName']}} ${{$singular}}) {
-        $input = Form::allInput();
+    public function do_edit({{$modelFullName}} $model) {
+        $input = array_merge(array( // for unchecked checkboxes:
+            @foreach($generalFields as $name => $def)
+            @if($def->data_type=='boolean')
+            '{{$name}}'=>false,
+            @endif
+            @endforeach
+        ), \Input::all());
+        
+        @if($isTranslatable)
+        $transl_input = array_merge(array( // for unchecked checkboxes:
+            @foreach($translatableFields as $name => $def)
+            @if($def->data_type=='boolean')
+            '{{$name}}'=>false,
+            @endif
+            @endforeach
+        ), array_except(Input::get('translation'), 'id'));
+        $transl_model = new {{$modelFullName}}Text();
+        $transl_errors = array();
+        @endif
 
-        if (${{$singular}}->validate($input)) {
-            ${{$singular}}->update($input);
-
-            return Redirect::route('backend.{{$plural}}.edit', ${{$singular}}->id);
+        if ($model->validate($input)) {
+            $model->update($input);
+            @if($isTranslatable)if ($transl_model->validate($transl_input)) {
+                $transl_model = $transl_model->create(array_merge(array('language_id' => \Lang::id(), '{{$singular}}_id' => $model->id), $transl_input));
+                
+                // Save translation
+                if (Input::get('translation.id')) {
+                    $transl_model = {{$modelFullName}}Text::find(\Input::get('translation.id'));
+                    $transl->update($transl_input);
+                } else {
+                    $transl_model = $transl_model->create(array_merge(array('language_id' => \Lang::id(), '{{$singular}}_id' => $model->id), $transl_input));
+                }
+            @endif
+            return Redirect::route('backend.{{$plural}}.edit', $model->id);
+            @if($isTranslatable)
+            }else{
+                $transl_errors = $transl_model->errors()
+            }
+            @endif
         }
         
-        return Redirect::route('backend.{{$plural}}.edit', ${{$singular}}->id)
+        return Redirect::route('backend.{{$plural}}.edit', $model->id)
                         ->withInput()
-                        ->withErrors(${{$singular}}->errors())
+                        ->withErrors($model->errors())
+                        @if($isTranslatable)->withErrors($transl_errors)@endif
                         ->with('message', 'There were validation errors.');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  {{$model['classFullName']}}  ${{$singular}} 
+     * @param  {{$modelFullName}}  $model 
      * @return Response
      */
-    public function do_delete({{$model['classFullName']}} ${{$singular}}) {
-        ${{$singular}}->delete();
+    public function do_delete({{$modelFullName}} $model) {
+        $model->delete();
 
         return Redirect::route('backend.{{$plural}}.index');
     }

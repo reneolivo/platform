@@ -1,32 +1,33 @@
 <?php echo '<?php'; ?>
 
-namespace {{$model['classNamespace']}};
+namespace {{$modelNamespace}};
 
 use Thor\Models;
 
 /**
  * {{ucfirst($singular)}} model 
-@foreach($fields as $i => $f)
- * @property {{$f[0]}} ${{$f[1]}}
+@foreach($generalFields as $name => $f)
+ * @property {{$f->data_type}} ${{$f->name}}
  
 @endforeach
-@foreach($transFields as $i => $f)
- * @property {{$f[0]}} ${{$f[1]}}
+@foreach($translatableFields as $name => $f)
+ * @property {{$f->data_type}} ${{$f->name}}
  
 @endforeach
  * @property timestamp $created_at
  * @property timestamp $updated_at
  */
-class {{$model['className']}} extends Models\Base {{$model['implements']}} {
-    {{$model['uses']}}
+class {{$modelShortName}} extends Models\Base {{$modelImplements}} {
+    {{$modelUses}}
     
     protected $table = '{{$plural}}';
     
-    protected $guarded = array(
-        
+    protected $fillable = array(
+@foreach($generalFields as $name => $f)
+  '${{$f->name}}',
+ 
+@endforeach
     );
     
-    public static $rules = array(
-        
-    );
+    public static $rules = array();
 }

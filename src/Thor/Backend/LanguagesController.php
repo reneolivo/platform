@@ -52,7 +52,7 @@ class LanguagesController extends Controller {
      * @return Response
      */
     public function do_create() {
-        $input = Form::allInput();
+        $input = \Input::all();
         
         if ($this->language->validate($input)) {
             $this->language->create($input);
@@ -98,7 +98,7 @@ class LanguagesController extends Controller {
      * @return Response
      */
     public function do_edit(\Thor\Models\Language $language) {
-        $input = Form::allInput();
+        $input = \Input::all();
 
         if ($language->validate($input)) {
             $language->update($input);

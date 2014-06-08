@@ -91,6 +91,11 @@ class Object implements \ArrayAccess, \Countable
         return $this->__isset($key);
     }
 
+    public function isEmpty()
+    {
+        return empty($this->props);
+    }
+
     /**
      * 
      * @param array $properties

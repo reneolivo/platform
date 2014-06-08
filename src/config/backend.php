@@ -1,6 +1,6 @@
 <?php
 
 return array(
+    'basepath' => 'backend',
     'title' => 'Thor CMS',
-    'base_route' => 'backend'
 );

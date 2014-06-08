@@ -3,7 +3,7 @@
 
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Show <?php $model_name; ?></h1>
+        <h1 class="page-header">Show <?php ucfirst($singular); ?></h1>
 
         <p>{{ link_to_route('<?php echo ('backend.' . $plural . '.index'); ?>', 'Return to all <?php echo $plural; ?>') }}</p>
 
@@ -12,17 +12,17 @@
                 {{ Form::label(null, 'ID:') }}
                 <pre class="well well-sm">{{{ $<?php echo $singular; ?>->id }}}</pre>
             </div>
-            <?php foreach($fields as $i => $f): $field = $f[1]; ?>
+            <?php foreach($generalFields as $name => $f): ?>
                 <div class="form-group">
-                    {{ Form::label(null, '<?php echo Str::title($field); ?>:') }}
-                    <pre class="well well-sm">{{{ $<?php echo $singular; ?>-><?php echo $field; ?> }}}</pre>
+                    {{ Form::label(null, '<?php echo $f->label; ?>:') }}
+                    <pre class="well well-sm">{{{ $<?php echo $singular; ?>-><?php echo $name; ?> }}}</pre>
                 </div>
             <?php endforeach; ?>
             <?php if($isTranslatable): ?>
-            <?php foreach($transFields as $i => $f): $field = $f[1]; ?>
+            <?php foreach($translatableFields as $name => $f): ?>
                 <div class="form-group">
-                    {{ Form::label(null, '<?php echo Str::title($field); ?>:') }}
-                    <pre class="well well-sm">{{{ $<?php echo $singular; ?>->translation()-><?php echo $field; ?> }}}</pre>
+                    {{ Form::label(null, '<?php echo $f->label; ?>:') }}
+                    <pre class="well well-sm">{{{ $<?php echo $singular; ?>->translation()-><?php echo $name; ?> }}}</pre>
                 </div>
             <?php endforeach; ?>
             <?php endif; ?>

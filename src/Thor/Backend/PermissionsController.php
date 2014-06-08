@@ -52,7 +52,7 @@ class PermissionsController extends Controller {
      * @return Response
      */
     public function do_create() {
-        $input = Form::allInput();
+        $input = \Input::all();
         $validation = Validator::make($input, \Thor\Models\Permission::$rules);
 
         if ($validation->passes()) {
@@ -103,7 +103,7 @@ class PermissionsController extends Controller {
      * @return Response
      */
     public function do_edit(\Thor\Models\Permission $permission) {
-        $input = Form::allInput();
+        $input = \Input::all();
         $validation = Validator::make($input, \Thor\Models\Permission::$rules);
 
         if ($validation->passes()) {

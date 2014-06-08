@@ -5,8 +5,7 @@ namespace Thor\Models;
 class Page extends Base implements IPageable, ITreeable, IImageable
 {
 
-    use TTranslatable,
-        TTreeable,
+    use TTreeable,
         TPageable,
         TImageable;
 

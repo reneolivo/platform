@@ -2,16 +2,16 @@
 
 // Backend basic routes
 
-$backend_base_route = Backend::config('base_route');
+$backend_basepath = Backend::config('basepath');
 
 // Redirect to a lang
-Route::any('/' . $backend_base_route . '/', array('as' => 'backend.root', 'uses' => function() {
+Route::any('/' . $backend_basepath . '/', array('as' => 'backend.root', 'uses' => function() {
 return Redirect::to(Backend::url(), 302);
 }
 ));
 
 // Backend routes that doesn't need auth
-Route::langGroup(array('prefix' => $backend_base_route), function() {
+Route::langGroup(array('prefix' => $backend_basepath), function() {
     // Backend Confide routes (that doesn't need auth)
     Route::get('login', array('as' => 'backend.login', 'uses' => '\\Thor\\Backend\\AuthController@login'));
     Route::post('login', '\\Thor\\Backend\\AuthController@do_login');
@@ -23,7 +23,7 @@ Route::langGroup(array('prefix' => $backend_base_route), function() {
 });
 
 // Backend routes with auth
-Route::langGroup(array('prefix' => $backend_base_route, 'before' => 'auth.backend'), function() {
+Route::langGroup(array('prefix' => $backend_basepath, 'before' => 'auth.backend'), function() {
     // Backend home
     Route::any('/', array('as' => 'backend.home', 'uses' => '\\Thor\\Backend\\MainController@index'));
 
@@ -32,15 +32,15 @@ Route::langGroup(array('prefix' => $backend_base_route, 'before' => 'auth.backen
 });
 
 // Base modules
-CRUD::createResourceRoutes('permission', true);
-CRUD::createResourceRoutes('role', true);
-CRUD::createResourceRoutes('user', true);
-CRUD::createResourceRoutes('language', true);
-CRUD::createResourceRoutes('module', true);
+CRUD::routes('permission', true);
+CRUD::routes('role', true);
+CRUD::routes('user', true);
+CRUD::routes('language', true);
+CRUD::routes('module', true);
 
 // Registered modules
 foreach (Backend::modules() as $module) {
-    CRUD::createResourceRoutes($module->name, true);
+    CRUD::routes($module->name, true);
 }
 
 // Site 404

@@ -20,10 +20,6 @@ class Image extends Base
 {
 
     protected $table = 'images';
-    protected $guarded = array(
-    );
-    public static $rules = array(
-    );
 
     public static function boot()
     {

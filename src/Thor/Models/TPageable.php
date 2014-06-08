@@ -27,7 +27,8 @@ namespace Thor\Models;
  */
 trait TPageable
 {
-
+    use TTranslatable;
+    
     protected $defaultController = null;
     protected $defaultAction = null;
 

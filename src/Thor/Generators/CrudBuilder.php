@@ -7,181 +7,62 @@ use Route,
     Entrust,
     Str,
     Redirect,
-    View, Backend;
+    View,
+    Backend;
 
 class CrudBuilder
 {
 
-    protected function getViewPrefix($isPageable, $transFields)
+    /**
+     * 
+     * @param string $singular
+     * @param string|array $behaviours
+     * @param string|array $generalFields
+     * @param string|array $translatableFields
+     * @param string|array $listableFields
+     * @return \Thor\Generators\ResourceResolver
+     */
+    public function generate($singular, $behaviours = false, $generalFields = false, $translatableFields = false, $listableFields = false)
     {
-        return 'thor::generators.';
+        $res = new ResourceResolver($singular, $behaviours, $generalFields, $translatableFields, $listableFields);
+        $this->createMigrationFile($res);
+        $this->createModelFile($res);
+        $this->createControllerFile($res);
+        $this->createViewFiles($res);
+        return $res;
     }
 
-    protected function getModelClass($singular)
+    /**
+     * Defines routes for a given resource name
+     * @param string $singular
+     * @param boolean $withPermissionFilters
+     */
+    public function routes($singular, $withPermissionFilters = false, $controllerClass = null, $modelClass = null, Redirect $notAllowedRedirect = null)
     {
-        return Config::get('thor::generators.model_prefix') .
-                ucfirst(Str::camel($singular)) .
-                Config::get('thor::generators.model_suffix');
-    }
+        $_this = $this;
+        Route::langGroup(array('prefix' => Config::get('thor::backend.basepath'), 'before' => 'auth.backend'), function()
+                use($_this, $singular, $withPermissionFilters, $controllerClass, $modelClass, $notAllowedRedirect) {
 
-    protected function getControllerClass($singular)
-    {
-        return Config::get('thor::generators.controller_prefix') .
-                ucfirst(Str::camel(Str::plural($singular))) .
-                Config::get('thor::generators.controller_suffix');
-    }
+            $plural = Str::plural($singular);
+            $rt = 'backend.' . $plural;
+            $ctrl = ($controllerClass ? $controllerClass : ('\\Thor\\Backend\\' . ucfirst(Str::camel($singular)) . 'Controller'));
+            $model = ($modelClass ? $modelClass : ('\\Thor\\Models\\' . ucfirst(Str::camel($singular))));
 
-    protected function getClassInfo($classFullName)
-    {
-        $parts = explode('/', str_replace('\\', '/', trim($classFullName, '/\\ ')));
-        $className = array_pop($parts);
-        $classNamespace = implode('\\', $parts);
-        $classNamespacePath = app_path() . '/src/' . trim(implode('/', $parts), '/\\ ');
-        $classFile = $classNamespacePath . '/' . $className;
-        return compact('classFullName', 'className', 'classNamespace', 'classNamespacePath', 'classFile');
-    }
+            Route::model($singular, $model);
+            Route::pattern($singular, '[0-9]+');
 
-    public function buildVars($singular, $fields = array(), $transFields = false, $isPageable = false, $isImageable = false)
-    {
-        $plural = Str::plural($singular);
-        $viewPrefix = $this->getViewPrefix($isPageable, $transFields);
-
-        $model = $this->getClassInfo($this->getModelClass($singular));
-        $controller = $this->getClassInfo($this->getControllerClass($singular));
-
-        $migrationFile = app_path() . '/database/migrations/' . date('Y_m_d_His') . '_' . 'create_' . $plural . '_table';
-
-        //$fields[] = array('integer', 'sorting', 'number');
-        //$fields[] = array('boolean', 'is_published', 'checkbox');
-
-        $viewParent = Config::get('thor::generators.view_parent');
-        $viewSection = Config::get('thor::generators.view_section');
-
-        if ($isPageable) {
-            if (!is_array($fields)) {
-                $fields = array();
+            if ($withPermissionFilters) {
+                $_this->filters($singular, $notAllowedRedirect);
             }
-            if (!is_array($transFields)) {
-                $transFields = array();
-            }
-            $fields = array_merge($fields, array(
-                'taxonomy' => array('string', 'taxonomy', 'text'),
-                'controller' => array('string', 'controller', 'text'),
-                'action' => array('string', 'action', 'text'),
-                'view' => array('string', 'view', 'text'),
-                'is_https' => array('boolean', 'is_https', 'checkbox'),
-                'is_indexable' => array('boolean', 'is_indexable', 'checkbox'),
-                'is_deletable' => array('boolean', 'is_deletable', 'checkbox'),
-                'sorting' => array('integer', 'sorting', 'number'),
-                'status' => array('string', 'status', 'text'), // general pageable status
-            ));
-            $transFields = array_merge($transFields, array(
-                'title' => array('string', 'title', 'text'),
-                'content' => array('text', 'content', 'html'),
-                'slug' => array('text', 'slug', 'text'),
-                'window_title' => array('string', 'window_title', 'text'),
-                'meta_description' => array('string', 'meta_description', 'text'),
-                'meta_keywords' => array('string', 'meta_keywords', 'text'),
-                'canonical_url' => array('string', 'canonical_url', 'text'),
-                'redirect_url' => array('string', 'redirect_url', 'text'),
-                'redirect_code' => array('string', 'redirect_code', 'text'), // redirect status code
-            ));
-        }
 
-        $isTranslatable = (is_array($transFields) and ( count($transFields) > 0));
-
-        if ($isTranslatable) {
-            $transFields = array_merge($transFields, array(
-                'translation_status' => array('string', 'translation_status', 'text'), // translation status
-            ));
-        }
-
-        if (!is_array($transFields)) {
-            $transFields = array();
-        }
-
-        $modelImplements = array();
-        $modelUses = array();
-        if ($isPageable) {
-            $modelImplements[] = 'Models\\IPageable';
-            $modelUses[] = 'Models\\TPageable';
-        }
-        if ($isTranslatable) {
-            if (!$isPageable) {
-                $modelImplements[] = 'Models\\ITranslatable';
-            }
-            $modelUses[] = 'Models\\TTranslatable';
-        }
-        if ($isImageable) {
-            $modelImplements[] = 'Models\\IImageable';
-            $modelUses[] = 'Models\\TImageable';
-        }
-
-        $model['implements'] = empty($modelImplements) ? '' : ('implements ' . implode(', ', $modelImplements));
-        $model['uses'] = empty($modelUses) ? '' : ('use ' . implode(', ', $modelUses) . ';');
-
-        return compact('singular', 'fields', 'transFields', 'isPageable', 'isTranslatable', 'isImageable'
-                , 'viewPrefix', 'plural', 'model', 'controller', 'migrationFile', 'viewParent', 'viewSection');
-    }
-
-    public function createControllerFile(array $vars)
-    {
-        if (!is_dir($vars['controller']['classNamespacePath'])) {
-            mkdir($vars['controller']['classNamespacePath'], 0755, true);
-        }
-        if (file_exists($vars['controller']['classFile'] . '.php')) {
-            $vars['controller']['classFile'] .= '_' . date('Y_m_d_His');
-        }
-        file_put_contents($vars['controller']['classFile'] . '.php', View::make($vars['viewPrefix'] . 'controller', $vars)->render());
-    }
-
-    public function createModelFile(array $vars)
-    {
-        if (!is_dir($vars['model']['classNamespacePath'])) {
-            mkdir($vars['model']['classNamespacePath'], 0755, true);
-        }
-        if (file_exists($vars['model']['classFile'] . '.php')) {
-            $vars['model']['classFile'] .= '_' . date('Y_m_d_His');
-        }
-        file_put_contents($vars['model']['classFile'] . '.php', View::make($vars['viewPrefix'] . 'model', $vars)->render());
-
-        if ($vars['isTranslatable']) {
-            $textClassFile = $vars['model']['classFile'] . 'Text';
-            if (file_exists($textClassFile . '.php')) {
-                $textClassFile .= '_' . date('Y_m_d_His');
-            }
-            file_put_contents($textClassFile . '.php', View::make($vars['viewPrefix'] . 'model_text', $vars)->render());
-        }
-    }
-
-    public function createMigrationFile(array $vars)
-    {
-        file_put_contents($vars['migrationFile'] . '.php', View::make($vars['viewPrefix'] . 'migration', $vars)->render());
-    }
-
-    public function createViewFiles(array $vars)
-    {
-        $viewsPath = app_path() . '/views/packages/thor/platform/backend/' . $vars['plural'] . '/';
-        if (!is_dir($viewsPath)) {
-            mkdir($viewsPath, 0755, true);
-        }
-        $views = array('create', 'edit', 'index', 'show');
-        foreach ($views as $v) {
-            $viewFile = $viewsPath . $v;
-            if (file_exists($viewFile . '.blade.php')) {
-                $viewFile .= '_' . date('Y_m_d_His');
-            }
-            file_put_contents($viewFile . '.blade.php', View::make($vars['viewPrefix'] . 'html.' . $v, $vars)->render());
-        }
-    }
-
-    public function createResourceFiles($singular, $fields = array(), $transFields = false, $isPageable = false, $isImageable = false)
-    {
-        $vars = $this->buildVars($singular, $fields, $transFields, $isPageable, $isImageable);
-        $this->createMigrationFile($vars);
-        $this->createModelFile($vars);
-        $this->createControllerFile($vars);
-        $this->createViewFiles($vars);
+            Route::get($plural, array('as' => $rt . '.index', 'uses' => $ctrl . '@index', 'before' => 'entrust.list_' . $plural));
+            Route::get($plural . '/{' . $singular . '}/show', array('as' => $rt . '.show', 'uses' => $ctrl . '@show', 'before' => 'entrust.read_' . $plural));
+            Route::get($plural . '/create', array('as' => $rt . '.create', 'uses' => $ctrl . '@create', 'before' => 'entrust.create_' . $plural));
+            Route::post($plural, array('as' => $rt . '.do_create', 'uses' => $ctrl . '@do_create', 'before' => 'entrust.create_' . $plural));
+            Route::get($plural . '/{' . $singular . '}', array('as' => $rt . '.edit', 'uses' => $ctrl . '@edit', 'before' => 'entrust.update_' . $plural));
+            Route::patch($plural . '/{' . $singular . '}', array('as' => $rt . '.do_edit', 'uses' => $ctrl . '@do_edit', 'before' => 'entrust.update_' . $plural));
+            Route::delete($plural . '/{' . $singular . '}', array('as' => $rt . '.do_delete', 'uses' => $ctrl . '@do_delete', 'before' => 'entrust.delete_' . $plural));
+        });
     }
 
     /**
@@ -192,7 +73,7 @@ class CrudBuilder
      * @param Redirect $notAllowedRedirect Redirection for not allowed users.
      * Defaults to Backend::url('error/?code=403')
      */
-    public function createPermissionFilters($singular, Redirect $notAllowedRedirect = null)
+    public function filters($singular, Redirect $notAllowedRedirect = null)
     {
         $plural = Str::plural($singular);
 
@@ -203,8 +84,8 @@ class CrudBuilder
             'update_' . $plural,
             'delete_' . $plural
         );
-        
-        if(empty($notAllowedRedirect)){
+
+        if (empty($notAllowedRedirect)) {
             $notAllowedRedirect = Redirect::to(Backend::url('/error?code=403'));
         }
 
@@ -252,36 +133,65 @@ class CrudBuilder
     }
 
     /**
-     * Defines routes for a given resource name
-     * @param string $singular
-     * @param boolean $withPermissionFilters
+     * 
+     * @param ResourceResolver $res Resource resolver
      */
-    public function createResourceRoutes($singular, $withPermissionFilters = false)
+    public function createControllerFile(ResourceResolver $res)
     {
-        $_this = $this;
-        Route::langGroup(array('prefix' => Config::get('thor::generators.backend_base_route'), 'before' => 'auth.backend'), function()
-                use($singular, $_this, $withPermissionFilters) {
+        if (!is_dir($res->controllerPath)) {
+            mkdir($res->controllerPath, 0755, true);
+        }
+        file_put_contents($res->controllerFile . '.php', View::make('thor::generators.controller', $res->export())->render());
+    }
 
-            $plural = Str::plural($singular);
-            $rt = 'backend.' . $plural;
-            $ctrl = $this->getControllerClass($singular);
-            $model = $this->getModelClass($singular);
+    /**
+     * 
+     * @param ResourceResolver $res Resource resolver
+     */
+    public function createModelFile(ResourceResolver $res)
+    {
+        if (!is_dir($res->modelPath)) {
+            mkdir($res->modelPath, 0755, true);
+        }
 
-            Route::model($singular, $model);
-            Route::pattern($singular, '[0-9]+');
+        file_put_contents($res->modelFile . '.php', View::make('thor::generators.model', $res->export())->render());
 
-            if ($withPermissionFilters) {
-                $_this->createPermissionFilters($singular);
+        if ($res->is('translatable')) {
+            $textClassFile = $res->modelFile . 'Text';
+            if (file_exists($textClassFile . '.php')) {
+                $textClassFile .= '_' . date('Y_m_d_His');
             }
+            file_put_contents($textClassFile . '.php', View::make('thor::generators.model_text', $res->export())->render());
+        }
+    }
 
-            Route::get($plural, array('as' => $rt . '.index', 'uses' => $ctrl . '@index', 'before' => 'entrust.list_' . $plural));
-            Route::get($plural . '/{' . $singular . '}/show', array('as' => $rt . '.show', 'uses' => $ctrl . '@show', 'before' => 'entrust.read_' . $plural));
-            Route::get($plural . '/create', array('as' => $rt . '.create', 'uses' => $ctrl . '@create', 'before' => 'entrust.create_' . $plural));
-            Route::post($plural, array('as' => $rt . '.do_create', 'uses' => $ctrl . '@do_create', 'before' => 'entrust.create_' . $plural));
-            Route::get($plural . '/{' . $singular . '}', array('as' => $rt . '.edit', 'uses' => $ctrl . '@edit', 'before' => 'entrust.update_' . $plural));
-            Route::patch($plural . '/{' . $singular . '}', array('as' => $rt . '.do_edit', 'uses' => $ctrl . '@do_edit', 'before' => 'entrust.update_' . $plural));
-            Route::delete($plural . '/{' . $singular . '}', array('as' => $rt . '.do_delete', 'uses' => $ctrl . '@do_delete', 'before' => 'entrust.delete_' . $plural));
-        });
+    /**
+     * 
+     * @param ResourceResolver $res Resource resolver
+     */
+    public function createMigrationFile(ResourceResolver $res)
+    {
+        file_put_contents($res->migrationFile . '.php', View::make('thor::generators.migration', $res->export())->render());
+    }
+
+    /**
+     * 
+     * @param ResourceResolver $res Resource resolver
+     */
+    public function createViewFiles(ResourceResolver $res)
+    {
+        $viewsPath = app_path() . '/views/' . (trim($res->viewBasepath, '/ ')) . $res->plural . '/';
+        if (!is_dir($viewsPath)) {
+            mkdir($viewsPath, 0755, true);
+        }
+        $views = array('create', 'edit', 'index', 'show');
+        foreach ($views as $v) {
+            $viewFile = $viewsPath . $v;
+            if (file_exists($viewFile . '.blade.php')) {
+                $viewFile .= '_' . date('Y_m_d_His');
+            }
+            file_put_contents($viewFile . '.blade.php', View::make('thor::generators.html.' . $v, $res->export())->render());
+        }
     }
 
 }

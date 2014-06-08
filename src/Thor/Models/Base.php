@@ -46,7 +46,7 @@ abstract class Base extends Eloquent {
      *
      * @var array 
      */
-    protected $guarded = array();
+    //protected $guarded = array();
 
     public function __construct(array $attributes = array(), Validator $validator = null) {
         parent::__construct($attributes);
