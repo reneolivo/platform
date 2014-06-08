@@ -7,35 +7,41 @@
 
         <p>{{ link_to_route('backend.modules.index', 'Return to all modules') }}</p>
 
+        @if ($errors->any())
+
+        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
+
+        @endif
+
         {{ Form::open(array('method' => 'POST', 'route' => array('backend.modules.do_create'), 'role'=>'form')) }}
-   <div class="panel panel-default">
+        <div class="panel panel-default">
             <div class="panel-heading">
                 General Info
             </div>
             <div class="panel-body">
-        <!-- Form fields here -->
-        {{Form::bsFields([
+                <!-- Form fields here -->
+                {{Form::bsFields([
     //label, name, attributes, type, value, containerAttributes
                     ['Name:', 'name', [], 'text', null, []],
                     ['Display Name:', 'display_name', [], 'text', null, []],
                     ['Icon:', 'icon', [], 'text', null, []],
                     ['Description:', 'description', [], 'text', null, []],
-                    ['Is active?', 'is_active', [], 'checkbox', 1, []],
+                    ['Is active', 'is_active', [], 'checkbox', 1, []],
                     ['Sorting:', 'sorting', [], 'number', null, []],
                 ])}}
             </div>
-<!--            <div class="panel-footer">
-                Panel Footer
-            </div>-->
+            <!--            <div class="panel-footer">
+                            Panel Footer
+                        </div>-->
         </div>
 
-                
-            <div class="panel panel-info">
+
+        <div class="panel panel-info">
             <div class="panel-heading">
-                Module definition
+                Model definition
             </div>
             <div class="panel-body">
-        {{Form::bsFields([
+                {{Form::bsFields([
     //label, name, attributes, type, value, containerAttributes
                     ['Behaviours:', 'behaviours', ['placeholder'=>'pageable, imageable, treeable and/or translatable'], 'text', null, []],
                     ['General Fields:', 'general_fields', [
@@ -54,20 +60,14 @@
                 text, textarea, checkbox, radio, email, colorpicker, datepicker, ...
             </div>
         </div>
-        
-        
+
+
         <div class="form-group">
             {{ Form::button('<i class="fa fa-plus"></i> Create', array('class' => 'btn btn-primary', 'type'=>'submit', 'value'=>'create')) }}
             {{ link_to_route('backend.modules.index', 'Cancel', null, array('class' => 'btn btn-default')) }}
         </div>
 
         {{ Form::close() }}
-
-        @if ($errors->any())
-
-        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
-
-        @endif
     </div><!-- /.col-lg-12 -->
 </div><!-- /.row -->
 @stop

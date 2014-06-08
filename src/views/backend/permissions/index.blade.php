@@ -3,18 +3,24 @@
 
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">All Permissions</h1>
+        <h1 class="page-header clearfix">All Permissions 
+            {{ _d(link_to_route('backend.permissions.create', '<i class="fa fa-plus"></i> Add new permission', [], ['class'=>'btn btn-success pull-right'])) }}
+        </h1>
 
-        <p>{{ _d(link_to_route('backend.permissions.create', '<i class="fa fa-plus"></i> Add new permission')) }}</p>
+        @if ($errors->any())
+
+        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
+
+        @endif
 
         @if ($permissions->count())
-        <table class="table table-striped table-hover table-responsive">
+        <table class="table table-striped table-hover table-responsive widget-datatable">
             <thead>
                 <tr>
                     <th>ID</th>
-                                            <th>Name</th>
-                                            <th>Display_Name</th>
-                                        <th>Created at</th>
+                    <th>Name</th>
+                    <th>Display_Name</th>
+                    <th>Created at</th>
                     <th>Updated at</th>
                     <th class="al-r">Actions</th>
                 </tr>
@@ -24,13 +30,13 @@
                 @foreach ($permissions as $permission)
                 <tr>
                     <td>{{{ $permission->id }}}</td>
-                                            <td>{{{ $permission->name }}}</td>
-                                            <td>{{{ $permission->display_name }}}</td>
-                                        <td>{{{ $permission->created_at }}}</td>
+                    <td>{{{ $permission->name }}}</td>
+                    <td>{{{ $permission->display_name }}}</td>
+                    <td>{{{ $permission->created_at }}}</td>
                     <td>{{{ $permission->updated_at }}}</td>
                     <td class="al-r">
                         {{ link_to_route('backend.permissions.show', 'Show', array($permission->id), array('class' => 'btn btn-sm btn-default')) }}
-                        {{ link_to_route('backend.permissions.edit', 'Edit', array($permission->id), array('class' => 'btn btn-sm btn-info')) }}
+                        {{ link_to_route('backend.permissions.edit', 'Edit', array($permission->id), array('class' => 'btn btn-sm btn-primary')) }}
                         {{ Form::open(array('method' => 'DELETE', 'class' => 'inl-bl', 'route' => array('backend.permissions.do_delete', $permission->id))) }}
                         {{ Form::submit('Delete', array('class' => 'btn btn-sm btn-danger btn-destroy')) }}
                         {{ Form::close() }}

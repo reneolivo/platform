@@ -3,15 +3,21 @@
 
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Edit <?php echo ucfirst($singular); ?></h1>
+        <h1 class="page-header">@if($module)<i class="module-icon fa {{$module->icon}}"></i>@endif  Edit <?php echo ucfirst($singular); ?></h1>
 
         <p>{{ link_to_route('<?php echo ('backend.' . $plural . '.index'); ?>', 'Return to all <?php echo $plural; ?>') }}</p>
 
-        {{ Form::model($model, array('method' => 'PATCH'
-    , 'route' => array('<?php echo ('backend.' . $plural . '.do_edit'); ?>', $model->id), 'role'=>'form')) }}
+        @if ($errors->any())
+
+        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
+
+        @endif
+
+        {{ Form::model($record, array('method' => 'PATCH'
+    , 'route' => array('<?php echo ('backend.' . $plural . '.do_edit'); ?>', $record->id), 'role'=>'form')) }}
 <?php if($isTranslatable): ?>
 <?php echo "<?php\n"; ?>
-    $transl = $model->translation();
+    $transl = $record->translation();
 <?php echo "?>"; ?>
 {{ Form::hidden('translation[id]', $transl->id) }}
 <?php endif; ?>
@@ -49,16 +55,10 @@
 
         <div class="form-group">
             {{ Form::button('<i class="fa fa-floppy-o"></i> Save', array('class' => 'btn btn-primary', 'type'=>'submit', 'value'=>'update')) }}
-            {{ link_to_route('<?php echo ('backend.' . $plural . '.index'); ?>', 'Cancel', array($model->id), array('class' => 'btn btn-default')) }}
+            {{ link_to_route('<?php echo ('backend.' . $plural . '.index'); ?>', 'Cancel', array($record->id), array('class' => 'btn btn-default')) }}
         </div>
 
         {{ Form::close() }}
-
-        @if ($errors->any())
-
-        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
-
-        @endif
     </div><!-- /.col-lg-12 -->
 </div><!-- /.row -->
 @stop

@@ -7,52 +7,69 @@
 
         <p>{{ link_to_route('backend.pages.index', 'Return to all pages') }}</p>
 
-        {{ Form::model($page, array('method' => 'PATCH'
-    , 'route' => array('backend.pages.do_edit', $page->id), 'role'=>'form')) }}
-<?php
-    $transl = $page->translation();
-?>{{ Form::hidden('translation[id]', $transl->id) }}
-
-        <!-- Form fields here -->
-        {{Form::bsFields([
-    //label, name, attributes, type, value, containerAttributes
-                    ['Taxonomy:', 'taxonomy', [], 'text', null, []],
-                    ['Controller:', 'controller', [], 'text', null, []],
-                    ['Action:', 'action', [], 'text', null, []],
-                    ['View:', 'view', [], 'text', null, []],
-                    ['Is_Https:', 'is_https', [], 'checkbox', 1, []],
-                    ['Is_Indexable:', 'is_indexable', [], 'checkbox', 1, []],
-                    ['Is_Deletable:', 'is_deletable', [], 'checkbox', 1, []],
-                    ['Sorting:', 'sorting', [], 'number', null, []],
-                    ['Status:', 'status', [], 'text', null, []],
-        ])}}
-        
-                {{Form::bsFields([
-    //label, name, attributes, type, value, containerAttributes
-                    ['Title ('.Lang::code().'):', 'translation[title]', [], 'text', $transl->title, []],
-                    ['Content ('.Lang::code().'):', 'translation[content]', [], 'text', $transl->content, []],
-                    ['Slug ('.Lang::code().'):', 'translation[slug]', [], 'text', $transl->slug, []],
-                    ['Window_Title ('.Lang::code().'):', 'translation[window_title]', [], 'text', $transl->window_title, []],
-                    ['Meta_Description ('.Lang::code().'):', 'translation[meta_description]', [], 'text', $transl->meta_description, []],
-                    ['Meta_Keywords ('.Lang::code().'):', 'translation[meta_keywords]', [], 'text', $transl->meta_keywords, []],
-                    ['Canonical_Url ('.Lang::code().'):', 'translation[canonical_url]', [], 'text', $transl->canonical_url, []],
-                    ['Redirect_Url ('.Lang::code().'):', 'translation[redirect_url]', [], 'text', $transl->redirect_url, []],
-                    ['Redirect_Code ('.Lang::code().'):', 'translation[redirect_code]', [], 'text', $transl->redirect_code, []],
-                    ['Translation_Status ('.Lang::code().'):', 'translation[translation_status]', [], 'text', $transl->translation_status, []],
-                ])}}
-        
-        <div class="form-group">
-            {{ Form::button('<i class="fa fa-floppy-o"></i> Save', array('class' => 'btn btn-primary', 'type'=>'submit', 'value'=>'update')) }}
-            {{ link_to_route('backend.pages.index', 'Cancel', array($page->id), array('class' => 'btn btn-default')) }}
-        </div>
-
-        {{ Form::close() }}
-
         @if ($errors->any())
 
         {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
 
         @endif
+
+        {{ Form::model($record, array('method' => 'PATCH'
+    , 'route' => array('backend.pages.do_edit', $record->id), 'role'=>'form')) }}
+<?php
+    $transl = $record->translation();
+?>{{ Form::hidden('translation[id]', $transl->id) }}
+
+        <!--FORM_FIELDS-->
+        
+                {{Form::bsField('Taxonomy', 'taxonomy', [], 'text',null, [])}}
+        
+                {{Form::bsField('Controller', 'controller', [], 'text',null, [])}}
+        
+                {{Form::bsField('Action', 'action', [], 'text',null, [])}}
+        
+                {{Form::bsField('View', 'view', [], 'text',null, [])}}
+        
+                {{Form::bsField('Is Https', 'is_https', [], 'checkbox',null, [])}}
+        
+                {{Form::bsField('Is Indexable', 'is_indexable', [], 'checkbox',null, [])}}
+        
+                {{Form::bsField('Is Deletable', 'is_deletable', [], 'checkbox',null, [])}}
+        
+                {{Form::bsField('Sorting', 'sorting', [], 'number',null, [])}}
+        
+                {{Form::bsField('Status', 'status', [], 'text',null, [])}}
+        
+               
+        
+                {{Form::bsField('Title ('.Lang::code().')', 'translation[title]', [], 'text',$transl->title, [])}}
+        
+                {{Form::bsField('Content ('.Lang::code().')', 'translation[content]', [], 'html',$transl->content, [])}}
+        
+                {{Form::bsField('Slug ('.Lang::code().')', 'translation[slug]', [], 'text',$transl->slug, [])}}
+        
+                {{Form::bsField('Window Title ('.Lang::code().')', 'translation[window_title]', [], 'text',$transl->window_title, [])}}
+        
+                {{Form::bsField('Meta Description ('.Lang::code().')', 'translation[meta_description]', [], 'text',$transl->meta_description, [])}}
+        
+                {{Form::bsField('Meta Keywords ('.Lang::code().')', 'translation[meta_keywords]', [], 'text',$transl->meta_keywords, [])}}
+        
+                {{Form::bsField('Canonical Url ('.Lang::code().')', 'translation[canonical_url]', [], 'text',$transl->canonical_url, [])}}
+        
+                {{Form::bsField('Redirect Url ('.Lang::code().')', 'translation[redirect_url]', [], 'text',$transl->redirect_url, [])}}
+        
+                {{Form::bsField('Redirect Code ('.Lang::code().')', 'translation[redirect_code]', [], 'text',$transl->redirect_code, [])}}
+        
+                {{Form::bsField('Is translation finished? ('.Lang::code().')', 'translation[is_translated]', [], 'checkbox',$transl->is_translated, [])}}
+        
+                        
+        <!--FORM_FIELDS_END-->
+
+        <div class="form-group">
+            {{ Form::button('<i class="fa fa-floppy-o"></i> Save', array('class' => 'btn btn-primary', 'type'=>'submit', 'value'=>'update')) }}
+            {{ link_to_route('backend.pages.index', 'Cancel', array($record->id), array('class' => 'btn btn-default')) }}
+        </div>
+
+        {{ Form::close() }}
     </div><!-- /.col-lg-12 -->
 </div><!-- /.row -->
 @stop

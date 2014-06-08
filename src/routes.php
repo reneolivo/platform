@@ -40,12 +40,12 @@ CRUD::routes('module', true);
 
 // Registered modules
 foreach (Backend::modules() as $module) {
-    CRUD::routes($module->name, true);
+    CRUD::routes($module->name, true, $module->controller_class, $module->module_class);
 }
 
 // Site 404
 App::missing(function($e) {
-    if (Backend::isBackendRequest()) {
+    if (Backend::requestIsBackend()) {
         return Response::view('thor::backend.error', array('page' => 'error'), 404);
     } else {
         Doc::title('Error 404')->h1('Error 404')->content('Page Not Found')->error(true);

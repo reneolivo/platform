@@ -12,8 +12,9 @@ use Entrust,
  * @property string $icon 
  * @property text $description 
  * @property boolean $is_pageable 
- * @property boolean $is_translatable 
- * @property boolean $is_imageable 
+ * @property string $controller_class 
+ * @property string $model_class
+ * @property text $metadata
  * @property boolean $is_active 
  * @property integer $sorting 
  * @property timestamp $created_at
@@ -23,14 +24,12 @@ class Module extends Base
 {
 
     protected $table = 'modules';
- 
     protected static $rules = array(
         'name' => 'required|not_in:user,role,permission,module,image,auth,language,main|unique:modules,name,{id}',
     );
-    
     protected $fillable = array(
         'name', 'display_name', 'icon', 'is_pageable', 'description',
-        'model_class', 'controller_class', 'is_active', 'sorting'
+        'model_class', 'controller_class', 'is_active', 'sorting', 'metadata'
     );
 
     public function singular()
@@ -50,7 +49,7 @@ class Module extends Base
 
     public function permissions()
     {
-        return Permission::where('name', 'LIKE', "%_".$this->plural())->orderBy('name', 'asc');
+        return Permission::where('name', 'LIKE', "%_" . $this->plural())->orderBy('name', 'asc');
     }
 
     public function canBeListed()

@@ -10,8 +10,8 @@ module.exports = function(grunt) {
                 },
                 files: {
                     'css/app.min.css': [
-                        'vendor/css/bootstrap-midnight.min.css',
-                        'vendor/css/bootstrap-theme-midnight.min.css',
+                        'vendor/css/bootstrap-midnight.css',
+                        'vendor/css/bootstrap-theme-midnight.css',
                         'vendor/css/font-awesome.min.css',
                         'vendor/css/bootstrap-colorpicker.min.css',
                         'vendor/css/bootstrap-datepicker.css',

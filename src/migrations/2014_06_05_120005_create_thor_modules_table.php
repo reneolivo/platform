@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateModulesTable extends Migration
+class CreateThorModulesTable extends Migration
 {
 
     /**

@@ -101,7 +101,7 @@ class ResourceResolver implements \ArrayAccess
         $this->fillBehaviours();
         $this->fillFields();
         $this->fillListableFields();
-        $this->isTranslatable = $this->hasBehaviour('translatable');
+        $this->isTranslatable = ($this->hasBehaviour('translatable') or (count($this->translatableFields) > 0));
         $this->resolver = $this;
     }
 
@@ -221,7 +221,9 @@ class ResourceResolver implements \ArrayAccess
         $modelUses = array();
 
         foreach ($this->behaviours as $name) {
-            if (($name == 'translatable') and ( !$this->hasBehaviour('pageable'))) {
+            if (($name == 'translatable') and $this->hasBehaviour('pageable')) {
+                continue;
+            }else{
                 $modelImplements[] = $this->modelPrefix . 'I' . ucfirst($name);
                 $modelUses[] = $this->modelPrefix . 'T' . ucfirst($name);
             }

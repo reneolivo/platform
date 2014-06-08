@@ -20,6 +20,17 @@ body{
     color:@color-text;
 }
 
+.nav>li>a{
+    position: relative;
+    display: block;
+    padding: 12px 15px;
+    font-size: 18px;
+}
+.nav>li.active a{
+    background: #eee;
+    color: @color-secondary;
+}
+
 .navbar .navbar-brand, .close{
     z-index: 2;
 }
@@ -63,6 +74,8 @@ nav.navbar-inverse{
 .navbar-static-side{
     color:@color-text;
     box-shadow:none;
+    border-top:none;
+    border-radius:0;
 }
 
 /* Wrappers */
@@ -197,7 +210,7 @@ nav.navbar-inverse{
         z-index: 1;
         position: absolute;
         width: @sidebar-width;
-        margin-top: 51px;
+        margin-top: 55px;
     }
 
     .navbar-top-links .dropdown-messages,
@@ -411,9 +424,9 @@ table.dataTable thead .sorting:after {
 }
 
 .sidebar .fa-fw{
-    width:auto;
-    font-size:14px;
-    margin-right: 7px;
+    margin-right: 15px;
+    font-size: 20px;
+    width: 20px;
 }
 
 .navbar-brand-back{
@@ -428,4 +441,20 @@ table.dataTable thead .sorting:after {
 
 .panel-checkboxes .form-group.text-muted {
     display:none;
+}
+
+.thorcms-version{
+    font-size:10px;
+    display:block;
+    font-family: monospace;
+    position: fixed;
+    bottom:5px;
+    left:5px;
+    font-weight: normal;
+    text-shadow: none;
+    z-index: 2;
+}
+
+.navbar-brand-title img{
+    margin: 0 10px 0 5px;
 }

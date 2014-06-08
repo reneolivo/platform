@@ -63,7 +63,7 @@ class ModulesController extends Controller
                         , \Input::get('general_fields'), \Input::get('translatable_fields')
                         , \Input::get('listable_fields'));
 
-        if ($this->module != false) {
+        if ((!$this->module->hasErrors()) and $this->module->exists()) {
             if ($this->module->is_active) {
                 return Redirect::to($this->module->url());
             } else {

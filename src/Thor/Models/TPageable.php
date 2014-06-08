@@ -40,7 +40,7 @@ trait TPageable
 
     public function slug($langId = null)
     {
-        return $this->translation($langId)->slug;
+        return $this->translation($langId) ? $this->translation($langId)->slug : '';
     }
 
     public function canonicalUrl($langId = null)
@@ -61,6 +61,11 @@ trait TPageable
     public function metaRobots()
     {
         $this->is_indexable ? 'INDEX,FOLLOW' : 'NOINDEX,NOFOLLOW';
+    }
+
+    public function getSlugAttribute()
+    {
+        return $this->slug();
     }
 
     public function getUrlAttribute()

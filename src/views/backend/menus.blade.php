@@ -8,7 +8,9 @@
         </button>
         <div class="navbar-brand">
             <a class="navbar-brand-back" href="{{lang_url()}}" title="Main site"><i class="fa fa-angle-double-left"></i></a>
-            <a class="navbar-brand-title" href="{{Backend::url()}}"><?php echo Backend::config('title') ?> <small>{{'@'.App::environment()}}</small></a>
+            <a class="navbar-brand-title" href="{{Backend::url()}}">
+                <img src="{{Backend::asset('img/logo_menu.jpg')}}" alt="LOGO" /> <?php echo Backend::config('title') ?>
+            </a>
         </div>
     </div>
     <!-- /.navbar-header -->
@@ -20,8 +22,8 @@
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-globe"></i> {{Lang::language()->name}} <b class="caret"></b></a>
             <ul class="dropdown-menu">
                 <li class="dropdown-header">Change language:</li>
-                @foreach(Lang::getAvailableLocales() as $code => $locale)
-                <li @if($code == Lang::code())class="active"@endif><a href="{{URL::langSwitch($code)}}">{{$code}}</a></li>
+                @foreach(Lang::getActiveLanguages() as $i => $lang)
+                <li @if($lang->code == Lang::code())class="active"@endif><a href="{{URL::langSwitch($lang->code)}}">{{$lang->name}}</a></li>
                 @endforeach
             </ul>
         </li>

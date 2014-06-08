@@ -16,26 +16,47 @@ trait TTranslatable
 
     public function __get($key)
     {
-        if(isset($this->$key)) {
+        if (isset($this->$key)) {
             return parent::__get($key); // look in the master model
-        } elseif(isset($this->translation()->$key)) {
+        } elseif ($this->hasTranslation() and isset($this->translation()->$key)) {
             return $this->translation()->$key; // look in the translation model
         } else {
-            return parent::__get($key); // else rely on eloquent
+            return parent::__get($key); // if not set rely on eloquent
         }
     }
 
+    /**
+     * 
+     * @param string $name
+     * @param int $langId
+     * @return mixed
+     */
     public function text($name, $langId = null)
     {
         return $this->translation($langId)->$name;
     }
 
+    /**
+     * 
+     * @param int $langId
+     * @return boolean
+     */
+    public function hasTranslation($langId = null)
+    {
+        return $this->translation($langId ? $langId : \Lang::id())->exists();
+    }
+
+    /**
+     * 
+     * @param int $langId
+     * @return BaseText
+     */
     public function translation($langId = null)
     {
-        if(empty($langId)) {
+        if (empty($langId)) {
             $langId = \Lang::id();
         }
-        if(isset($this->translations[$langId])) {
+        if (isset($this->translations[$langId])) {
             return $this->translations[$langId];
         }
         $transl = $this->translations()->where('language_id', '=', $langId)->first();
@@ -44,6 +65,10 @@ trait TTranslatable
         return $this->translations[$langId];
     }
 
+    /**
+     * 
+     * @return BaseText[]
+     */
     public function translations()
     {
         return $this->hasMany((get_class($this) . 'Text'))->orderBy('language_id', 'asc');

@@ -7,6 +7,12 @@
 
         <p>{{ link_to_route('backend.permissions.index', 'Return to all permissions') }}</p>
 
+        @if ($errors->any())
+
+        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
+
+        @endif
+
         {{ Form::open(array('method' => 'POST', 'route' => array('backend.permissions.do_create'), 'role'=>'form')) }}
 
         <!-- Form fields here -->
@@ -23,12 +29,6 @@
         </div>
 
         {{ Form::close() }}
-
-        @if ($errors->any())
-
-        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
-
-        @endif
     </div><!-- /.col-lg-12 -->
 </div><!-- /.row -->
 @stop

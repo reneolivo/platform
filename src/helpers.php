@@ -1,5 +1,9 @@
 <?php
 
+if(!defined('THORCMS_VERSION')){
+    define('THORCMS_VERSION', '0.4.0-dev');
+}
+
 if(!function_exists('lang_url')) {
 
     /**

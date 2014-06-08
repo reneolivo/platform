@@ -7,6 +7,12 @@
 
         <p>{{ link_to_route('backend.users.index', 'Return to all users') }}</p>
 
+        @if ($errors->any())
+
+        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
+
+        @endif
+
         {{ Form::model($user, array('method' => 'PATCH'
     , 'route' => array('backend.users.do_edit', $user->id), 'role'=>'form')) }}
 
@@ -56,12 +62,6 @@
         </div>
 
         {{ Form::close() }}
-
-        @if ($errors->any())
-
-        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
-
-        @endif
     </div><!-- /.col-lg-12 -->
 </div><!-- /.row -->
 @stop

@@ -7,48 +7,64 @@
 
         <p>{{ link_to_route('backend.pages.index', 'Return to all pages') }}</p>
 
+        @if ($errors->any())
+
+        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
+
+        @endif
+
         {{ Form::open(array('method' => 'POST', 'route' => array('backend.pages.do_create'), 'role'=>'form')) }}
 
-        <!-- Form fields here -->
-        {{Form::bsFields([
-    //label, name, attributes, type, value, containerAttributes
-                    ['Taxonomy:', 'taxonomy', [], 'text', null, []],
-                    ['Controller:', 'controller', [], 'text', null, []],
-                    ['Action:', 'action', [], 'text', null, []],
-                    ['View:', 'view', [], 'text', null, []],
-                    ['Is_Https:', 'is_https', [], 'checkbox', 1, []],
-                    ['Is_Indexable:', 'is_indexable', [], 'checkbox', 1, []],
-                    ['Is_Deletable:', 'is_deletable', [], 'checkbox', 1, []],
-                    ['Sorting:', 'sorting', [], 'number', null, []],
-                    ['Status:', 'status', [], 'text', null, []],
-                ])}}
+        <!--FORM_FIELDS-->
         
-                {{Form::bsFields([
-    //label, name, attributes, type, value, containerAttributes
-                    ['Title ('.Lang::code().'):', 'translation[title]', [], 'text', null, []],
-                    ['Content ('.Lang::code().'):', 'translation[content]', [], 'text', null, []],
-                    ['Slug ('.Lang::code().'):', 'translation[slug]', [], 'text', null, []],
-                    ['Window_Title ('.Lang::code().'):', 'translation[window_title]', [], 'text', null, []],
-                    ['Meta_Description ('.Lang::code().'):', 'translation[meta_description]', [], 'text', null, []],
-                    ['Meta_Keywords ('.Lang::code().'):', 'translation[meta_keywords]', [], 'text', null, []],
-                    ['Canonical_Url ('.Lang::code().'):', 'translation[canonical_url]', [], 'text', null, []],
-                    ['Redirect_Url ('.Lang::code().'):', 'translation[redirect_url]', [], 'text', null, []],
-                    ['Redirect_Code ('.Lang::code().'):', 'translation[redirect_code]', [], 'text', null, []],
-                    ['Translation_Status ('.Lang::code().'):', 'translation[translation_status]', [], 'text', null, []],
-                ])}}
+                {{Form::bsField('Taxonomy', 'taxonomy', [], 'text',null, [])}}
         
+                {{Form::bsField('Controller', 'controller', [], 'text',null, [])}}
+        
+                {{Form::bsField('Action', 'action', [], 'text',null, [])}}
+        
+                {{Form::bsField('View', 'view', [], 'text',null, [])}}
+        
+                {{Form::bsField('Is Https', 'is_https', [], 'checkbox',null, [])}}
+        
+                {{Form::bsField('Is Indexable', 'is_indexable', [], 'checkbox',null, [])}}
+        
+                {{Form::bsField('Is Deletable', 'is_deletable', [], 'checkbox',null, [])}}
+        
+                {{Form::bsField('Sorting', 'sorting', [], 'number',null, [])}}
+        
+                {{Form::bsField('Status', 'status', [], 'text',null, [])}}
+        
+                
+                {{Form::bsField('Title ('.Lang::code().')', 'translation[title]', [], 'text',null, [])}}
+        
+                {{Form::bsField('Content ('.Lang::code().')', 'translation[content]', [], 'html',null, [])}}
+        
+                {{Form::bsField('Slug ('.Lang::code().')', 'translation[slug]', [], 'text',null, [])}}
+        
+                {{Form::bsField('Window Title ('.Lang::code().')', 'translation[window_title]', [], 'text',null, [])}}
+        
+                {{Form::bsField('Meta Description ('.Lang::code().')', 'translation[meta_description]', [], 'text',null, [])}}
+        
+                {{Form::bsField('Meta Keywords ('.Lang::code().')', 'translation[meta_keywords]', [], 'text',null, [])}}
+        
+                {{Form::bsField('Canonical Url ('.Lang::code().')', 'translation[canonical_url]', [], 'text',null, [])}}
+        
+                {{Form::bsField('Redirect Url ('.Lang::code().')', 'translation[redirect_url]', [], 'text',null, [])}}
+        
+                {{Form::bsField('Redirect Code ('.Lang::code().')', 'translation[redirect_code]', [], 'text',null, [])}}
+        
+                {{Form::bsField('Is translation finished? ('.Lang::code().')', 'translation[is_translated]', [], 'checkbox',null, [])}}
+        
+                        
+        <!--FORM_FIELDS_END-->
+
         <div class="form-group">
             {{ Form::button('<i class="fa fa-plus"></i> Create', array('class' => 'btn btn-primary', 'type'=>'submit', 'value'=>'create')) }}
             {{ link_to_route('backend.pages.index', 'Cancel', null, array('class' => 'btn btn-default')) }}
         </div>
 
         {{ Form::close() }}
-
-        @if ($errors->any())
-
-        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
-
-        @endif
     </div><!-- /.col-lg-12 -->
 </div><!-- /.row -->
 @stop

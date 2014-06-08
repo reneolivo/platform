@@ -7,6 +7,12 @@
 
         <p>{{ link_to_route('backend.modules.index', 'Return to all modules') }}</p>
 
+        @if ($errors->any())
+
+        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
+
+        @endif
+
         <section class="resource-show">
             <div class="form-group">
                 {{ Form::label(null, 'ID:') }}

@@ -26,7 +26,6 @@ class CrudBuilder
     public function generate($singular, $behaviours = false, $generalFields = false, $translatableFields = false, $listableFields = false)
     {
         $res = new ResourceResolver($singular, $behaviours, $generalFields, $translatableFields, $listableFields);
-        //dd($res);
         $this->createMigrationFile($res);
         $this->createModelFile($res);
         $this->createControllerFile($res);
@@ -104,7 +103,7 @@ class CrudBuilder
     {
         $module = new \Thor\Models\Module();
         if (empty($input['name'])) {
-            $input['name'] = \Str::singular(strtolower($input['name']));
+            $input['name'] = \Str::singular($input['name']);
         }
         if (empty($input['display_name'])) {
             $input['display_name'] = \Str::plural(ucfirst($input['name']));
@@ -112,26 +111,26 @@ class CrudBuilder
         if (empty($input['icon'])) {
             $input['icon'] = 'fa-cube';
         }
+        $input['name'] = strtolower(trim($input['name']));
+
         if ($module->validate($input)) {
-//            try {
-                $resolver = $this->generate($input['name'], $behaviours, $generalFields, $translatableFields, $listableFields);
-                Artisan::call('migrate');
-                $this->createPermissions($resolver->singular, true);
-//            } catch (Exception $exc) {
-//                // delete files and rollback ¿?
-//                throw $exc;
-//            }
+            $resolver = $this->generate($input['name'], $behaviours, $generalFields, $translatableFields, $listableFields);
+            Artisan::call('migrate');
+            $this->createPermissions($resolver->singular, true);
 
             // finally:
             $input['is_pageable'] = $resolver->hasBehaviour('pageable');
+            $input['controller_class'] = $resolver->controllerFullName;
+            $input['model_class'] = $resolver->modelFullName;
+            $input['metadata'] = $resolver->export();
+            unset($input['metadata']['resolver']);
+            $input['metadata'] = (serialize($input['metadata']));
+            
             $module = $module->create($input);
-
-            /*
-             * todo: update $module with $resolver data
-             */
+            
             return $module;
         }
-        return false;
+        return $module;
     }
 
     /**
@@ -156,7 +155,7 @@ class CrudBuilder
 
         foreach ($permissions as $perm) {
             $records->add(\Permission::create(array(
-                        'name' => $perm,
+                        'name' => strtolower($perm),
                         'display_name' => ucwords(Str::title(str_replace('_', ' ', $perm)))
             )));
         }
@@ -192,7 +191,7 @@ class CrudBuilder
 
         file_put_contents($res->modelFile . '.php', View::make('thor::generators.model', $res->export())->render());
 
-        if ($res->hasBehaviour('translatable')) {
+        if ($res->isTranslatable) {
             $textClassFile = $res->modelFile . 'Text';
             if (file_exists($textClassFile . '.php')) {
                 $textClassFile .= '_' . date('Y_m_d_His');

@@ -7,98 +7,104 @@
 
         <p>{{ link_to_route('backend.pages.index', 'Return to all pages') }}</p>
 
+        @if ($errors->any())
+
+        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
+
+        @endif
+
         <section class="resource-show">
             <div class="form-group">
                 {{ Form::label(null, 'ID:') }}
-                <pre class="well well-sm">{{{ $page->id }}}</pre>
+                <pre class="well well-sm">{{{ $record->id }}}</pre>
             </div>
                             <div class="form-group">
                     {{ Form::label(null, 'Taxonomy:') }}
-                    <pre class="well well-sm">{{{ $page->taxonomy }}}</pre>
+                    <pre class="well well-sm">{{{ $record->taxonomy }}}</pre>
                 </div>
                             <div class="form-group">
                     {{ Form::label(null, 'Controller:') }}
-                    <pre class="well well-sm">{{{ $page->controller }}}</pre>
+                    <pre class="well well-sm">{{{ $record->controller }}}</pre>
                 </div>
                             <div class="form-group">
                     {{ Form::label(null, 'Action:') }}
-                    <pre class="well well-sm">{{{ $page->action }}}</pre>
+                    <pre class="well well-sm">{{{ $record->action }}}</pre>
                 </div>
                             <div class="form-group">
                     {{ Form::label(null, 'View:') }}
-                    <pre class="well well-sm">{{{ $page->view }}}</pre>
+                    <pre class="well well-sm">{{{ $record->view }}}</pre>
                 </div>
                             <div class="form-group">
-                    {{ Form::label(null, 'Is_Https:') }}
-                    <pre class="well well-sm">{{{ $page->is_https }}}</pre>
+                    {{ Form::label(null, 'Is Https:') }}
+                    <pre class="well well-sm">{{{ $record->is_https }}}</pre>
                 </div>
                             <div class="form-group">
-                    {{ Form::label(null, 'Is_Indexable:') }}
-                    <pre class="well well-sm">{{{ $page->is_indexable }}}</pre>
+                    {{ Form::label(null, 'Is Indexable:') }}
+                    <pre class="well well-sm">{{{ $record->is_indexable }}}</pre>
                 </div>
                             <div class="form-group">
-                    {{ Form::label(null, 'Is_Deletable:') }}
-                    <pre class="well well-sm">{{{ $page->is_deletable }}}</pre>
+                    {{ Form::label(null, 'Is Deletable:') }}
+                    <pre class="well well-sm">{{{ $record->is_deletable }}}</pre>
                 </div>
                             <div class="form-group">
                     {{ Form::label(null, 'Sorting:') }}
-                    <pre class="well well-sm">{{{ $page->sorting }}}</pre>
+                    <pre class="well well-sm">{{{ $record->sorting }}}</pre>
                 </div>
                             <div class="form-group">
                     {{ Form::label(null, 'Status:') }}
-                    <pre class="well well-sm">{{{ $page->status }}}</pre>
+                    <pre class="well well-sm">{{{ $record->status }}}</pre>
                 </div>
                                                     <div class="form-group">
                     {{ Form::label(null, 'Title:') }}
-                    <pre class="well well-sm">{{{ $page->translation()->title }}}</pre>
+                    <pre class="well well-sm">{{{ $record->translation()->title }}}</pre>
                 </div>
                             <div class="form-group">
                     {{ Form::label(null, 'Content:') }}
-                    <pre class="well well-sm">{{{ $page->translation()->content }}}</pre>
+                    <pre class="well well-sm">{{{ $record->translation()->content }}}</pre>
                 </div>
                             <div class="form-group">
                     {{ Form::label(null, 'Slug:') }}
-                    <pre class="well well-sm">{{{ $page->translation()->slug }}}</pre>
+                    <pre class="well well-sm">{{{ $record->translation()->slug }}}</pre>
                 </div>
                             <div class="form-group">
-                    {{ Form::label(null, 'Window_Title:') }}
-                    <pre class="well well-sm">{{{ $page->translation()->window_title }}}</pre>
+                    {{ Form::label(null, 'Window Title:') }}
+                    <pre class="well well-sm">{{{ $record->translation()->window_title }}}</pre>
                 </div>
                             <div class="form-group">
-                    {{ Form::label(null, 'Meta_Description:') }}
-                    <pre class="well well-sm">{{{ $page->translation()->meta_description }}}</pre>
+                    {{ Form::label(null, 'Meta Description:') }}
+                    <pre class="well well-sm">{{{ $record->translation()->meta_description }}}</pre>
                 </div>
                             <div class="form-group">
-                    {{ Form::label(null, 'Meta_Keywords:') }}
-                    <pre class="well well-sm">{{{ $page->translation()->meta_keywords }}}</pre>
+                    {{ Form::label(null, 'Meta Keywords:') }}
+                    <pre class="well well-sm">{{{ $record->translation()->meta_keywords }}}</pre>
                 </div>
                             <div class="form-group">
-                    {{ Form::label(null, 'Canonical_Url:') }}
-                    <pre class="well well-sm">{{{ $page->translation()->canonical_url }}}</pre>
+                    {{ Form::label(null, 'Canonical Url:') }}
+                    <pre class="well well-sm">{{{ $record->translation()->canonical_url }}}</pre>
                 </div>
                             <div class="form-group">
-                    {{ Form::label(null, 'Redirect_Url:') }}
-                    <pre class="well well-sm">{{{ $page->translation()->redirect_url }}}</pre>
+                    {{ Form::label(null, 'Redirect Url:') }}
+                    <pre class="well well-sm">{{{ $record->translation()->redirect_url }}}</pre>
                 </div>
                             <div class="form-group">
-                    {{ Form::label(null, 'Redirect_Code:') }}
-                    <pre class="well well-sm">{{{ $page->translation()->redirect_code }}}</pre>
+                    {{ Form::label(null, 'Redirect Code:') }}
+                    <pre class="well well-sm">{{{ $record->translation()->redirect_code }}}</pre>
                 </div>
                             <div class="form-group">
-                    {{ Form::label(null, 'Translation_Status:') }}
-                    <pre class="well well-sm">{{{ $page->translation()->translation_status }}}</pre>
+                    {{ Form::label(null, 'Is translation finished?:') }}
+                    <pre class="well well-sm">{{{ $record->translation()->is_translated }}}</pre>
                 </div>
                                     <div class="form-group">
                 {{ Form::label(null, 'Created at:') }}
-                <pre class="well well-sm">{{{ $page->created_at }}}</pre>
+                <pre class="well well-sm">{{{ $record->created_at }}}</pre>
             </div>
             <div class="form-group">
                 {{ Form::label(null, 'Updated at:') }}
-                <pre class="well well-sm">{{{ $page->updated_at }}}</pre>
+                <pre class="well well-sm">{{{ $record->updated_at }}}</pre>
             </div>
 
             <div class="form-group">
-                {{ _d(link_to_route('backend.pages.edit', '<i class="fa fa-pencil"></i> Edit', array($page->id), array('class' => 'btn btn-info'))) }}
+                {{ _d(link_to_route('backend.pages.edit', '<i class="fa fa-pencil"></i> Edit', array($record->id), array('class' => 'btn btn-info'))) }}
                 {{ link_to_route('backend.pages.index', 'Cancel', null, array('class' => 'btn btn-default')) }}
             </div>
         </section>

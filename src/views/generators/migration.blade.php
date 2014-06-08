@@ -21,6 +21,10 @@ $table->foreign('{{$name}}')->references('id')->on('{{$def->foreign_table}}');
 $table->{{$def->blueprint_function}}('{{$name}}')->nullable()->default(null);
 @endif
                     @endforeach
+@if($resolver->hasBehaviour('treeable'))
+$table->integer('parent_id')->unsigned()->nullable()->default(null);
+$table->foreign('parent_id')->references('id')->on('{{$plural}}');
+@endif
 $table->timestamps();
                 });
                 
@@ -57,6 +61,9 @@ $table->{{$def->blueprint_function}}('{{$name}}')->nullable()->default(null);
 $table->dropForeign('{{$singular}}_{{$name}}_foreign');
 @endif
 @endforeach
+@if($resolver->hasBehaviour('treeable'))
+$table->dropForeign('{{$singular}}_parent_id_foreign');
+@endif
                 });
                 @if($isTranslatable)
                 

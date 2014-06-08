@@ -11,7 +11,7 @@ use URL,
 
 class Backend
 {
-    
+
     /**
      * Laravel application
      * 
@@ -34,8 +34,9 @@ class Backend
             $this->app['thor.document']->addClass('is-backend');
         }
     }
-    
-    public function getAccessPermissionName(){
+
+    public function getAccessPermissionName()
+    {
         return 'access_backend';
     }
 
@@ -85,10 +86,20 @@ class Backend
         return Entrust::can($this->getAccessPermissionName());
     }
 
-    public function isBackendRequest()
+    public function requestIs($plural = '', $after = '.*')
     {
-        $base = $this->config('basepath');
-        return (Request::is(Lang::code() . '/' . $base . '/*') or Request::is($base . '/*'));
+        if(!empty($plural)){
+            $plural.='\/?';
+        }
+        $base = trim($this->config('basepath'), '/');
+        $expr = '/^'.(Lang::code() . '\/' . $base . '\/' . trim($plural, '/'));
+        $path = trim(Request::path(), '/');
+        return (preg_match($expr.$after.'$/', $path) != false);
+    }
+
+    public function requestIsBackend()
+    {
+        return $this->requestIs('');
     }
 
     public function isInstalled()

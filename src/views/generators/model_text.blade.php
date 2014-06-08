@@ -26,10 +26,10 @@ class {{$modelShortName}}Text extends Models\BaseText {
     protected $fillable = array(
 @foreach($translatableFields as $name => $f)
   '{{$f->name}}',
-  'language_id',
-  '{{$singular}}_id',
  
 @endforeach
+  'language_id',
+  '{{$singular}}_id',
     );
     
     public static $rules = array();

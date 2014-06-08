@@ -7,6 +7,12 @@
 
         <p>{{ link_to_route('backend.roles.index', 'Return to all roles') }}</p>
 
+        @if ($errors->any())
+
+        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
+
+        @endif
+
         {{ Form::model($role, array('method' => 'PATCH'
     , 'route' => array('backend.roles.do_edit', $role->id), 'role'=>'form')) }}
 
@@ -95,12 +101,6 @@
         </div>
 
         {{ Form::close() }}
-
-        @if ($errors->any())
-
-        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
-
-        @endif
     </div><!-- /.col-lg-12 -->
 </div><!-- /.row -->
 @stop

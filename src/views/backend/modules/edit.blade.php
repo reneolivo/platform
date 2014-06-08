@@ -7,22 +7,40 @@
 
         <p>{{ link_to_route('backend.modules.index', 'Return to all modules') }}</p>
 
+        @if ($errors->any())
+
+        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
+
+        @endif
+
         {{ Form::model($module, array('method' => 'PATCH'
     , 'route' => array('backend.modules.do_edit', $module->id), 'role'=>'form')) }}
 
         <!-- Form fields here -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                General Info
+            </div>
+            <div class="panel-body">
+        <!-- Form fields here -->
         {{Form::bsFields([
     //label, name, attributes, type, value, containerAttributes
-                    ['Name:', 'name', [], 'text', null, []],
-                    ['Display_Name:', 'display_name', [], 'text', null, []],
+                    ['Name:', 'name', ['readonly'], 'text', null, []],
+                    ['Display Name:', 'display_name', [], 'text', null, []],
                     ['Icon:', 'icon', [], 'text', null, []],
                     ['Description:', 'description', [], 'text', null, []],
-                    ['Is_Pageable:', 'is_pageable', [], 'checkbox', 1, []],
-                    ['Is_Translatable:', 'is_translatable', [], 'checkbox', 1, []],
-                    ['Is_Imageable:', 'is_imageable', [], 'checkbox', 1, []],
-                    ['Is_Active:', 'is_active', [], 'checkbox', 1, []],
+                    [($module->is_pageable ? '<i class="fa fa-file" title="Pageable model"></i> Model Class:':
+                        'Model Class:'), 'model_class', ['readonly'], 'text', null, []],
+                    ['Controller Class:', 'controller_class', ['readonly'], 'text', null, []],
+                    //['Metadata:', 'metadata', [], 'textarea', null, []],
+                    ['Is active', 'is_active', [], 'checkbox', 1, []],
                     ['Sorting:', 'sorting', [], 'number', null, []],
-        ])}}
+                ])}}
+            </div>
+<!--            <div class="panel-footer">
+                Panel Footer
+            </div>-->
+        </div>
         
         
         <div class="panel panel-default">
@@ -56,12 +74,6 @@
         </div>
 
         {{ Form::close() }}
-
-        @if ($errors->any())
-
-        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
-
-        @endif
     </div><!-- /.col-lg-12 -->
 </div><!-- /.row -->
 @stop

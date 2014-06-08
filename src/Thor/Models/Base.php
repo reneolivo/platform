@@ -85,6 +85,20 @@ abstract class Base extends Eloquent {
         return false;
     }
 
+    /**
+     * Returns the associated module (if this model has been created through 'Modules')
+     * @return Module|false
+     */
+    public static function relatedModule() {
+        $kl = trim(get_class(new static()),'/\\');
+        foreach(\Backend::modules() as $m){
+            if(trim($m->model_class, '/\\') == trim($kl, '/')){
+                return $m;
+            }
+        }
+        return false;
+    }
+
     public function exists() {
         return ($this->exists === true);
     }
