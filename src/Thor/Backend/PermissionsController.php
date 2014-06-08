@@ -14,7 +14,7 @@ use View,
 | Feel free to change it to your needs.
 |
 */
-class PermissionsController extends \Controller {
+class PermissionsController extends Controller {
 
     /**
      * Repository

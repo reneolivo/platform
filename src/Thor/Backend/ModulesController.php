@@ -14,7 +14,7 @@ use View,
 | Feel free to change it to your needs.
 |
 */
-class ModulesController extends \Controller {
+class ModulesController extends Controller {
 
     /**
      * Repository

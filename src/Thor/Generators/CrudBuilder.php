@@ -14,21 +14,21 @@ class CrudBuilder
 
     protected function getViewPrefix($isPageable, $transFields)
     {
-        return 'generators::';
+        return 'thor::generators.';
     }
 
     protected function getModelClass($singular)
     {
-        return Config::get('generators::model_prefix') .
+        return Config::get('thor::generators.model_prefix') .
                 ucfirst(Str::camel($singular)) .
-                Config::get('generators::model_suffix');
+                Config::get('thor::generators.model_suffix');
     }
 
     protected function getControllerClass($singular)
     {
-        return Config::get('generators::controller_prefix') .
+        return Config::get('thor::generators.controller_prefix') .
                 ucfirst(Str::camel(Str::plural($singular))) .
-                Config::get('generators::controller_suffix');
+                Config::get('thor::generators.controller_suffix');
     }
 
     protected function getClassInfo($classFullName)
@@ -54,8 +54,8 @@ class CrudBuilder
         //$fields[] = array('integer', 'sorting', 'number');
         //$fields[] = array('boolean', 'is_published', 'checkbox');
 
-        $viewParent = Config::get('generators::view_parent');
-        $viewSection = Config::get('generators::view_section');
+        $viewParent = Config::get('thor::generators.view_parent');
+        $viewSection = Config::get('thor::generators.view_section');
 
         if ($isPageable) {
             if (!is_array($fields)) {
@@ -259,7 +259,7 @@ class CrudBuilder
     public function createResourceRoutes($singular, $withPermissionFilters = false)
     {
         $_this = $this;
-        Route::langGroup(array('prefix' => Config::get('generators::backend_base_route'), 'before' => 'auth.backend'), function()
+        Route::langGroup(array('prefix' => Config::get('thor::generators.backend_base_route'), 'before' => 'auth.backend'), function()
                 use($singular, $_this, $withPermissionFilters) {
 
             $plural = Str::plural($singular);

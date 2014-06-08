@@ -12,7 +12,7 @@ use View,
 /**
  * Backend authentication controller
  */
-class AuthController extends \Illuminate\Routing\Controller
+class AuthController extends Controller
 {
 
     /**

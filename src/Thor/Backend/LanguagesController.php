@@ -14,7 +14,7 @@ use View,
 | Feel free to change it to your needs.
 |
 */
-class LanguagesController extends \Controller {
+class LanguagesController extends Controller {
 
     /**
      * Repository

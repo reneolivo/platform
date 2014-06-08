@@ -15,7 +15,7 @@ use View,
 | Feel free to change it to your needs.
 |
 */
-class {{$controller['className']}} extends {{Config::get('generators::controller_extends')}} {
+class {{$controller['className']}} extends {{Config::get('thor::generators.controller_extends')}} {
 
     /**
      * Repository
