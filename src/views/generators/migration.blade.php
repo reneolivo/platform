@@ -18,7 +18,7 @@ class CreateThor{{ucfirst($plural)}}Table extends Migration {
 $table->integer('{{$name}}')->unsigned()->nullable()->default(null);
 $table->foreign('{{$name}}')->references('id')->on('{{$def->foreign_table}}');
 @else
-$table->{{$def->data_type}}('{{$name}}')->nullable()->default(null);
+$table->{{$def->blueprint_function}}('{{$name}}')->nullable()->default(null);
 @endif
                     @endforeach
 $table->timestamps();
@@ -37,7 +37,7 @@ $table->timestamps();
 $table->integer('{{$name}}')->unsigned()->nullable()->default(null);
 $table->foreign('{{$name}}')->references('id')->on('{{$def->foreign_table}}');
 @else
-$table->{{$def->data_type}}('{{$name}}')->nullable()->default(null);
+$table->{{$def->blueprint_function}}('{{$name}}')->nullable()->default(null);
 @endif
                     @endforeach
                     $table->timestamps();
@@ -56,6 +56,7 @@ $table->{{$def->data_type}}('{{$name}}')->nullable()->default(null);
 @if($def->foreign_table!=false)
 $table->dropForeign('{{$singular}}_{{$name}}_foreign');
 @endif
+@endforeach
                 });
                 @if($isTranslatable)
                 
@@ -66,6 +67,7 @@ $table->dropForeign('{{$singular}}_{{$name}}_foreign');
 @if($def->foreign_table!=false)
 $table->dropForeign('{{$singular}}_texts_{{$name}}_foreign');
 @endif
+@endforeach
                 });
         Schema::drop('{{$singular}}_texts');
                 @endif

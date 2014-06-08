@@ -7,13 +7,15 @@ use Thor\Models;
 /**
  * {{ucfirst($singular)}} text model 
 @foreach($generalFields as $name => $f)
- * @property {{$f->data_type}} ${{$f->name}}
+ * @property {{$f->blueprint_function}} ${{$f->name}}
  
 @endforeach
 @foreach($translatableFields as $name => $f)
- * @property {{$f->data_type}} ${{$f->name}}
+ * @property {{$f->blueprint_function}} ${{$f->name}}
  
 @endforeach
+ * @property integer $language_id
+ * @property integer ${{$singular}}_id
  * @property timestamp $created_at
  * @property timestamp $updated_at 
  */
@@ -23,7 +25,9 @@ class {{$modelShortName}}Text extends Models\BaseText {
     
     protected $fillable = array(
 @foreach($translatableFields as $name => $f)
-  '${{$f->name}}',
+  '{{$f->name}}',
+  'language_id',
+  '{{$singular}}_id',
  
 @endforeach
     );

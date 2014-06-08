@@ -16,7 +16,29 @@
             }
         });
         $('.btn-destroy').on('click', function(e) {
-            return window.confirm('Do you want to continue with this operation?');
+            if (!window.confirm('Do you want to continue with this operation?')) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+        });
+
+        Dropzone.autoDiscover = false;
+
+        $('.widget-dropzone').each(function() {
+            var $self = $(this);
+            this._dropzone = new Dropzone(this, {
+                url: $self.attr('data-dropzone-url'),
+                dictDefaultMessage: $self.attr('data-dropzone-title')
+            });
+        });
+
+        $('.widget-datatable').dataTable();
+        $('.widget-wysihtml5').wysihtml5();
+        $('.widget-select2').select2();
+        $('.widget-colorpicker').colorpicker();
+        $('.widget-datepicker').datepicker({
+            "format": "yyyy-mm-dd"
         });
     });
 })(window.jQuery);

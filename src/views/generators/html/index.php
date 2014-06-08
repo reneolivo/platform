@@ -5,12 +5,12 @@
     <div class="col-lg-12">
         <h1 class="page-header">All <?php echo ucfirst($plural); ?></h1>
         
-@(if(Entrust::can('create_<?php echo $plural; ?>')))
+@if(Entrust::can('create_<?php echo $plural; ?>'))
         <p>{{ _d(link_to_route('<?php echo ('backend.' . $plural . '.create'); ?>', '<i class="fa fa-plus"></i> Add new <?php echo $singular; ?>',[],['class'=>'btn btn-primary pull-right'])) }}</p>
 @endif
 
-        @if ($<?php echo $plural; ?>->count())
-        <table class="table table-striped table-hover table-responsive">
+        @if ($items->count())
+        <table class="table table-striped table-hover table-responsive widget-datatable">
             <thead>
                 <tr>
                     <?php foreach($listableFields as $name => $f): ?>
@@ -21,22 +21,22 @@
             </thead>
 
             <tbody>
-                @foreach ($<?php echo $plural; ?> as $<?php echo $singular; ?>)
+                @foreach ($items as $item)
                 <tr>
                     <?php foreach($listableFields as $name => $f): ?>
-                        <td>{{{ $<?php echo $singular; ?>-><?php echo $name; ?> }}}</td>
+                        <td>{{{ $item-><?php echo $name; ?> }}}</td>
                     <?php endforeach; ?>
                     <td class="al-r">
-                        @(if(Entrust::can('read_<?php echo $plural; ?>')))
-                        {{ link_to_route('<?php echo ('backend.' . $plural . '.show'); ?>', 'Show', array($<?php echo $singular; ?>->id), array('class' => 'btn btn-sm btn-default')) }}
+                        @if(Entrust::can('read_<?php echo $plural; ?>'))
+                        {{ link_to_route('<?php echo ('backend.' . $plural . '.show'); ?>', 'Show', array($item->id), array('class' => 'btn btn-sm btn-default')) }}
                         @endif
                         
-                        @(if(Entrust::can('update_<?php echo $plural; ?>')))
-                        {{ link_to_route('<?php echo ('backend.' . $plural . '.edit'); ?>', 'Edit', array($<?php echo $singular; ?>->id), array('class' => 'btn btn-sm btn-info')) }}
+                        @if(Entrust::can('update_<?php echo $plural; ?>'))
+                        {{ link_to_route('<?php echo ('backend.' . $plural . '.edit'); ?>', 'Edit', array($item->id), array('class' => 'btn btn-sm btn-info')) }}
                         @endif
                         
-                        @(if(Entrust::can('delete_<?php echo $plural; ?>')))
-                        {{ Form::open(array('method' => 'DELETE', 'class' => 'inl-bl', 'route' => array('<?php echo ('backend.' . $plural . '.do_delete'); ?>', $<?php echo $singular; ?>->id))) }}
+                        @if(Entrust::can('delete_<?php echo $plural; ?>'))
+                        {{ Form::open(array('method' => 'DELETE', 'class' => 'inl-bl', 'route' => array('<?php echo ('backend.' . $plural . '.do_delete'); ?>', $item->id))) }}
                         {{ Form::submit('Delete', array('class' => 'btn btn-sm btn-danger btn-destroy')) }}
                         {{ Form::close() }}
                         @endif

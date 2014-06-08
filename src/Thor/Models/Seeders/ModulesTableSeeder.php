@@ -36,10 +36,11 @@ class ModulesTableSeeder extends Seeder
             'icon' => 'fa-bookmark',
             'description' => 'Pages module',
             'is_pageable' => true,
-            'is_translatable' => true,
-            'is_imageable' => true,
+            'model_class' => '\\Thor\\Models\\Page',
+            'controller_class' => '\\Thor\\Backend\\PagesController',
+            'metadata' => '',
             'is_active' => true,
-            'sorting' => 1
+            'sorting' => -99
         ));
     }
 

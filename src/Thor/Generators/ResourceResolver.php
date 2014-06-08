@@ -5,7 +5,7 @@ namespace Thor\Generators;
 use Config,
     Str;
 
-class ResourceResolver extends \ArrayObject
+class ResourceResolver implements \ArrayAccess
 {
 
     public $singular;
@@ -39,7 +39,7 @@ class ResourceResolver extends \ArrayObject
     public $isTranslatable;
     public $resolver;
     //
-    public $defaultPageableFields = array(
+    protected $defaultPageableFields = array(
         'taxonomy' => array('string', 'taxonomy', 'text'),
         'controller' => array('string', 'controller', 'text'),
         'action' => array('string', 'action', 'text'),
@@ -50,7 +50,7 @@ class ResourceResolver extends \ArrayObject
         'sorting' => array('integer', 'sorting', 'number'),
         'status' => array('string', 'status', 'text'), // general pageable status
     );
-    public $defaultPageableTranslatableFields = array(
+    protected $defaultPageableTranslatableFields = array(
         'title' => array('string', 'title', 'text'),
         'content' => array('text', 'content', 'html'),
         'slug' => array('text', 'slug', 'text'),
@@ -95,30 +95,71 @@ class ResourceResolver extends \ArrayObject
 
         $this->fillDefaultConfig();
         $this->fillClassInfo('model');
-        $this->fillClassInfo('controller');
+        $this->fillClassInfo('controller', true);
         $this->migrationFile = app_path() . '/database/migrations/' . date('Y_m_d_His') . '_' . 'create_thor_' . $this->plural . '_table';
 
-        $this->fillFields();
         $this->fillBehaviours();
+        $this->fillFields();
         $this->fillListableFields();
-        $this->isTranslatable = $this->is('translatable');
+        $this->isTranslatable = $this->hasBehaviour('translatable');
         $this->resolver = $this;
+    }
+
+    public function offsetExists($offset)
+    {
+        return isset($this->$offset);
+    }
+
+    public function offsetGet($offset)
+    {
+        return $this->$offset;
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        $this->$offset = $value;
+    }
+
+    public function offsetUnset($offset)
+    {
+        unset($this->$offset);
+    }
+    
+    /**
+     * 
+     * @param string $name
+     * @param string $label
+     * @param string $blueprintFunction
+     * @param string $formControlType
+     * @param string $foreignTable
+     * @param string $foreignListWith
+     * @return \Thor\Support\Object
+     */
+    public function defineField($name, $label = null, $blueprintFunction = 'string', $formControlType = 'text', $foreignTable = false, $foreignListWith = false)
+    {
+        return new \Thor\Support\Object(array(
+            'name' => $name,
+            'label' => ($label ? $label : $name),
+            'blueprint_function' => $blueprintFunction,
+            'form_control_type' => $formControlType,
+            'foreign_table' => $foreignTable,
+            'foreign_list_with' => $foreignListWith
+        ));
     }
 
     protected function fillListableFields()
     {
 
         if (empty($this->listableFields)) {
-            $this->listableFields = array_merge(array('id'), 
-                    array_keys($this->generalFields), array('updated_at'));
+            $this->listableFields = array_merge(array('id'), array_keys($this->generalFields), array('updated_at'));
         }
         $fields = array();
-        foreach($this->listableFields as $name){
-            if(isset($this->generalFields[$fields])){
-                $fields[$name] = $this->generalFields[$fields];
-            }elseif(isset($this->translatableFields[$fields])){
-                $fields[$name] = $this->translatableFields[$fields];
-            }else{
+        foreach ($this->listableFields as $name) {
+            if (isset($this->generalFields[$name])) {
+                $fields[$name] = $this->generalFields[$name];
+            } elseif (isset($this->translatableFields[$name])) {
+                $fields[$name] = $this->translatableFields[$name];
+            } else {
                 $fields[$name] = false;
             }
         }
@@ -138,14 +179,15 @@ class ResourceResolver extends \ArrayObject
         $this->modelSuffix = $config['model_suffix'];
     }
 
-    protected function fillClassInfo($classType)
+    protected function fillClassInfo($classType, $usePluralInClass = false)
     {
-        $this[$classType . 'FullName'] = $fullClass = ($this[$classType . 'Prefix'] . ucfirst(Str::camel($this->singular)) . $this[$classType . 'Suffix']);
+        $this[$classType . 'FullName'] = $fullClass = ($this[$classType . 'Prefix']
+                . ucfirst(Str::camel($usePluralInClass ? $this->plural : $this->singular)) . $this[$classType . 'Suffix']);
         $parts = explode('/', str_replace('\\', '/', trim($fullClass, '/\\ ')));
         $this[$classType . 'ShortName'] = array_pop($parts);
         $this[$classType . 'Namespace'] = implode('\\', $parts);
         $this[$classType . 'Path'] = app_path() . '/src/' . trim(implode('/', $parts), '/\\ ');
-        $this[$classType . 'File'] = $this[$classType . 'Path'] . '/' . $this[$classType . 'ShortName'] . '.php';
+        $this[$classType . 'File'] = $this[$classType . 'Path'] . '/' . $this[$classType . 'ShortName'];
         if (file_exists($this[$classType . 'File'] . '.php')) {
             $this[$classType . 'File'] .= '_' . date('Y_m_d_His');
         }
@@ -153,23 +195,17 @@ class ResourceResolver extends \ArrayObject
 
     protected function fillFields()
     {
-        if ($this->has('pageable')) {
-            $this->generalFields = array_merge($this->defaultPageableFields, $this->generalFields);
-            $this->translatableFields = array_merge($this->defaultPageableTranslatableFields, $this->translatableFields);
+        if ($this->hasBehaviour('pageable')) {
+            foreach($this->defaultPageableFields as $f){
+                $this->generalFields[$f[1]] = $this->defineField($f[1], Str::title(str_replace('_', ' ', $f[1])), $f[0], $f[2]);
+            }
+            foreach($this->defaultPageableTranslatableFields as $f){
+                $this->translatableFields[$f[1]] = $this->defineField($f[1], Str::title(str_replace('_', ' ', $f[1])), $f[0], $f[2]);
+            }
         }
 
         if ((is_array($this->translatableFields) and ( count($this->translatableFields) > 0))) {
-            $transFields = array_merge($transFields, array(
-                'translation_status' => (object) array(
-                    'name' => 'translation_status',
-                    'label' => 'Translation Status',
-                    'data_type' => 'string',
-                    'control_type' => 'text',
-                    'foreign_table' => false,
-                    'foreign_column' => false,
-                    'foreign_listwith' => false
-                ),
-            ));
+            $this->translatableFields['is_translated'] = $this->defineField('is_translated', 'Is translation finished?', 'boolean', 'checkbox');
         }
     }
 
@@ -185,7 +221,7 @@ class ResourceResolver extends \ArrayObject
         $modelUses = array();
 
         foreach ($this->behaviours as $name) {
-            if (($name == 'translatable') and ( !$this->is('pageable'))) {
+            if (($name == 'translatable') and ( !$this->hasBehaviour('pageable'))) {
                 $modelImplements[] = $this->modelPrefix . 'I' . ucfirst($name);
                 $modelUses[] = $this->modelPrefix . 'T' . ucfirst($name);
             }
@@ -195,13 +231,13 @@ class ResourceResolver extends \ArrayObject
         $this->modelUses = empty($modelUses) ? '' : ('use ' . implode(', ', $modelUses) . ';');
     }
 
-    public function has($fieldName)
+    public function hasField($fieldName)
     {
         return in_array($fieldName, array_keys($this->generalFields))
                 or in_array($fieldName, array_keys($this->translatableFields));
     }
 
-    public function is($behaviourName)
+    public function hasBehaviour($behaviourName)
     {
         return in_array($behaviourName, $this->behaviours);
     }
@@ -214,28 +250,23 @@ class ResourceResolver extends \ArrayObject
         }
         if (is_string($str)) {
             $parsed = explode(',', trim(strtolower($str), ',;|: '));
+            foreach ($parsed as $i => $v) {
+                $parsed[$i] = trim($v);
+            }
         }
         return $parsed;
     }
 
     public function parseFields($str)
     {
-        $str = $this->parseStrList($str);
-        if (empty($str)) {
+        $fields = $this->parseStrList($str);
+        if (empty($fields)) {
             return array();
         }
         $parsed = array();
 
-        $fields = explode(',', $str);
         foreach ($fields as $field) {
-            $data = array(
-                'name' => false,
-                'label' => false,
-                'data_type' => 'string',
-                'control_type' => 'text',
-                'foreign_table' => false,
-                'foreign_listwith' => false
-            );
+            $data = $this->defineField(false);
             $params = explode(':', trim($field, ',;|: '));
             if (empty($params)) {
                 return false;
@@ -244,26 +275,30 @@ class ResourceResolver extends \ArrayObject
             $data['label'] = Str::title(str_replace('_', ' ', $params[0]));
 
             if (isset($params[1])) {
-                $data['data_type'] = $params[1];
+                $data['blueprint_function'] = $params[1];
+            }
+            if ($data['blueprint_function'] == 'datetime') {
+                $data['blueprint_function'] = 'timestamp';
             }
             if (isset($params[2])) {
-                $data['control_type'] = $params[2];
-            }else{
-                switch($data['data_type']){
-                    case 'boolean': $data['control_type'] = 'checkbox'; break;
-                    case 'integer': $data['control_type'] = 'number'; break;
-                    case 'timestamp': $data['control_type'] = 'datepicker'; break;
-                    default: $data['control_type'] = 'number'; break;
+                $data['form_control_type'] = $params[2];
+            } else {
+                switch ($data['blueprint_function']) {
+                    case 'boolean': $data['form_control_type'] = 'checkbox';
+                        break;
+                    case 'integer': $data['form_control_type'] = 'number';
+                        break;
+                    case 'timestamp': $data['form_control_type'] = 'datepicker';
+                        break;
+                    default: $data['form_control_type'] = 'text';
+                        break;
                 }
             }
             if (isset($params[3])) {
                 $data['foreign_table'] = $params[3];
             }
             if (isset($params[4])) {
-                $data['foreign_column'] = $params[4];
-            }
-            if (isset($params[5])) {
-                $data['foreign_listwith'] = $params[5];
+                $data['foreign_listwith'] = $params[4];
             }
             $parsed[$data['name']] = (object) $data;
         }

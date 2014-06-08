@@ -7,11 +7,11 @@
 
         <p>{{ link_to_route('<?php echo ('backend.' . $plural . '.index'); ?>', 'Return to all <?php echo $plural; ?>') }}</p>
 
-        {{ Form::model($<?php echo $singular; ?>, array('method' => 'PATCH'
-    , 'route' => array('<?php echo ('backend.' . $plural . '.do_edit'); ?>', $<?php echo $singular; ?>->id), 'role'=>'form')) }}
+        {{ Form::model($model, array('method' => 'PATCH'
+    , 'route' => array('<?php echo ('backend.' . $plural . '.do_edit'); ?>', $model->id), 'role'=>'form')) }}
 <?php if($isTranslatable): ?>
 <?php echo "<?php\n"; ?>
-    $transl = $<?php echo $singular; ?>->translation();
+    $transl = $model->translation();
 <?php echo "?>"; ?>
 {{ Form::hidden('translation[id]', $transl->id) }}
 <?php endif; ?>
@@ -21,12 +21,12 @@
         <?php
         foreach($generalFields as $name => $f):
             $inputValue = 'null';
-            if($f->data_type=='boolean'){
+            if($f->blueprint_function=='boolean'){
                 $inputType = '1';
             }
             //bsField params: labelText, name, inputAttributes, type, value, containerAttributes
             ?>
-        {{Form::bsField(array('<?php echo $f->label ?>', '<?php echo $f->name ?>', [], '<?php echo $f->control_type ?>',<?php echo $inputValue ?>, []))}}
+        {{Form::bsField('<?php echo $f->label ?>', '<?php echo $f->name ?>', [], '<?php echo $f->form_control_type ?>',<?php echo $inputValue ?>, [])}}
         
         <?php endforeach; ?>
        
@@ -34,13 +34,13 @@
         <?php
         if($isTranslatable):
         foreach($translatableFields as $name => $f):
-            $inputValue = '$transl->'.$field;
-            if($f->data_type=='boolean'){
+            $inputValue = '$transl->'.$name;
+            if($f->blueprint_function=='boolean'){
                 $inputType = '1';
             }
             //bsField params: labelText, name, inputAttributes, type, value, containerAttributes
             ?>
-        {{Form::bsField(array('<?php echo $f->label ?> ('.Lang::code().')', 'translation[<?php echo $f->name ?>]', [], '<?php echo $f->control_type ?>',<?php echo $inputValue ?>, []))}}
+        {{Form::bsField('<?php echo $f->label ?> ('.Lang::code().')', 'translation[<?php echo $f->name ?>]', [], '<?php echo $f->form_control_type ?>',<?php echo $inputValue ?>, [])}}
         
         <?php endforeach; ?>
         <?php endif; ?>
@@ -49,7 +49,7 @@
 
         <div class="form-group">
             {{ Form::button('<i class="fa fa-floppy-o"></i> Save', array('class' => 'btn btn-primary', 'type'=>'submit', 'value'=>'update')) }}
-            {{ link_to_route('<?php echo ('backend.' . $plural . '.index'); ?>', 'Cancel', array($<?php echo $singular; ?>->id), array('class' => 'btn btn-default')) }}
+            {{ link_to_route('<?php echo ('backend.' . $plural . '.index'); ?>', 'Cancel', array($model->id), array('class' => 'btn btn-default')) }}
         </div>
 
         {{ Form::close() }}

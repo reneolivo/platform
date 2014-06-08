@@ -1,20 +1,23 @@
 <?php
+
 namespace Thor\Backend;
 
 use View,
     Redirect,
-    Validator,
-    Form, CRUD, Artisan;
+    CRUD;
+
 /*
-|--------------------------------------------------------------------------
-| \Thor\Models\Module backend controller
-|--------------------------------------------------------------------------
-|
-| This is a default Thor CMS backend controller template for resource management.
-| Feel free to change it to your needs.
-|
-*/
-class ModulesController extends Controller {
+  |--------------------------------------------------------------------------
+  | \Thor\Models\Module backend controller
+  |--------------------------------------------------------------------------
+  |
+  | This is a default Thor CMS backend controller template for resource management.
+  | Feel free to change it to your needs.
+  |
+ */
+
+class ModulesController extends Controller
+{
 
     /**
      * Repository
@@ -22,7 +25,8 @@ class ModulesController extends Controller {
      * @var \Thor\Models\Module     */
     protected $module;
 
-    public function __construct(\Thor\Models\Module $module) {
+    public function __construct(\Thor\Models\Module $module)
+    {
         $this->module = $module;
     }
 
@@ -31,7 +35,8 @@ class ModulesController extends Controller {
      *
      * @return Response
      */
-    public function index() {
+    public function index()
+    {
         $modules = $this->module->all();
 
         return View::make('thor::backend.modules.index', compact('modules'));
@@ -42,7 +47,8 @@ class ModulesController extends Controller {
      *
      * @return Response
      */
-    public function create() {
+    public function create()
+    {
         return View::make('thor::backend.modules.create');
     }
 
@@ -51,21 +57,16 @@ class ModulesController extends Controller {
      *
      * @return Response
      */
-    public function do_create() {
-        $input = \Input::all();
-        if(isset($input['name'])){
-            $input['name'] = \Str::singular(strtolower($input['name']));
-        }
-        if ($this->module->validate($input)) {
-            $module = $this->module->create($input);
-            
-            CRUD::generate($module->singular(), [], [], $module->is_pageable, $module->is_imageable);
-            Artisan::call('migrate');
-            CRUD::createPermissions($module->singular(), true);
-            
-            if($module->is_active){
-                return Redirect::to(\Backend::url($module->plural()));
-            }else{
+    public function do_create()
+    {
+        $this->module = CRUD::createModule(\Input::all(), \Input::get('behaviours')
+                        , \Input::get('general_fields'), \Input::get('translatable_fields')
+                        , \Input::get('listable_fields'));
+
+        if ($this->module != false) {
+            if ($this->module->is_active) {
+                return Redirect::to($this->module->url());
+            } else {
                 return Redirect::route('backend.modules.index');
             }
         }
@@ -82,7 +83,8 @@ class ModulesController extends Controller {
      * @param  \Thor\Models\Module  $module 
      * @return Response
      */
-    public function show(\Thor\Models\Module $module) {
+    public function show(\Thor\Models\Module $module)
+    {
 
         return View::make('thor::backend.modules.show', compact('module'));
     }
@@ -93,7 +95,8 @@ class ModulesController extends Controller {
      * @param  \Thor\Models\Module  $module 
      * @return Response
      */
-    public function edit(\Thor\Models\Module $module) {
+    public function edit(\Thor\Models\Module $module)
+    {
 
         if (is_null($module)) {
             return Redirect::route('backend.modules.index');
@@ -109,15 +112,16 @@ class ModulesController extends Controller {
      * @param  \Thor\Models\Module  $module 
      * @return Response
      */
-    public function do_edit(\Thor\Models\Module $module) {
-        $input = array_merge(array( // for unchecked checkboxes:
-            'is_pageable'=>false,
-            'is_translatable'=>false,
-            'is_imageable'=>false,
-            'is_active'=>false,
-        ), \Input::all());
-        
-        if(isset($input['name'])){
+    public function do_edit(\Thor\Models\Module $module)
+    {
+        $input = array_merge(array(// for unchecked checkboxes:
+            'is_pageable' => false,
+            'is_translatable' => false,
+            'is_imageable' => false,
+            'is_active' => false,
+                ), \Input::all());
+
+        if (isset($input['name'])) {
             $input['name'] = strtolower($input['name']);
         }
 
@@ -126,7 +130,7 @@ class ModulesController extends Controller {
 
             return Redirect::route('backend.modules.edit', $module->id);
         }
-        
+
         return Redirect::route('backend.modules.edit', $module->id)
                         ->withInput()
                         ->withErrors($module->errors())
@@ -139,7 +143,8 @@ class ModulesController extends Controller {
      * @param  \Thor\Models\Module  $module 
      * @return Response
      */
-    public function do_delete(\Thor\Models\Module $module) {
+    public function do_delete(\Thor\Models\Module $module)
+    {
         $module->delete();
 
         return Redirect::route('backend.modules.index');

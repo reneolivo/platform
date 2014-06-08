@@ -22,6 +22,7 @@ class CreateModulesTable extends Migration
             $table->boolean('is_pageable')->nullable()->default(null);
             $table->string('model_class')->nullable()->default(null);
             $table->string('controller_class')->nullable()->default(null);
+            $table->text('metadata')->nullable()->default(null);
             $table->boolean('is_active')->nullable()->default(null);
             $table->integer('sorting')->nullable()->default(null);
             $table->timestamps();

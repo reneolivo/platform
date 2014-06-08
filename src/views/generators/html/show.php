@@ -10,33 +10,33 @@
         <section class="resource-show">
             <div class="form-group">
                 {{ Form::label(null, 'ID:') }}
-                <pre class="well well-sm">{{{ $<?php echo $singular; ?>->id }}}</pre>
+                <pre class="well well-sm">{{{ $model->id }}}</pre>
             </div>
             <?php foreach($generalFields as $name => $f): ?>
                 <div class="form-group">
                     {{ Form::label(null, '<?php echo $f->label; ?>:') }}
-                    <pre class="well well-sm">{{{ $<?php echo $singular; ?>-><?php echo $name; ?> }}}</pre>
+                    <pre class="well well-sm">{{{ $model-><?php echo $name; ?> }}}</pre>
                 </div>
             <?php endforeach; ?>
             <?php if($isTranslatable): ?>
             <?php foreach($translatableFields as $name => $f): ?>
                 <div class="form-group">
                     {{ Form::label(null, '<?php echo $f->label; ?>:') }}
-                    <pre class="well well-sm">{{{ $<?php echo $singular; ?>->translation()-><?php echo $name; ?> }}}</pre>
+                    <pre class="well well-sm">{{{ $model->translation()-><?php echo $name; ?> }}}</pre>
                 </div>
             <?php endforeach; ?>
             <?php endif; ?>
             <div class="form-group">
                 {{ Form::label(null, 'Created at:') }}
-                <pre class="well well-sm">{{{ $<?php echo $singular; ?>->created_at }}}</pre>
+                <pre class="well well-sm">{{{ $model->created_at }}}</pre>
             </div>
             <div class="form-group">
                 {{ Form::label(null, 'Updated at:') }}
-                <pre class="well well-sm">{{{ $<?php echo $singular; ?>->updated_at }}}</pre>
+                <pre class="well well-sm">{{{ $model->updated_at }}}</pre>
             </div>
 
             <div class="form-group">
-                {{ _d(link_to_route('<?php echo ('backend.' . $plural . '.edit'); ?>', '<i class="fa fa-pencil"></i> Edit', array($<?php echo $singular; ?>->id), array('class' => 'btn btn-info'))) }}
+                {{ _d(link_to_route('<?php echo ('backend.' . $plural . '.edit'); ?>', '<i class="fa fa-pencil"></i> Edit', array($model->id), array('class' => 'btn btn-info'))) }}
                 {{ link_to_route('<?php echo ('backend.' . $plural . '.index'); ?>', 'Cancel', null, array('class' => 'btn btn-default')) }}
             </div>
         </section>

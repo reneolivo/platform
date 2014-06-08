@@ -26,7 +26,11 @@ class Module extends Base
  
     protected static $rules = array(
         'name' => 'required|not_in:user,role,permission,module,image,auth,language,main|unique:modules,name,{id}',
-        'display_name' => 'required',
+    );
+    
+    protected $fillable = array(
+        'name', 'display_name', 'icon', 'is_pageable', 'description',
+        'model_class', 'controller_class', 'is_active', 'sorting'
     );
 
     public function singular()
@@ -37,6 +41,11 @@ class Module extends Base
     public function plural()
     {
         return Str::plural($this->name);
+    }
+
+    public function url()
+    {
+        return \Backend::url($this->plural());
     }
 
     public function permissions()

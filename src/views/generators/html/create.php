@@ -14,12 +14,12 @@
         <?php
         foreach($generalFields as $name => $f):
             $inputValue = 'null';
-            if($f->data_type=='boolean'){
+            if($f->blueprint_function=='boolean'){
                 $inputType = '1';
             }
             //bsField params: labelText, name, inputAttributes, type, value, containerAttributes
             ?>
-        {{Form::bsField(array('<?php echo $f->label ?>', '<?php echo $f->name ?>', [], '<?php echo $f->control_type ?>',<?php echo $inputValue ?>, []))}}
+        {{Form::bsField('<?php echo $f->label ?>', '<?php echo $f->name ?>', [], '<?php echo $f->form_control_type ?>',<?php echo $inputValue ?>, [])}}
         
         <?php endforeach; ?>
         
@@ -27,12 +27,12 @@
         if($isTranslatable):
         foreach($translatableFields as $name => $f):
             $inputValue = 'null';
-            if($f->data_type=='boolean'){
+            if($f->blueprint_function=='boolean'){
                 $inputType = '1';
             }
             //bsField params: labelText, name, inputAttributes, type, value, containerAttributes
             ?>
-        {{Form::bsField(array('<?php echo $f->label ?> ('.Lang::code().')', 'translation[<?php echo $f->name ?>]', [], '<?php echo $f->control_type ?>',<?php echo $inputValue ?>, []))}}
+        {{Form::bsField('<?php echo $f->label ?> ('.Lang::code().')', 'translation[<?php echo $f->name ?>]', [], '<?php echo $f->form_control_type ?>',<?php echo $inputValue ?>, [])}}
         
         <?php endforeach; ?>
         <?php endif; ?>

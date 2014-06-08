@@ -4,7 +4,7 @@ namespace {{$controllerNamespace}};
 
 use View,
     Redirect,
-    Form;
+    Form, Input;
 /*
 |--------------------------------------------------------------------------
 | Backend controller for {{$modelFullName}}
@@ -33,9 +33,9 @@ class {{$controllerShortName}} extends \Thor\Backend\Controller {
      * @return Response
      */
     public function index() {
-        ${{$plural}} = $this->model->all();
+        $items = $this->model->all();
 
-        return View::make('thor::backend.{{$plural}}.index', compact('{{$plural}}'));
+        return View::make('thor::backend.{{$plural}}.index', compact('items'));
     }
 
     /**
@@ -53,7 +53,7 @@ class {{$controllerShortName}} extends \Thor\Backend\Controller {
      * @return Response
      */
     public function do_create() {
-        $input = \Input::all();
+        $input = Input::all();
         @if($isTranslatable)
         $transl_model = new {{$modelFullName}}Text();
         $transl_input = array_except(Input::get('translation'), 'id');
@@ -68,7 +68,7 @@ class {{$controllerShortName}} extends \Thor\Backend\Controller {
                 return Redirect::route('backend.{{$plural}}.index');
             @if($isTranslatable)
             }else{
-                $transl_errors = $transl_model->errors()
+                $transl_errors = $transl_model->errors();
             }
             @endif
         }
@@ -88,7 +88,7 @@ class {{$controllerShortName}} extends \Thor\Backend\Controller {
      */
     public function show({{$modelFullName}} $model) {
 
-        return View::make('thor::backend.{{$plural}}.show', compact('{{$singular}}'));
+        return View::make('thor::backend.{{$plural}}.show', compact('model'));
     }
 
     /**
@@ -103,7 +103,7 @@ class {{$controllerShortName}} extends \Thor\Backend\Controller {
             return Redirect::route('backend.{{$plural}}.index');
         }
 
-        return View::make('thor::backend.{{$plural}}.edit', compact('{{$singular}}'));
+        return View::make('thor::backend.{{$plural}}.edit', compact('model'));
     }
 
     /**
@@ -115,16 +115,16 @@ class {{$controllerShortName}} extends \Thor\Backend\Controller {
     public function do_edit({{$modelFullName}} $model) {
         $input = array_merge(array( // for unchecked checkboxes:
             @foreach($generalFields as $name => $def)
-            @if($def->data_type=='boolean')
+            @if($def->blueprint_function=='boolean')
             '{{$name}}'=>false,
             @endif
             @endforeach
-        ), \Input::all());
+        ), Input::all());
         
         @if($isTranslatable)
         $transl_input = array_merge(array( // for unchecked checkboxes:
             @foreach($translatableFields as $name => $def)
-            @if($def->data_type=='boolean')
+            @if($def->blueprint_function=='boolean')
             '{{$name}}'=>false,
             @endif
             @endforeach
@@ -140,7 +140,7 @@ class {{$controllerShortName}} extends \Thor\Backend\Controller {
                 
                 // Save translation
                 if (Input::get('translation.id')) {
-                    $transl_model = {{$modelFullName}}Text::find(\Input::get('translation.id'));
+                    $transl_model = {{$modelFullName}}Text::find(Input::get('translation.id'));
                     $transl->update($transl_input);
                 } else {
                     $transl_model = $transl_model->create(array_merge(array('language_id' => \Lang::id(), '{{$singular}}_id' => $model->id), $transl_input));
@@ -149,7 +149,7 @@ class {{$controllerShortName}} extends \Thor\Backend\Controller {
             return Redirect::route('backend.{{$plural}}.edit', $model->id);
             @if($isTranslatable)
             }else{
-                $transl_errors = $transl_model->errors()
+                $transl_errors = $transl_model->errors();
             }
             @endif
         }

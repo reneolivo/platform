@@ -55,6 +55,7 @@ module.exports = function(grunt) {
                         'vendor/js/select2.min.js',
                         'vendor/js/jquery.dataTables.min.js',
                         'vendor/js/jquery.dataTables.bootstrap.js',
+                        'vendor/js/dropzone.js',
                         'js/app.js'
                     ]
                 }
