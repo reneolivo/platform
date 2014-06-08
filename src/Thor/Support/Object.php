@@ -2,7 +2,7 @@
 
 namespace Thor\Support;
 
-class Object implements \ArrayAccess
+class Object implements \ArrayAccess, \Countable, \Traversable
 {
 
     /**
@@ -28,6 +28,11 @@ class Object implements \ArrayAccess
     public function __isset($name)
     {
         return isset($this->props[$name]);
+    }
+    
+    public function count()
+    {
+        return count($this->props);
     }
 
     public function get($name)
@@ -89,7 +94,7 @@ class Object implements \ArrayAccess
     /**
      * 
      * @param array $properties
-     * @return static|this
+     * @return static
      */
     public function fromArray(array $properties)
     {

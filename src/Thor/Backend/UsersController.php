@@ -1,0 +1,152 @@
+<?php
+namespace Thor\Admin;
+
+use View,
+    Redirect,
+    Validator,
+    Form, Input;
+/*
+|--------------------------------------------------------------------------
+| \Thor\Models\User admin controller
+|--------------------------------------------------------------------------
+|
+| This is a default Thor Framework admin controller template for resource management.
+| Feel free to change it to your needs.
+|
+*/
+class UsersController extends \Controller {
+
+    /**
+     * Repository
+     *
+     * @var \Thor\Models\User     */
+    protected $user;
+
+    public function __construct(\Thor\Models\User $user) {
+        $this->user = $user;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index() {
+        $users = $this->user->all();
+
+        return View::make('admin::users.index', compact('users'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create() {
+        return View::make('admin::users.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return Response
+     */
+    public function do_create()
+    {
+        $this->user->username = Input::get('username');
+        $this->user->email = Input::get('email');
+        $this->user->password = Input::get('password');
+
+        // The password confirmation will be removed from model
+        // before saving. This field will be used in Ardent's
+        // auto validation.
+        $this->user->password_confirmation = Input::get('password_confirmation');
+
+        // Save if valid. Password field will be hashed before save
+        $this->user->save();
+
+        if ($this->user->id) {
+
+            return Redirect::route('admin.users.index');
+        }
+
+        return Redirect::route('admin.users.create')
+                        ->withInput()
+                        ->withErrors($this->user->errors())
+                        ->with('message', 'There were validation errors.');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \Thor\Models\User  $user 
+     * @return Response
+     */
+    public function show(\Thor\Models\User $user) {
+
+        return View::make('admin::users.show', compact('user'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \Thor\Models\User  $user 
+     * @return Response
+     */
+    public function edit(\Thor\Models\User $user) {
+
+        if (is_null($user)) {
+            return Redirect::route('admin.users.index');
+        }
+        
+        $roles = \Role::all();
+        $user_roles = $user->roles()->get()->lists('id');
+
+        return View::make('admin::users.edit', compact('user', 'roles', 'user_roles'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Thor\Models\User  $user 
+     * @return Response
+     */
+    public function do_edit(\Thor\Models\User $user) {
+        $user->username = Input::get('username');
+        $user->email = Input::get('email');
+        if(strlen(Input::get('password')) > 0){
+            $user->password = Input::get('password');
+
+            // The password confirmation will be removed from model
+            // before saving. This field will be used in Ardent's
+            // auto validation.
+            $user->password_confirmation = Input::get('password_confirmation');
+        }
+
+        // Save if valid. Password field will be hashed before save
+        if ($user->save()) {
+            if(\Entrust::can('update_roles')){
+                $user->roles()->sync(\Input::get('roles', array()));
+            }
+            return Redirect::route('admin.users.edit', $user->id);
+        }
+
+        return Redirect::route('admin.users.edit', $user->id)
+                        ->withInput()
+                        ->withErrors($user->errors())
+                        ->with('message', 'There were validation errors.');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \Thor\Models\User  $user 
+     * @return Response
+     */
+    public function do_delete(\Thor\Models\User $user) {
+        $user->delete();
+
+        return Redirect::route('admin.users.index');
+    }
+
+}

@@ -21,7 +21,7 @@
         <whitelist>
             <directory>src/Thor</directory>
             <exclude>
-                <file>src/Thor/ThorServiceProvider.php</file>
+                <file>src/Thor/Platform/PlatformServiceProvider.php</file>
             </exclude>
         </whitelist>
     </filter>

@@ -39,7 +39,7 @@ class Bench
      */
     public function getTime($raw = false, $format = null)
     {
-        return $raw ? ($this->end_time - $this->start_time) : self::getFormattedElapsedTime($this->start_time, $this->end_time, $format);
+        return $raw ? ($this->end_time - $this->start_time) : $this->getFormattedElapsedTime($this->start_time, $this->end_time, $format);
     }
 
     /**
@@ -51,7 +51,7 @@ class Bench
      */
     public function getMemoryUsage($raw = false, $format = null)
     {
-        return $raw ? $this->memory_usage : self::getFormattedMemorySize($this->memory_usage, $format);
+        return $raw ? $this->memory_usage : $this->getFormattedMemorySize($this->memory_usage, $format);
     }
 
     /**
@@ -65,7 +65,7 @@ class Bench
     {
         $memory = memory_get_peak_usage(true);
 
-        return $raw ? $memory : self::getFormattedMemorySize($memory, $format);
+        return $raw ? $memory : $this->getFormattedMemorySize($memory, $format);
     }
 
     /**
@@ -76,21 +76,21 @@ class Bench
      * @param   int    $round
      * @return  string
      */
-    public static function getFormattedMemorySize($size, $format = null, $round = 3)
+    public function getFormattedMemorySize($size, $format = null, $round = 3)
     {
         $mod = 1024;
 
-        if(is_null($format)) {
+        if (is_null($format)) {
             $format = '%.2f%s';
         }
 
         $units = explode(' ', 'B Kb Mb Gb Tb');
 
-        for($i = 0; $size > $mod; $i++) {
+        for ($i = 0; $size > $mod; $i++) {
             $size /= $mod;
         }
 
-        if(0 === $i) {
+        if (0 === $i) {
             $format = preg_replace('/(%.[\d]+f)/', '%d', $format);
         }
 
@@ -105,18 +105,18 @@ class Bench
      * @param int $round Decimal precision
      * @return string 
      */
-    public static function getFormattedElapsedTime($start_microtime, $end_microtime = null, $format = null, $round = 3)
+    public function getFormattedElapsedTime($start_microtime, $end_microtime = null, $format = null, $round = 3)
     {
-        if(empty($end_microtime)) {
+        if (empty($end_microtime)) {
             $end_microtime = microtime(true);
         }
         $microtime = $end_microtime - $start_microtime;
 
-        if(is_null($format)) {
+        if (is_null($format)) {
             $format = '%.3f%s';
         }
 
-        if($microtime >= 1) {
+        if ($microtime >= 1) {
             $unit = 's';
             $time = round($microtime, $round);
         } else {

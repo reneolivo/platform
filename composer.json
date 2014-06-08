@@ -1,7 +1,7 @@
 {
-    "name": "thor/framework",
-    "description": "Thor CMS base & support package",
-    "keywords": ["laravel", "cms", "framework", "thorcms", "multilingual", "crud"],
+    "name": "thor/platform",
+    "description": "Thor CMS platform package. Laravel 4 multilingual CMS and CRUD Generator.",
+    "keywords": ["laravel", "cms", "framework", "thorcms", "multilingual", "i18n", "crud", "generators", "backend", "admin", "acl"],
     "license": "MIT",
     "authors": [
         {
@@ -13,7 +13,8 @@
     "require": {
         "php": ">=5.4",
         "illuminate/support": "4.1.*",
-        "thor/models": "dev-master"
+        "zizaco/confide": "3.2.*",
+        "zizaco/entrust": "1.2.*"
     },
     "require-dev": {
         "phpunit/phpunit": "4.*",

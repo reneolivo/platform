@@ -2,19 +2,14 @@
 
 namespace Thor\Support;
 
-use View;
-
 /**
  * Helper for HTML common variables
  */
 class Document extends Object
 {
 
-    protected $app;
-
-    public function __construct(\Illuminate\Container\Container $app, array $properties = [])
+    public function __construct(array $properties = array())
     {
-        $this->app = $app;
 
         $properties = array_merge([
             'charset' => 'utf-8',
@@ -41,7 +36,7 @@ class Document extends Object
 
     protected function getOrSet($prop, $set, $value)
     {
-        if($set === true) {
+        if ($set === true) {
             $this->$prop = $value;
             return $this;
         }
@@ -105,7 +100,7 @@ class Document extends Object
      */
     public function classes(array $value = null)
     {
-        if(func_num_args() > 0) {
+        if (func_num_args() > 0) {
             $this->classes = $value;
         }
         return $this->classes;
@@ -250,7 +245,7 @@ class Document extends Object
 
     public function removeClass($classname)
     {
-        if(($key = array_search($classname, $this->props['classes'])) !== false) {
+        if (($key = array_search($classname, $this->props['classes'])) !== false) {
             unset($this->props['classes'][$key]);
         }
     }
