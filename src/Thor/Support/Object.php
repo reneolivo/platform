@@ -2,7 +2,7 @@
 
 namespace Thor\Support;
 
-class Object implements \ArrayAccess, \Countable, \Traversable
+class Object implements \ArrayAccess, \Countable
 {
 
     /**

@@ -14,7 +14,7 @@ class LangPublishCommand extends Command
      *
      * @var string
      */
-    protected $name = 'thor:lang:publish';
+    protected $name = 'thor:lang-publish';
 
     /**
      * The console command description.
