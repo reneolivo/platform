@@ -24,6 +24,9 @@ class UrlGenerator extends IlluminateUrlGenerator
      */
     public function langTo($path, $extra = array(), $secure = null, $langCode = null)
     {
+        if(!Config::get('thor::i18n.enabled')) {
+            return parent::to($path, $extra, $secure);
+        }
         return parent::to(($langCode ? $langCode : Lang::code()) . '/' . trim($path, '/'), $extra, $secure);
     }
 
@@ -38,6 +41,9 @@ class UrlGenerator extends IlluminateUrlGenerator
      */
     public function langSwitch($langCode, $extra = array(), $secure = null)
     {
+        if(!Config::get('thor::i18n.enabled')) {
+            return parent::to(parent::current(), $extra, $secure);
+        }
         $langSegment = Lang::getCodeFromSegment();
 
         if(Lang::isValidCode($langSegment)) {

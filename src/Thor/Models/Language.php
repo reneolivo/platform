@@ -72,6 +72,15 @@ class Language extends Base
      * 
      * @return Language[]
      */
+    public static function scopeByCodeOrLocale($query, $code)
+    {
+        return $query->whereRaw('(locale=?) OR (code=?)', array($code, $code));
+    }
+
+    /**
+     * 
+     * @return Language[]
+     */
     public static function scopeToAssoc($query)
     {
         $langs = $query->get();

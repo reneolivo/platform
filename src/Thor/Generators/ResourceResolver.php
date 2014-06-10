@@ -221,12 +221,8 @@ class ResourceResolver implements \ArrayAccess
         $modelUses = array();
 
         foreach ($this->behaviours as $name) {
-            if (($name == 'translatable') and $this->hasBehaviour('pageable')) {
-                continue;
-            }else{
-                $modelImplements[] = $this->modelPrefix . 'I' . ucfirst($name);
-                $modelUses[] = $this->modelPrefix . 'T' . ucfirst($name);
-            }
+            $modelImplements[] = 'Behaviours\\I' . ucfirst($name);
+            $modelUses[] = 'Behaviours\\T' . ucfirst($name);
         }
 
         $this->modelImplements = empty($modelImplements) ? '' : ('implements ' . implode(', ', $modelImplements));

@@ -1,6 +1,6 @@
 <?php
 
-namespace Thor\Models;
+namespace Thor\Models\Behaviours;
 
 /**
  * Implementation of ITreeable interface
@@ -10,14 +10,14 @@ trait TTreeable
 
     /**
      * 
-     * @return type
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function getParent()
+    public function parentRecord()
     {
         return $this->belongsTo(get_class($this), 'parent_id', $this->primaryKey);
     }
 
-    public function getAbsoluteParent()
+    public function parentRoot()
     {
         $p = $this;
         while($p->hasParent()) {
@@ -31,7 +31,7 @@ trait TTreeable
         return ($this->parent_id > 0);
     }
 
-    public function getChildren()
+    public function children()
     {
         return $this->hasMany(get_class($this), 'parent_id', $this->primaryKey);
     }

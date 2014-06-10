@@ -2,7 +2,7 @@
 
 namespace {{$modelNamespace}};
 
-use Thor\Models;
+use Thor\Models\Behaviours;
 
 /**
  * {{ucfirst($singular)}} model 
@@ -21,7 +21,7 @@ use Thor\Models;
  * @property timestamp $created_at
  * @property timestamp $updated_at
  */
-class {{$modelShortName}} extends Models\Base {{$modelImplements}} {
+class {{$modelShortName}} extends \Thor\Models\Base {{$modelImplements}} {
     {{$modelUses}}
     
     protected $table = '{{$plural}}';

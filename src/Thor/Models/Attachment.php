@@ -3,23 +3,20 @@
 namespace Thor\Models;
 
 /**
- * Image model 
+ * Attachment model 
  * @property-read string $url 
  * @property string $caption 
  * @property string $path 
  * @property string $group 
- * @property integer $imageable_id 
- * @property string $imageable_type 
- * @property integer $sorting 
- * @property boolean $is_published 
- * @property string $sorting
+ * @property integer $attachablee_id
+ * @property string $attachablee_type
  * @property timestamp $created_at
  * @property timestamp $updated_at
  */
-class Image extends Base implements Behaviours\ISortable, Behaviours\IPublishable
+class Attachment extends Base implements Behaviours\ISortable, Behaviours\IPublishable
 {
     use Behaviours\TSortable, Behaviours\TPublishable;
-    
+
     protected $table = 'images';
 
     public static function boot()
@@ -47,7 +44,7 @@ class Image extends Base implements Behaviours\ISortable, Behaviours\IPublishabl
 
     public function asHtml($attributes = '')
     {
-        return '<img src="' . $this->url . '" alt="' . $this->caption . '" ' . $attributes . ' />';
+        return '<img src="' . $this->url . '" alt="' . $this->alt . '" ' . $attributes . ' />';
     }
 
     public function imageable()
@@ -85,8 +82,8 @@ class Image extends Base implements Behaviours\ISortable, Behaviours\IPublishabl
         $img = new static(array(
             'imageable_id' => $imageableId,
             'imageable_type' => $imageableType,
-            'caption' => $filename,
-            'group' => \Input::get('group', 'default'),
+            'alt' => $filename,
+            'imageset' => \Input::get('imageset', 'default'),
             'path' => $public_path . $newFilename,
             'sorting' => static::where('imageable_id', '=', $imageableId)->where('imageable_type', '=', $imageableId)->count() + 1
         ));

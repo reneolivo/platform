@@ -35,7 +35,7 @@
 
         $('.widget-datatable').dataTable();
         $('.widget-wysihtml5').wysihtml5();
-        $('.widget-select2').select2();
+        $('.widget-select2, .widget-combobox').select2();
         $('.widget-colorpicker').colorpicker();
         $('.widget-datepicker').datepicker({
             "format": "yyyy-mm-dd"

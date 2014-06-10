@@ -34,6 +34,14 @@ class FormBuilder extends \Illuminate\Html\FormBuilder
             $type = 'text';
             $options = array_merge(array('class' => 'form-control widget-colorpicker'), $options);
         }
+        if (in_array($type, array('select', 'select2', 'combobox'))) {
+            $options = array_merge(array('class'=>'form-control'), $options);
+            if(in_array($type, array('select2', 'combobox'))){
+                $options['class'].=' widget-select2';
+            }
+            return $this->bsFormgroup($labelText, $this->select($name, $value
+                    , (isset($options['selected']) ? $options['selected'] : null), $options), $containerAttrs);
+        }
         if ($type == 'checkbox') {
             return $this->bsFormgroup(false, $this->bsCheckbox($labelText, $name, ($value === null) ? 1 : $value, $options, true), $containerAttrs);
         }

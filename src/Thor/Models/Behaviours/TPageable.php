@@ -1,6 +1,8 @@
 <?php
 
-namespace Thor\Models;
+namespace Thor\Models\Behaviours;
+
+use Config;
 
 /**
  * Implementation of IPageable interface
@@ -27,29 +29,24 @@ namespace Thor\Models;
  */
 trait TPageable
 {
-    use TTranslatable;
-    
-    protected $defaultController = null;
-    protected $defaultAction = null;
 
-    public function url($langId = null)
+    public function url($extra = array())
     {
-        $langCode = empty($langId) ? \Lang::code() : Language::find($langId)->code;
-        return \URL::langTo($this->translation($langId)->slug, array(), $this->is_https ? true : false, $langCode);
+        return \URL::to($this->slug, $extra, $this->is_https ? true : false);
     }
 
-    public function slug($langId = null)
+    public function getSlug()
     {
-        return $this->translation($langId) ? $this->translation($langId)->slug : '';
+        return $this->slug;
     }
 
-    public function canonicalUrl($langId = null)
+    public function canonicalUrl()
     {
         if($this->exists()) {
-            if(strlen(trim($this->translation($langId)->canonical_url)) > 0) {
-                $url = $this->translation($langId)->canonical_url;
+            if(strlen(trim($this->canonical_url)) > 0) {
+                $url = $this->canonical_url;
             } else {
-                $url = $this->url($langId);
+                $url = $this->url();
             }
         } else {
             return null;
@@ -63,40 +60,20 @@ trait TPageable
         $this->is_indexable ? 'INDEX,FOLLOW' : 'NOINDEX,NOFOLLOW';
     }
 
-    public function getSlugAttribute()
-    {
-        return $this->slug();
-    }
-
     public function getUrlAttribute()
     {
         return $this->url();
     }
 
-    public function isPublished()
-    {
-        return ($this->is_published == true) and ( strtotime($this->published_at) < time());
-    }
-
-    public static function scopePublished($query)
-    {
-        return $query->where('is_published', '=', 'published')->whereRaw('published_at < CURRENT_DATE');
-    }
-
-    public static function scopeSorted($query, $direction = 'asc')
-    {
-        return $query->orderBy('sorting', $direction);
-    }
-
-    public static function slugize($str, $langId = null, $slugField = 'slug')
+    public static function slugize($str, $slugField = 'slug')
     {
         $slug = \Str::slug($str);
         $result = $slug;
         $i = 2;
-        $search = static::resolve($slug, $langId, false, $slugField);
+        $search = static::resolve($slug, false, $slugField);
         while(is_object($search) and ( count($search) > 0)) {
             $result = $slug . '-' . $i;
-            $search = static::resolve($result, $langId, false, $slugField);
+            $search = static::resolve($result, false, $slugField);
             $i++;
             if($i > 10) {
                 break;
@@ -104,7 +81,7 @@ trait TPageable
         }
         return $result;
     }
-    
+
     /**
      * This defines what this page must do when it's executed (e.g. it is resolved and you want to do something 'extra').
      * Tipically a controller and an action may be executed, but can be any type of class of your choice.
@@ -124,8 +101,8 @@ trait TPageable
             return \Redirect::to($this->redirect_url, intval($this->redirect_status));
         }
 
-        $controller = empty($controller) ? (empty($this->controller) ? $this->defaultController : $this->controller) : $controller;
-        $action = empty($action) ? (empty($this->action) ? $this->defaultAction : $this->action) : $action;
+        $controller = (empty($controller) ? (empty($this->controller) ? Config::get('thor::pageable_default_controller') : $this->controller) : $controller);
+        $action = (empty($action) ? (empty($this->action) ? Config::get('thor::pageable_default_action') : $this->action) : $action);
 
         if(empty($controller) or empty($action)) {
             return false;
@@ -143,12 +120,11 @@ trait TPageable
     /**
      * Finds a pageable by a slug string
      * @param string $slug Full slug
-     * @param int|null $langId If false, it will be resolved without language conditions (matching any language)
      * @param boolean $onlyOne Return only the first record if present
      * @param string $slugField Slug field name to search in
      * @return \Illuminate\Database\Eloquent\Builder | static | false
      */
-    public static function resolve($slug, $langId = null, $onlyOne = true, $slugField = 'slug')
+    public static function resolve($slug, $onlyOne = true, $slugField = 'slug')
     {
         $slug = trim($slug, '/ ');
         if(empty($slug)) {
@@ -157,9 +133,6 @@ trait TPageable
         $modelClass = get_called_class() . 'Text';
         $statement = $modelClass::where($slugField, '=', $slug);
 
-        if($langId !== false) {
-            $statement = $statement->where('language_id', '=', empty($langId) ? \Lang::id() : $langId);
-        }
         $records = $statement->get();
         $results = (count($records) == 0) ? false : $records;
 

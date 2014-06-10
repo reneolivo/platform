@@ -1,6 +1,6 @@
 <?php
 
-namespace Thor\Models;
+namespace Thor\Models\Behaviours;
 
 /**
  * @property string $controller
@@ -27,57 +27,45 @@ namespace Thor\Models;
  * @property timestamp $updated_at
  * @property timestamp $published_at
  */
-interface IPageable extends ITranslatable
+interface IPageable
 {
 
     /**
      * Returns the full url for this resource
-     * @param int|null $langId
      */
-    public function url($langId = null);
+    public function url();
 
     /**
-     * Returns the full slug in the desired language
-     * @param int|null $langId
+     * Returns the full slug
      */
-    public function slug($langId = null);
+    public function getSlug();
 
     /**
      * Returns the full canonical url (or url by default)
-     * @param int|null $langId
      */
-    public function canonicalUrl($langId = null);
+    public function canonicalUrl();
 
+    /**
+     * Returns a meta robots string
+     */
     public function metaRobots();
 
     /**
-     * Returns the publish status, also, if the published_at date is a future date,
-     * it shouldn't be considered published
-     */
-    public function isPublished();
-
-    public static function scopeSorted($query, $direction = 'asc');
-
-    public static function scopePublished($query);
-
-    /**
-     * Slugizes the given string and returns a valid unique slug for the -texts table (appending incrementing numbers if necessary)
+     * Slugizes the given string and returns a valid unique slug (appending incrementing numbers if necessary)
      * @param string $str
-     * @param int|null $langId
      * @param string $slugField
      * @return string
      */
-    public static function slugize($str, $langId = null, $slugField = 'slug');
+    public static function slugize($str, $slugField = 'slug');
 
     /**
      * Finds a pageable by a slug string
      * @param string $slug Full slug
-     * @param int|null $langId If false, it will be resolved without language conditions (matching any language)
      * @param boolean $onlyOne Return only the first record if present
      * @param string $slugField Slug field name to search in
      * @return \Illuminate\Database\Eloquent\Builder | static | false
      */
-    public static function resolve($slug, $langId = null, $onlyOne = true, $slugField = 'slug');
+    public static function resolve($slug, $onlyOne = true, $slugField = 'slug');
 
     /**
      * This defines what this page must do when it's executed (e.g. it is resolved and you want to do something 'extra').

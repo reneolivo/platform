@@ -1,6 +1,6 @@
 <?php
 
-namespace Thor\Models;
+namespace Thor\Models\Behaviours;
 
 /**
  * Implementation of ITranslatable interface
@@ -16,9 +16,9 @@ trait TTranslatable
 
     public function __get($key)
     {
-        if (isset($this->$key)) {
+        if(isset($this->$key)) {
             return parent::__get($key); // look in the master model
-        } elseif ($this->hasTranslation() and isset($this->translation()->$key)) {
+        } elseif($this->hasTranslation() and isset($this->translation()->$key)) {
             return $this->translation()->$key; // look in the translation model
         } else {
             return parent::__get($key); // if not set rely on eloquent
@@ -53,10 +53,10 @@ trait TTranslatable
      */
     public function translation($langId = null)
     {
-        if (empty($langId)) {
+        if(empty($langId)) {
             $langId = \Lang::id();
         }
-        if (isset($this->translations[$langId])) {
+        if(isset($this->translations[$langId])) {
             return $this->translations[$langId];
         }
         $transl = $this->translations()->where('language_id', '=', $langId)->first();

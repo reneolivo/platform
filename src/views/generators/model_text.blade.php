@@ -2,8 +2,6 @@
 
 namespace {{$modelNamespace}};
 
-use Thor\Models;
-
 /**
  * {{ucfirst($singular)}} text model 
 @foreach($generalFields as $name => $f)
@@ -19,7 +17,7 @@ use Thor\Models;
  * @property timestamp $created_at
  * @property timestamp $updated_at 
  */
-class {{$modelShortName}}Text extends Models\BaseText {
+class {{$modelShortName}}Text extends \Thor\Models\BaseText {
     
     protected $table = '{{$singular}}_texts';
     

@@ -30,11 +30,11 @@ use Thor\Models;
  * @property timestamp $created_at
  * @property timestamp $updated_at
  */
-class Page extends Models\Base implements \Thor\Models\IPageable
+class Page extends Models\Base implements Behaviours\IPageable, Behaviours\ITranslatable
 {
 
-    use \Thor\Models\TPageable,
-        \Thor\Models\TImageable;
+    use Behaviours\TPageable,
+        Behaviours\TImageable, Behaviours\TTranslatable;
 
     protected $table = 'pages';
     protected $fillable = array(

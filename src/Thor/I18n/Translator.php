@@ -42,11 +42,14 @@ class Translator extends \Illuminate\Translation\Translator
         $this->fallback = $app['config']->get('app.fallback_locale');
         $this->language = null;
 
-        if($app['config']->get('thor::i18n.autoresolve') === true) {
+        if($app['config']->get('thor::i18n.enabled') === true) {
             $this->resolve();
         } else {
-            $this->language = new Language(array('id' => -1, 'name' => $this->locale,
-                'code' => preg_replace('/[_-].+$/', '', $this->locale), 'locale' => $this->locale));
+            $this->language = Language::byCodeOrLocale($this->locale)->first();
+            if(!is_object($this->language) or !$this->language->exists()) {
+                $this->language = new Language(array('id' => -1, 'name' => $this->locale,
+                    'code' => preg_replace('/[_-].+$/', '', $this->locale), 'locale' => $this->locale));
+            }
         }
     }
 
@@ -102,7 +105,7 @@ class Translator extends \Illuminate\Translation\Translator
      */
     public function resolveWith($langCode)
     {
-        if(($this->app['config']->get('thor::i18n.use_database') === true) and (\Schema::hasTable('languages'))) {
+        if(($this->app['config']->get('thor::i18n.use_database') === true) and ( \Schema::hasTable('languages'))) {
             return $this->resolveFromDb($langCode);
         } else {
             return $this->resolveFromConfig($langCode);

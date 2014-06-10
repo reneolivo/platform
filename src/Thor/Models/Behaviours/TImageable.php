@@ -1,23 +1,22 @@
 <?php
 
-namespace Thor\Models;
+namespace Thor\Models\Behaviours;
 
 /**
  * Trait for models that may have related images,
  * implementation of IImageable interface
  * 
- * @property \Thor\Models\IImageable $imageable Imageable instance
  */
 trait TImageable
 {
 
     /**
      * 
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany|\Thor\Models\Image[]
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany|\Thor\Models\Image[]
      */
     public function images()
     {
-        return $this->morphMany('\\Thor\Models\\Image', 'imageable')->orderBy('sorting', 'asc');
+        return $this->morphMany(\Config::get('thor::imageable_image_model', '\\Thor\Models\\Image'), 'imageable');
     }
 
     /**

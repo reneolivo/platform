@@ -41,14 +41,30 @@
                 Model definition
             </div>
             <div class="panel-body">
+                <?php
+                echo Form::bsField('Behaviours', 'behaviours[]', array(
+                    'placeholder' => '---',
+                    'multiple', 'selected' => null
+                        ), 'select2', array(
+                    'translatable' => 'Translatable',
+                    'pageable' => 'Pageable',
+                    'publishable' => 'Publishable',
+                    'treeable' => 'Treeable',
+                    'imageable' => 'Imageable',
+                    'attachablee' => 'Attachablee',
+                    'taggable' => 'Taggable',
+                    'flaggable' => 'Flaggable',
+                    'sortable' => 'Sortable',
+                ));
+                ?>
                 {{Form::bsFields([
     //label, name, attributes, type, value, containerAttributes
-                    ['Behaviours:', 'behaviours', ['placeholder'=>'pageable, imageable, treeable and/or translatable'], 'text', null, []],
+                    //['Behaviours:', 'behaviours', ['placeholder'=>'pageable, imageable, treeable and/or translatable'], 'text', null, []],
                     ['General Fields:', 'general_fields', [
-                        'placeholder'=>'columnName:blueprintFunction:formControlType:foreignTable,columnName2:bluePrintFunction,columnName3'
+                        'placeholder'=>'columnName:blueprintMethod:formControlType:foreignTable,columnName2:blueprintMethod,columnName3'
                     ], 'text', null, []],
                     ['Translatable Fields:', 'translatable_fields', [
-                        'placeholder'=>'columnName:blueprintFunction:formControlType:foreignTable,columnName2:bluePrintFunction,columnName3'
+                        'placeholder'=>'columnName:blueprintMethod:formControlType:foreignTable,columnName2:blueprintMethod,columnName3'
                     ], 'text', null, []],
                     ['Listable Fields:', 'listable_fields', ['placeholder'=>'Comma separated list of column names (general or/and translatable)'], 'text', null, []],
                 ])}}
@@ -57,7 +73,7 @@
                 Definitions format are the same as in <code>thor:generate</code> command.
                 Separate fields with commas, and field options with colons.<br>
                 <code>formControlType</code> can be an input compatible with <code>Form::bsField</code> e.g.:
-                text, textarea, checkbox, radio, email, colorpicker, datepicker, ...
+                text, textarea, checkbox, radio, email, colorpicker, datepicker, select, select2, ...
             </div>
         </div>
 

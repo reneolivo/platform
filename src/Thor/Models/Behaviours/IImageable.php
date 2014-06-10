@@ -1,6 +1,6 @@
 <?php
 
-namespace Thor\Models;
+namespace Thor\Models\Behaviours;
 
 /**
  * Interface for models that may have related images

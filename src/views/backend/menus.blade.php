@@ -18,6 +18,7 @@
     <ul class="nav navbar-top-links navbar-right">
         @yield('navbar_prepend')
         <!-- /.dropdown -->
+        @if(Config::get('thor::i18n.enabled'))
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-globe"></i> {{Lang::language()->name}} <b class="caret"></b></a>
             <ul class="dropdown-menu">
@@ -27,6 +28,7 @@
                 @endforeach
             </ul>
         </li>
+        @endif
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                 <i class="fa fa-user fa-fw"></i> {{Auth::user()->username}}  <i class="fa fa-caret-down"></i>
