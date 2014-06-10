@@ -18,13 +18,7 @@ abstract class BaseText extends Base
      *
      * @var string 
      */
-    protected $master_primary = null;
-
-    /**
-     *
-     * @var string 
-     */
-    protected $master_foreign = null;
+    protected $master_fk = null;
 
     /**
      *
@@ -38,6 +32,9 @@ abstract class BaseText extends Base
         if(empty($this->master_model)) {
             $this->master_model = preg_replace('/(Text)$/', '', get_class($this));
         }
+        if(empty($this->master_fk)){
+            $this->master_fk = strtolower(basename(str_replace('\\',DIRECTORY_SEPARATOR,$this->master_model))).'_id';
+        }
     }
 
     /**
@@ -46,7 +43,9 @@ abstract class BaseText extends Base
      */
     public function master()
     {
-        return $this->belongsTo($this->master_model, $this->master_foreign, $this->master_primary);
+        $master_model = $this->master_model;
+        $master_fk = $this->master_fk;
+        return $master_model::find($this->$master_fk);
     }
 
 }

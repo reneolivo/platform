@@ -1,8 +1,8 @@
 <?php
 
-namespace Thor\Generators;
+namespace Thor\Platform;
 
-class CrudFacade extends \Illuminate\Support\Facades\Facade
+class PageableFacade extends \Illuminate\Support\Facades\Facade
 {
 
     /**
@@ -12,7 +12,7 @@ class CrudFacade extends \Illuminate\Support\Facades\Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'thor.crud';
+        return 'thor.pageable.manager';
     }
 
 }

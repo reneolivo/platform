@@ -99,6 +99,10 @@ if(!function_exists('get_real_class')) {
     function get_real_class($class)
     {
         static $classes = array();
+        
+        if(is_object($class)){
+            $class = get_class($class);
+        }
 
         if(!array_key_exists($class, $classes)) {
             $reflect = new ReflectionClass($class);

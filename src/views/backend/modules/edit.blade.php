@@ -33,6 +33,7 @@
                         'Model Class:'), 'model_class', ['readonly'], 'text', null, []],
                     ['Controller Class:', 'controller_class', ['readonly'], 'text', null, []],
                     //['Metadata:', 'metadata', [], 'textarea', null, []],
+                    ['Is pageable', 'is_pageable', [], 'checkbox', 1, []],
                     ['Is active', 'is_active', [], 'checkbox', 1, []],
                     ['Sorting:', 'sorting', [], 'number', null, []],
                 ])}}

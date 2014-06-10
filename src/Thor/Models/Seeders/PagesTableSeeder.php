@@ -19,7 +19,7 @@ class PagesTableSeeder extends Seeder
         \DB::table('page_texts')->delete();
         \DB::table('pages')->delete();
 
-        $page = Page::create(array('taxonomy' => 'page', 'view' => 'home', 'sorting' => 1));
+        $page = Page::create(array('taxonomy' => 'page', 'view' => 'default', 'sorting' => 1));
         if ($page->exists()) {
             PageText::create(array('page_id' => $page->id, 'language_id' => 1, 'title' => 'Homepage'));
         }
