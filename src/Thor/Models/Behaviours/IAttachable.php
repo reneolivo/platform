@@ -5,7 +5,7 @@ namespace Thor\Models\Behaviours;
 /**
  * Interface for models that may have related files
  */
-interface IAttachablee
+interface IAttachable
 {
 
     public function files();

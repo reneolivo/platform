@@ -41,6 +41,9 @@ CRUD::routes('module', true);
 // Registered modules
 foreach (Backend::modules() as $module) {
     CRUD::routes($module->name, true, $module->controller_class, $module->module_class);
+    if($module->is_pageable){
+        Route::registerPageable($module->model_class);
+    }
 }
 
 // Site 404

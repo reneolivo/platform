@@ -9,9 +9,9 @@ namespace Thor\Models\Behaviours;
 trait TSortable
 {
 
-    public static function scopeSorted($direction = 'asc')
+    public static function scopeSorted($query, $direction = 'asc')
     {
-        
+        return $query->orderBy('sorting', $direction);
     }
 
 }

@@ -56,6 +56,16 @@ class InstallCommand extends Command
         $this->call('asset:publish', array('package' => 'thor/platform'));
         $this->call('config:publish', array('package' => 'thor/platform'));
         $this->call('thor:lang-publish', array('package' => 'thor/platform'));
+        
+        
+        // Publish backend routes file
+        $package_src = realpath(__DIR__ . '/../../');
+
+        if (!file_exists(app_path('routes'))) {
+            mkdir(app_path('routes'), 0755, true);
+        }
+        file_put_contents(app_path('routes/backend.php'), file_get_contents($package_src . '/routes.php'));
+
 
         $this->output->writeln('<info>Thor CMS has been installed successfully.</info>');
     }

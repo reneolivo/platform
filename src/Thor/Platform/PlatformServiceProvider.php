@@ -4,7 +4,9 @@ namespace Thor\Platform;
 
 use Illuminate\Support\Facades;
 use Illuminate\Support\ServiceProvider,
-    View, Backend, Pageable;
+    View,
+    Backend,
+    Pageable;
 
 class PlatformServiceProvider extends ServiceProvider
 {
@@ -33,7 +35,7 @@ class PlatformServiceProvider extends ServiceProvider
         Facades\HTML::swap($this->app['thor.html']);
 
         $app = $this->app;
-        
+
         // Always expose the current view name and all the Document vars
         View::composer('*', function($view) use($app) {
             $app['thor.document']->view($view->getName());
@@ -42,15 +44,11 @@ class PlatformServiceProvider extends ServiceProvider
         });
 
         include_once $package_src . '/filters.php';
-        include_once $package_src . '/routes.php';
-        
-        // bind pageables
-        foreach(Backend::modules() as $mod){
-            if($mod->is_pageable){
-                Pageable::register($mod->model_class);
-            }
+
+        $backend_routes_file = app_path('routes/backend.php');
+        if (file_exists($backend_routes_file)) {
+            include_once $backend_routes_file;
         }
-        //dd(Pageable::registered());
     }
 
     /**
@@ -73,7 +71,6 @@ class PlatformServiceProvider extends ServiceProvider
         $this->registerBackend();
         $this->registerCrudBuilder();
         $this->registerLangPublisher();
-        $this->registerPageableManager();
 
         // Commands
         $this->registerThorLangPublishCommand();
@@ -100,7 +97,6 @@ class PlatformServiceProvider extends ServiceProvider
             'thor.backend',
             'thor.crud',
             'thor.lang.publisher',
-            'thor.pageable.manager',
             'command.thor.lang.publish',
             'command.thor.install',
             'command.thor.generate'
@@ -125,7 +121,7 @@ class PlatformServiceProvider extends ServiceProvider
     protected function registerRouter()
     {
         $this->app->bindShared('thor.router', function($app) {
-            return new \Thor\I18n\Router($app['events'], $app);
+            return new \Thor\Platform\Router($app['events'], $app);
         });
     }
 
@@ -224,13 +220,6 @@ class PlatformServiceProvider extends ServiceProvider
     {
         $this->app->bindShared('thor.lang.publisher', function($app) {
             return new \Thor\I18n\LangPublisher($app['files'], $app['path'] . '/lang');
-        });
-    }
-
-    protected function registerPageableManager()
-    {
-        $this->app->bindShared('thor.pageable.manager', function($app) {
-            return new PageableManager($app);
         });
     }
 

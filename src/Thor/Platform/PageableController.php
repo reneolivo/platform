@@ -2,34 +2,35 @@
 
 namespace Thor\Platform;
 
-use Pageable,
-    View;
+use \Thor\Models\Behaviours\IPageable,
+    View,
+    Config;
 
 class PageableController extends Controller
 {
 
     /**
-     * 
-     * @param string $slug Slug route parameter
-     * @return mixed
+     *
+     * @var IPageable 
      */
-    public function execute($slug = null)
+    protected $pageable;
+
+    public function __construct(IPageable $pageable)
     {
-        $content = false;
-        if(Pageable::isFound()) {
-            $content = Pageable::found()->execute();
-        }
-        if(empty($content)) {
-            App::abort(404);
-        }
-        return $content;
+        $this->pageable = $pageable;
+        $pageable->view ? $pageable->view : Config::get('thor::pageable_default_view)');
     }
 
-    public function defaultAction()
+    public function defaultAction($data = array())
     {
-        return View::make('default', array(
-                    'page' => Pageable::found()
-        ));
+        return $this->make($data);
+    }
+
+    protected function make(array $data = array())
+    {
+        $data['page'] = $this->pageable;
+        $viewname = ($this->pageable->view ? $this->pageable->view : Config::get('thor::pageable_default_view)'));
+        return View::make($viewname, $data);
     }
 
 }

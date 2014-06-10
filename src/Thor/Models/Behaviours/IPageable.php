@@ -24,15 +24,16 @@ interface IPageable
      * Returns a meta robots string
      */
     public function metaRobots();
+    
+    public static function scopeWithSlug($query, $slug);
 
     /**
      * Finds a pageable by a slug string
      * @param string $slug Full slug
      * @param string $slugField Slug field name to search in
-     * @param boolean $onlyOne Return only the first record if present
      * @return \Illuminate\Database\Eloquent\Builder | static | false
      */
-    public static function resolve($slug, $slugField = 'slug', $onlyOne = true);
+    public static function resolve($slug, $slugField = 'slug');
 
     /**
      * This defines what this page must do when it's executed (e.g. it is resolved and you want to do something 'extra').

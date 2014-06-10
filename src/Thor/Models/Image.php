@@ -56,7 +56,7 @@ class Image extends Base implements Behaviours\ISortable, Behaviours\IPublishabl
     }
 
     /**
-     * Imageable uploader handler (for dropzonejs)
+     * File uploader handler (for dropzonejs)
      * @param string $imageableType
      * @param string $imageableId
      * @param callable $onupload
@@ -71,7 +71,6 @@ class Image extends Base implements Behaviours\ISortable, Behaviours\IPublishabl
         $validation = \Validator::make($input, $rules);
 
         if($validation->fails()) {
-            //return \Response::make($validation->errors()->first(), 400);
             return \Response::make('Invalid image format', 400);
         }
 
@@ -79,10 +78,9 @@ class Image extends Base implements Behaviours\ISortable, Behaviours\IPublishabl
         $public_path = '/content/uploads/' . trim(strtolower(str_replace(array('Model', '\\'), array('', '_'), $imageableType)), '_ ') . '-' . $imageableId . '/';
         $ext = $file->getClientOriginalExtension();
         $filename = $ext ? preg_replace("/\\." . $ext . "$/", "", $file->getClientOriginalName()) : $file->getClientOriginalName();
-        //$newFilename = \Str::slug($filename) . '_' . time() . '.' . strtolower($file->getClientOriginalExtension());
         $newFilename = sha1($filename . '_' . microtime()) . '.' . strtolower($file->getClientOriginalExtension());
 
-        $img = new static(array(
+        $record = new static(array(
             'imageable_id' => $imageableId,
             'imageable_type' => $imageableType,
             'caption' => $filename,
@@ -92,9 +90,9 @@ class Image extends Base implements Behaviours\ISortable, Behaviours\IPublishabl
         ));
 
         if($file->move(base_path('public' . $public_path), $newFilename)->isReadable()) {
-            $img->save();
+            $record->save();
             if(is_callable($onupload)) {
-                call_user_func($onupload, $img, $file, $newFilename);
+                call_user_func($onupload, $record, $file, $newFilename);
             }
             return \Response::json('success', 200);
         }

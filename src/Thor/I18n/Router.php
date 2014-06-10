@@ -4,11 +4,11 @@ namespace Thor\I18n;
 
 use Closure,
     Lang,
-    Config;
-use Illuminate\Routing\Router as IlluminateRouter;
+    Config,
+    Illuminate\Routing\Router as IlluminateRouter;
 
 /**
- * A Router with multilingual features
+ * A Router with multilingual resolver features
  */
 class Router extends IlluminateRouter
 {
@@ -26,19 +26,19 @@ class Router extends IlluminateRouter
      */
     public function langGroup($attributes, Closure $callback = null)
     {
-        if(Config::get('thor::i18n.enabled')) {
-            if($attributes instanceof Closure) {
+        if (Config::get('thor::i18n.enabled')) {
+            if ($attributes instanceof Closure) {
                 return $this->group(array('prefix' => Lang::code()), $attributes);
-            } elseif(is_array($attributes)) {
+            } elseif (is_array($attributes)) {
                 $attributes['prefix'] = trim(isset($attributes['prefix']) ? (Lang::code() . '/' . $attributes['prefix']) : Lang::code(), '/');
                 $this->group($attributes, $callback);
             } else {
                 throw new \InvalidArgumentException('First argument must be of type Closure or array');
             }
         } else {
-            if($attributes instanceof Closure) {
+            if ($attributes instanceof Closure) {
                 $attributes();
-            }else{
+            } else {
                 return parent::group($attributes, $callback);
             }
         }

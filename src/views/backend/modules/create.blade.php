@@ -51,7 +51,7 @@
                     'publishable' => 'Publishable',
                     'treeable' => 'Treeable',
                     'imageable' => 'Imageable',
-                    'attachablee' => 'Attachablee',
+                    'attachable' => 'Attachable',
                     'taggable' => 'Taggable',
                     'flaggable' => 'Flaggable',
                     'sortable' => 'Sortable',

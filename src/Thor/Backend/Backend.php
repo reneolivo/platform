@@ -88,13 +88,17 @@ class Backend
 
     public function requestIs($plural = '', $after = '.*')
     {
-        if(!empty($plural)){
+        if (!empty($plural)) {
             $plural.='\/?';
         }
         $base = trim($this->config('basepath'), '/');
-        $expr = '/^'.(Lang::code() . '\/' . $base . '\/' . trim($plural, '/'));
+        if (Config::get('thor:i18n.enabled')) {
+            $expr = '/^' . (Lang::code() . '\/' . $base . '\/' . trim($plural, '/'));
+        } else {
+            $expr = '/^' . ($base . '\/' . trim($plural, '/'));
+        }
         $path = trim(Request::path(), '/');
-        return (preg_match($expr.$after.'$/', $path) != false);
+        return (preg_match($expr . $after . '$/', $path) != false);
     }
 
     public function requestIsBackend()

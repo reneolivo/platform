@@ -3,9 +3,9 @@
 namespace Thor\Models\Behaviours;
 
 /**
- * Implementation of IAttachablee interface
+ * Implementation of IAttachable interface
  */
-trait TAttachablee
+trait TAttachable
 {
 
     /**
@@ -14,7 +14,7 @@ trait TAttachablee
      */
     public function files()
     {
-        return $this->morphMany(\Config::get('thor::attachablee_attachment_model', '\\Thor\Models\\Attachment'), 'attachablee');
+        return $this->morphMany(\Config::get('thor::attachable_attachment_model', '\\Thor\Models\\Attachment'), 'attachable');
     }
 
     /**
@@ -32,7 +32,7 @@ trait TAttachablee
      */
     public function firstFile()
     {
-        if($this->hasImages()) {
+        if ($this->hasImages()) {
             return $this->images()->first();
         }
         return false;

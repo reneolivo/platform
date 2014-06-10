@@ -15,18 +15,20 @@ namespace Thor\Models;
  */
 class Attachment extends Base implements Behaviours\ISortable, Behaviours\IPublishable
 {
-    use Behaviours\TSortable, Behaviours\TPublishable;
 
-    protected $table = 'images';
+    use Behaviours\TSortable,
+        Behaviours\TPublishable;
+
+    protected $table = 'attachments';
 
     public static function boot()
     {
         parent::boot();
 
-        // delete image file if the record has been deleted
-        static::deleted(function(\Model\Image $image) {
-            $filepath = base_path('public/' . ltrim($image->path, '/'));
-            if(file_exists($filepath)) {
+        // delete file if the record has been deleted
+        static::deleted(function(Attachment $file) {
+            $filepath = base_path('public/' . ltrim($file->path, '/'));
+            if (file_exists($filepath)) {
                 @unlink($filepath);
             }
         });
@@ -44,54 +46,54 @@ class Attachment extends Base implements Behaviours\ISortable, Behaviours\IPubli
 
     public function asHtml($attributes = '')
     {
-        return '<img src="' . $this->url . '" alt="' . $this->alt . '" ' . $attributes . ' />';
+        return '<a href="' . $this->url . '" ' . $attributes . '>' . $this->caption . '</a>';
     }
 
-    public function imageable()
+    public function attachable()
     {
         return $this->morphTo();
     }
 
     /**
-     * Imageable uploader handler (for dropzonejs)
-     * @param string $imageableType
-     * @param string $imageableId
+     * File uploader handler (for dropzonejs)
+     * @param string $attachableType
+     * @param string $attachableId
      * @param callable $onupload
      * @param array $rules
      * @param string $inputName
      * @return \Response
      */
-    public static function handleUpload($imageableType, $imageableId, $onupload = null, $rules = array('file' => 'image|max:3000'), $inputName = 'file')
+    public static function handleUpload($attachableType, $attachableId, $onupload = null, $rules = array('file' => 'mimes:zip,pdf,txt,md|max:3000'), $inputName = 'file')
     {
         $input = \Input::all();
 
         $validation = \Validator::make($input, $rules);
 
-        if($validation->fails()) {
-            //return \Response::make($validation->errors()->first(), 400);
-            return \Response::make('Invalid image format', 400);
+        if ($validation->fails()) {
+            return \Response::make('Invalid file format', 400);
         }
 
         $file = \Input::file($inputName);
-        $public_path = '/content/uploads/' . trim(strtolower(str_replace(array('Model', '\\'), array('', '_'), $imageableType)), '_ ') . '-' . $imageableId . '/';
+        $public_path = '/content/uploads/' . trim(strtolower(str_replace(array('Model', '\\'), array('', '_'), $attachableType)), '_ ') . '-' . $attachableId . '/';
         $ext = $file->getClientOriginalExtension();
         $filename = $ext ? preg_replace("/\\." . $ext . "$/", "", $file->getClientOriginalName()) : $file->getClientOriginalName();
         //$newFilename = \Str::slug($filename) . '_' . time() . '.' . strtolower($file->getClientOriginalExtension());
         $newFilename = sha1($filename . '_' . microtime()) . '.' . strtolower($file->getClientOriginalExtension());
 
-        $img = new static(array(
-            'imageable_id' => $imageableId,
-            'imageable_type' => $imageableType,
-            'alt' => $filename,
-            'imageset' => \Input::get('imageset', 'default'),
+        $record = new static(array(
+            'attachable_id' => $attachableId,
+            'attachable_type' => $attachableType,
+            'caption' => $filename,
+            'group' => \Input::get('group', 'default'),
             'path' => $public_path . $newFilename,
-            'sorting' => static::where('imageable_id', '=', $imageableId)->where('imageable_type', '=', $imageableId)->count() + 1
+            'published_at' => date('Y-m-d H:i:s'),
+            'sorting' => static::where('attachable_id', '=', $attachableId)->where('attachable_type', '=', $attachableId)->count() + 1
         ));
 
-        if($file->move(base_path('public' . $public_path), $newFilename)->isReadable()) {
-            $img->save();
-            if(is_callable($onupload)) {
-                call_user_func($onupload, $img, $file, $newFilename);
+        if ($file->move(base_path('public' . $public_path), $newFilename)->isReadable()) {
+            $record->save();
+            if (is_callable($onupload)) {
+                call_user_func($onupload, $record, $file, $newFilename);
             }
             return \Response::json('success', 200);
         }

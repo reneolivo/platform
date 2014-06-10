@@ -22,11 +22,11 @@ interface IPublishable
 
     public function isFuturePublication();
 
-    public static function scopePublished();
+    public static function scopePublished($query);
 
-    public static function scopeUnpublished();
+    public static function scopeUnpublished($query);
 
-    public static function scopeFuturePublications();
+    public static function scopeFuturePublications($query);
 
-    public static function scopePastPublications();
+    public static function scopePastPublications($query);
 }

@@ -9,7 +9,7 @@ trait TPageable
 
     public function url($extra = array(), $langId = null)
     {
-        if($this instanceof ITranslatable) {
+        if ($this instanceof ITranslatable) {
             return \URL::langTo($this->translation($langId)->slug, array()
                             , ($this->is_https ? true : false)
                             , (empty($langId) ? \Lang::code() : Language::find($langId)->code));
@@ -20,7 +20,7 @@ trait TPageable
 
     public function getSlug($langId = null)
     {
-        if($this instanceof ITranslatable) {
+        if ($this instanceof ITranslatable) {
             return $this->translation($langId) ? $this->translation($langId)->slug : '';
         }
         return $this->slug;
@@ -28,15 +28,15 @@ trait TPageable
 
     public function canonicalUrl($langId = null)
     {
-        if($this->exists()) {
-            if($this instanceof ITranslatable) {
-                if(strlen(trim($this->translation($langId)->canonical_url)) > 0) {
+        if ($this->exists()) {
+            if ($this instanceof ITranslatable) {
+                if (strlen(trim($this->translation($langId)->canonical_url)) > 0) {
                     $url = $this->translation($langId)->canonical_url;
                 } else {
                     $url = $this->url($langId);
                 }
             } else {
-                if(strlen(trim($this->canonical_url)) > 0) {
+                if (strlen(trim($this->canonical_url)) > 0) {
                     $url = $this->canonical_url;
                 } else {
                     $url = $this->url();
@@ -72,7 +72,7 @@ trait TPageable
         $result = $slug;
         $suffix = 2;
         $search = static::resolve($slug, $slugField, false, $langId);
-        while(is_object($search) and ( count($search) > 0)) {
+        while (is_object($search) and ( count($search) > 0)) {
             $result = $slug . '-' . $suffix;
             $search = static::resolve($result, $slugField, false, $langId);
             $suffix++;
@@ -80,44 +80,52 @@ trait TPageable
         return $result;
     }
 
+    public static function scopeWithSlug($query, $slug)
+    {
+        
+    }
+
     /**
      * Finds a pageable by a slug string
      * @param string $slug Full slug
      * @param string $slugField Slug field name to search in
-     * @param boolean $onlyOne Return only the first record if present
      * @param int $langId Language to search the slug in (only used if this class has the Behaviours\TTranslatable trait)
      * @return \Illuminate\Database\Eloquent\Builder | static | false
      */
-    public static function resolve($slug, $slugField = 'slug', $onlyOne = true, $langId = null)
+    public static function resolve($slug, $slugField = 'slug', $langId = null)
     {
         $slug = trim($slug, '/ ');
-        if(empty($slug)) {
+        if (empty($slug)) {
             return false;
         }
         $model = new static();
+        $isTranslatable = ($model instanceof ITranslatable);
         $modelClass = get_real_class($model);
         $statement = $modelClass::where($slugField, '=', $slug);
 
-        if($model instanceof ITranslatable) {
+        if ($isTranslatable) {
             $modelClass .= 'Text';
             $statement = $modelClass::where($slugField, '=', $slug)->where('language_id', '=', empty($langId) ? \Lang::id() : $langId);
         } else {
             $statement = $modelClass::where($slugField, '=', $slug);
         }
+
+        if ($model instanceof IPublishable) {
+            $statement = $statement->published();
+        }
+
         $records = $statement->get();
-        
+
         $results = (count($records) == 0) ? false : $records;
-        
-        if($onlyOne == true) {
-            if(($results == false) or ( count($results) != 1)) {
-                return false;
-            } else {
-                $pageable = $results->first();
-                if($pageable instanceof \Thor\Models\BaseText){
-                    return $pageable->master();
-                }
-                return $pageable;
+
+        if ($results == false) {
+            return false;
+        } else {
+            $pageable = $results->first();
+            if ($isTranslatable) {
+                return $pageable->master();
             }
+            return $pageable;
         }
 
         return $results;
@@ -134,11 +142,11 @@ trait TPageable
      */
     public function execute($data = array(), $controller = null, $action = null)
     {
-        if(!($this->exists())) {
+        if (!($this->exists())) {
             return false;
         }
 
-        if((intval($this->redirect_code) > 300) and ( filter_var($this->redirect_url, FILTER_VALIDATE_URL))) {
+        if ((intval($this->redirect_code) > 300) and ( filter_var($this->redirect_url, FILTER_VALIDATE_URL))) {
             return \Redirect::to($this->redirect_url, intval($this->redirect_code));
         }
 
@@ -148,14 +156,14 @@ trait TPageable
         $action = (empty($action) ? (empty($this->action) ?
                                 Config::get('thor::pageable_default_action') : $this->action) : $action);
 
-        if(empty($controller) or empty($action)) {
+        if (empty($controller) or empty($action)) {
             return false;
         }
-        if($controller instanceof \Closure) {
+        if ($controller instanceof \Closure) {
             return $controller($this, $data);
-        } elseif(class_exists($controller) and method_exists($controller, $action)) {
-            $controller = new $controller();
-            return $controller->$action($this, $data);
+        } elseif (class_exists($controller) and method_exists($controller, $action)) {
+            $controller = new $controller($this);
+            return $controller->$action($data);
         }
         return false;
     }
