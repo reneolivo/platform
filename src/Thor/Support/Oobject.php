@@ -6,7 +6,7 @@ namespace Thor\Support;
  * Object that can have overloaded magic getters, setters, issets and unsets
  * for each individual property.
  */
-class Overobject extends Object
+class Oobject extends Object
 {
 
     public function get($name)

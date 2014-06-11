@@ -1,57 +1,40 @@
 <?php
 
-namespace Thor\Models;
+namespace Thor\Platform;
 
-/**
- * Attachment model 
- * @property-read string $url 
- * @property string $caption 
- * @property string $path 
- * @property string $group 
- * @property integer $attachablee_id
- * @property string $attachablee_type
- * @property timestamp $created_at
- * @property timestamp $updated_at
- */
-class Attachment extends Base implements Behaviours\ISortable, Behaviours\IPublishable
+use \Illuminate\Container\Container;
+
+class UploadHandler
 {
 
-    use Behaviours\TSortable,
-        Behaviours\TPublishable;
+    /**
+     *
+     * @var Container 
+     */
+    protected $app;
 
-    protected $table = 'attachments';
-
-    public static function boot()
+    /**
+     * 
+     * @param Container $app
+     */
+    public function __construct(Container $app)
     {
-        parent::boot();
-
-        // delete file if the record has been deleted
-        static::deleted(function(Attachment $file) {
-            $filepath = base_path('public/' . ltrim($file->path, '/'));
-            if (file_exists($filepath)) {
-                @unlink($filepath);
-            }
-        });
+        $this->app = $app;
     }
 
-    public function url()
+    public function upload()
     {
-        return url($this->path);
+        
     }
 
-    public function getUrlAttribute()
+    public function uploadFiles()
     {
-        return $this->url();
+        
     }
 
-    public function asHtml($attributes = '')
+    public function uploadImages()
     {
-        return '<a href="' . $this->url . '" ' . $attributes . '>' . $this->caption . '</a>';
-    }
-
-    public function attachable()
-    {
-        return $this->morphTo();
+        
     }
 
     /**
@@ -62,8 +45,10 @@ class Attachment extends Base implements Behaviours\ISortable, Behaviours\IPubli
      * @param array $rules
      * @param string $inputName
      * @return \Response
+     * @todo rewrite this fn
      */
-    public static function handleUpload($attachableType, $attachableId, $onupload = null, $rules = array('file' => 'mimes:zip,pdf,txt,md|max:3000'), $inputName = 'file')
+    private function _handleUpload($attachableType, $attachableId, $onupload = null
+    , $rules = array('file' => 'mimes:zip,pdf,txt,md|max:3000'), $inputName = 'file')
     {
         $input = \Input::all();
 
@@ -74,7 +59,8 @@ class Attachment extends Base implements Behaviours\ISortable, Behaviours\IPubli
         }
 
         $file = \Input::file($inputName);
-        $public_path = '/content/uploads/' . trim(strtolower(str_replace(array('Model', '\\'), array('', '_'), $attachableType)), '_ ') . '-' . $attachableId . '/';
+        $public_path = '/content/uploads/' . trim(strtolower(str_replace(array('Model', '\\'), array('', '_')
+                                        , $attachableType)), '_ ') . '-' . $attachableId . '/';
         $ext = $file->getClientOriginalExtension();
         $filename = $ext ? preg_replace("/\\." . $ext . "$/", "", $file->getClientOriginalName()) : $file->getClientOriginalName();
         //$newFilename = \Str::slug($filename) . '_' . time() . '.' . strtolower($file->getClientOriginalExtension());

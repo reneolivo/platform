@@ -21,8 +21,6 @@ class DatabaseSeeder extends Seeder
         $this->call('Thor\Models\Seeders\UsersTableSeeder');
         $this->call('Thor\Models\Seeders\RolesTableSeeder');
         $this->call('Thor\Models\Seeders\PermissionsTableSeeder');
-        $this->call('Thor\Models\Seeders\ModulesTableSeeder');
-        $this->call('Thor\Models\Seeders\PagesTableSeeder');
     }
 
 }

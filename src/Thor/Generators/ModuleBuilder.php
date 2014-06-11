@@ -11,7 +11,7 @@ use Route,
     Backend,
     Artisan;
 
-class CrudBuilder
+class ModuleBuilder
 {
 
     /**
@@ -21,11 +21,11 @@ class CrudBuilder
      * @param string|array $generalFields
      * @param string|array $translatableFields
      * @param string|array $listableFields
-     * @return \Thor\Generators\ResourceResolver
+     * @return \Thor\Generators\Parser
      */
     public function generate($singular, $behaviours = false, $generalFields = false, $translatableFields = false, $listableFields = false)
     {
-        $res = new ResourceResolver($singular, $behaviours, $generalFields, $translatableFields, $listableFields);
+        $res = new Parser($singular, $behaviours, $generalFields, $translatableFields, $listableFields);
         $this->createMigrationFile($res);
         $this->createModelFile($res);
         $this->createControllerFile($res);
@@ -148,10 +148,9 @@ class CrudBuilder
         $input['name'] = strtolower(trim($input['name']));
 
         if ($module->validate($input)) {
-            $resolver = new ResourceResolver($input['name'], $behaviours, $generalFields, $translatableFields, $listableFields);
+            $resolver = new Parser($input['name'], $behaviours, $generalFields, $translatableFields, $listableFields);
             //dd($module->metadata['resolver']);
-            file_put_contents($module->metadata['resolver']->migrationFile . '.php', 
-                    View::make('thor::generators.migration', $resolver->export())->render());
+            file_put_contents($module->metadata['resolver']->migrationFile . '.php', View::make('thor::generators.migration', $resolver->export())->render());
             $this->createModelFile($resolver);
             $this->createControllerFile($resolver);
             $this->createViewFiles($resolver);
@@ -205,9 +204,9 @@ class CrudBuilder
 
     /**
      * 
-     * @param ResourceResolver $res Resource resolver
+     * @param Parser $res Resource resolver
      */
-    public function createControllerFile(ResourceResolver $res)
+    public function createControllerFile(Parser $res)
     {
         if (!is_dir($res->controllerPath)) {
             mkdir($res->controllerPath, 0755, true);
@@ -217,9 +216,9 @@ class CrudBuilder
 
     /**
      * 
-     * @param ResourceResolver $res Resource resolver
+     * @param Parser $res Resource resolver
      */
-    public function createModelFile(ResourceResolver $res)
+    public function createModelFile(Parser $res)
     {
         if (!is_dir($res->modelPath)) {
             mkdir($res->modelPath, 0755, true);
@@ -235,18 +234,18 @@ class CrudBuilder
 
     /**
      * 
-     * @param ResourceResolver $res Resource resolver
+     * @param Parser $res Resource resolver
      */
-    public function createMigrationFile(ResourceResolver $res)
+    public function createMigrationFile(Parser $res)
     {
         file_put_contents($res->migrationFile . '.php', View::make('thor::generators.migration', $res->export())->render());
     }
 
     /**
      * 
-     * @param ResourceResolver $res Resource resolver
+     * @param Parser $res Resource resolver
      */
-    public function createViewFiles(ResourceResolver $res, $force = false)
+    public function createViewFiles(Parser $res, $force = false)
     {
         $viewsPath = app_path() . '/views/' . (trim($res->viewBasepath, '/ ')) . '/' . $res->plural . '/';
         if (!is_dir($viewsPath)) {
@@ -255,7 +254,7 @@ class CrudBuilder
         $views = array('create', 'edit', 'index', 'show');
         foreach ($views as $v) {
             $viewFile = $viewsPath . $v;
-            file_put_contents($viewFile . '.blade.php', View::make('thor::generators.html.' . $v, $res->export())->render());
+            file_put_contents($viewFile . '.blade.php', View::make('thor::generators.views.' . $v, $res->export())->render());
         }
     }
 

@@ -109,7 +109,7 @@ class Backend
     public function isInstalled()
     {
         if ($this->installed === null) {
-            $this->installed = (\Schema::hasTable('users') === true);
+            $this->installed = (\Schema::hasTable('languages') === true);
         }
         return $this->installed;
     }

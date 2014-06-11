@@ -12,7 +12,7 @@ trait TPageable
         if ($this instanceof ITranslatable) {
             return \URL::langTo($this->translation($langId)->slug, array()
                             , ($this->is_https ? true : false)
-                            , (empty($langId) ? \Lang::code() : Language::find($langId)->code));
+                            , \Lang::code($langId));
         } else {
             return \URL::to($this->slug, $extra, $this->is_https ? true : false);
         }

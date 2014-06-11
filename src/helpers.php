@@ -1,10 +1,10 @@
 <?php
 
-if(!defined('THORCMS_VERSION')){
+if (!defined('THORCMS_VERSION')) {
     define('THORCMS_VERSION', '0.4.0-dev');
 }
 
-if(!function_exists('lang_url')) {
+if (!function_exists('lang_url')) {
 
     /**
      * Decode html code (HTML::decode alias)
@@ -18,7 +18,7 @@ if(!function_exists('lang_url')) {
 
 }
 
-if(!function_exists('_d')) {
+if (!function_exists('_d')) {
 
     /**
      * Decode html code (HTML::decode alias)
@@ -34,7 +34,7 @@ if(!function_exists('_d')) {
 
 
 
-if(!function_exists('get_class_constants')) {
+if (!function_exists('get_class_constants')) {
 
     /**
      * Retrieves all constants (or the specified one) from a class using Reflection
@@ -48,7 +48,7 @@ if(!function_exists('get_class_constants')) {
         $reflect = new \ReflectionClass($className);
         $constants = $reflect->getConstants();
 
-        if(!empty($constantName)) {
+        if (!empty($constantName)) {
             return $constants[$constantName];
         } else {
             return $constants;
@@ -57,7 +57,7 @@ if(!function_exists('get_class_constants')) {
 
 }
 
-if(!function_exists('get_object_public_vars')) {
+if (!function_exists('get_object_public_vars')) {
 
 
     /**
@@ -73,7 +73,7 @@ if(!function_exists('get_object_public_vars')) {
 
 }
 
-if(!function_exists('get_real_type')) {
+if (!function_exists('get_real_type')) {
 
     /**
      * 
@@ -87,7 +87,7 @@ if(!function_exists('get_real_type')) {
 
 }
 
-if(!function_exists('get_real_class')) {
+if (!function_exists('get_real_class')) {
 
     /**
      * Takes a classname and returns the actual classname for an alias or just the classname
@@ -99,12 +99,12 @@ if(!function_exists('get_real_class')) {
     function get_real_class($class)
     {
         static $classes = array();
-        
-        if(is_object($class)){
+
+        if (is_object($class)) {
             $class = get_class($class);
         }
 
-        if(!array_key_exists($class, $classes)) {
+        if (!array_key_exists($class, $classes)) {
             $reflect = new ReflectionClass($class);
             $classes[$class] = $reflect->getName();
         }
@@ -114,7 +114,7 @@ if(!function_exists('get_real_class')) {
 
 }
 
-if(!function_exists('array_sort_column')) {
+if (!function_exists('array_sort_column')) {
 
     /**
      * Sorts an array of associative arrays or objects by column
@@ -126,13 +126,13 @@ if(!function_exists('array_sort_column')) {
      */
     function array_sort_column($column, $arr, $sorting = SORT_ASC, $comparefn = 'strnatcasecmp')
     {
-        if(is_array($arr) && (count($arr) > 0)) {
+        if (is_array($arr) && (count($arr) > 0)) {
             usort($arr, function($a, $b) use ($comparefn, $column, $sorting) {
                 $a = is_array($a) ? ((object) $a) : $a;
                 $b = is_array($b) ? ((object) $b) : $b;
 
-                if(isset($a->$column) && isset($b->$column)) {
-                    if($sorting == SORT_ASC) {
+                if (isset($a->$column) && isset($b->$column)) {
+                    if ($sorting == SORT_ASC) {
                         return call_user_func($comparefn, $a->$column, $b->$column);
                     } else {
                         return call_user_func($comparefn, $b->$column, $a->$column);
@@ -147,7 +147,7 @@ if(!function_exists('array_sort_column')) {
 
 }
 
-if(!function_exists('array_safe_value')) {
+if (!function_exists('array_safe_value')) {
 
     /**
      * Checks if a variable exists inside an array and matches the given php filter or regular expression.
@@ -161,20 +161,20 @@ if(!function_exists('array_safe_value')) {
      */
     function array_safe_value(array $arr, $key, $default = null, $validation = null)
     {
-        if($validation === true) {
+        if ($validation === true) {
             // has
             return isset($arr[$key]);
         }
-        if(isset($arr[$key])) {
+        if (isset($arr[$key])) {
             $value = $arr[$key];
-            if($validation != null) {
-                if(is_string($validation) && ($validation{0} == '/')) {
+            if ($validation != null) {
+                if (is_string($validation) && ($validation{0} == '/')) {
                     //regexp
                     return (preg_match($validation, $value) > 0) ? $value : $default;
-                } elseif(is_int($validation)) {
+                } elseif (is_int($validation)) {
                     // FILTER_* constant
                     return filter_var($value, $validation) ? $value : $default;
-                } elseif(is_callable($validation)) {
+                } elseif (is_callable($validation)) {
                     // validation function
                     return $validation($value) ? $value : $default;
                 } else {
@@ -191,16 +191,16 @@ if(!function_exists('array_safe_value')) {
 
 }
 
-if(!function_exists('array_sanitize')) {
+if (!function_exists('array_sanitize')) {
 
     function array_sanitize(array $arr, $removeHtml = true, $replacement = ' ', $replaceChars = array('>', '<', '\\', '/', '"', '\''), $trimChars = ' .,-_')
     {
-        if($removeHtml) {
-            foreach($arr as $k => $v) {
+        if ($removeHtml) {
+            foreach ($arr as $k => $v) {
                 $arr[$k] = trim(str_replace($replaceChars, $replacement, strip_tags($v)), $trimChars);
             }
         } else {
-            foreach($arr as $k => $v) {
+            foreach ($arr as $k => $v) {
                 $arr[$k] = trim(str_replace($replaceChars, $replacement, $v), $trimChars);
             }
         }
@@ -209,33 +209,85 @@ if(!function_exists('array_sanitize')) {
 
 }
 
-if(!function_exists('array_key_prefix')) {
+if (!function_exists('array_value_prefix')) {
 
-    function array_key_prefix(array $arr, $prefix)
+    function array_value_prefix(array $arr, $prefix, $key = null)
     {
-        $newArr = array();
-        foreach($arr as $k => $v) {
-            $newArr[$prefix . $k] = $v;
+        if (strlen($key) == 0) {
+            if (isset($arr[$key])) {
+                $arr[$key] = $prefix . $arr[$key];
+            } else {
+                $arr[$key] = $prefix;
+            }
+        } else {
+            foreach ($arr as $k => $v) {
+                $arr[$k] = $prefix . $arr[$k];
+            }
         }
-        return $newArr;
+        return $arr;
     }
 
 }
 
-if(!function_exists('array_key_suffix')) {
+if (!function_exists('array_value_suffix')) {
 
-    function array_key_suffix(array $arr, $suffix)
+    function array_value_suffix(array $arr, $suffix, $key = null)
     {
-        $newArr = array();
-        foreach($arr as $k => $v) {
-            $newArr[$k . $suffix] = $v;
+        if (strlen($key) == 0) {
+            if (isset($arr[$key])) {
+                $arr[$key].=$suffix;
+            } else {
+                $arr[$key] = $suffix;
+            }
+        } else {
+            foreach ($arr as $k => $v) {
+                $arr[$k].=$suffix;
+            }
         }
-        return $newArr;
+        return $arr;
     }
 
 }
 
-if(!function_exists('array_validate')) {
+if (!function_exists('array_key_prefix')) {
+
+    function array_key_prefix(array $arr, $prefix, $key = null)
+    {
+        if (strlen($key) == 0) {
+            $newArr = array();
+            foreach ($arr as $k => $v) {
+                $newArr[$prefix . $k] = $v;
+            }
+            return $newArr;
+        } else {
+            $arr[$prefix . $k] = $arr[$k];
+            unset($arr[$k]);
+            return $arr;
+        }
+    }
+
+}
+
+if (!function_exists('array_key_suffix')) {
+
+    function array_key_suffix(array $arr, $suffix, $key = null)
+    {
+        if (strlen($key) == 0) {
+            $newArr = array();
+            foreach ($arr as $k => $v) {
+                $newArr[$k . $suffix] = $v;
+            }
+            return $newArr;
+        } else {
+            $arr[$k . $suffix] = $arr[$k];
+            unset($arr[$k]);
+            return $arr;
+        }
+    }
+
+}
+
+if (!function_exists('array_validate')) {
 
     /**
      * 
@@ -247,34 +299,34 @@ if(!function_exists('array_validate')) {
     {
         $errors = array();
 
-        foreach($validations as $field => $validation) {
-            if(empty($validation)) {
+        foreach ($validations as $field => $validation) {
+            if (empty($validation)) {
                 continue;
             }
-            if(!isset($arr[$field])) {
+            if (!isset($arr[$field])) {
                 $errors[] = $field;
                 continue;
             }
-            if(($validation == 'e') and empty($arr[$field])) {
+            if (($validation == 'e') and empty($arr[$field])) {
                 $errors[] = $field;
                 continue;
             }
-            if(is_callable($validation) and ( call_user_func($arr[$field]) == false)) {
+            if (is_callable($validation) and ( call_user_func($arr[$field]) == false)) {
                 $errors[] = $field;
                 continue;
             }
-            if(is_numeric($validation) and ( !filter_var($arr[$field], $validation))) {
+            if (is_numeric($validation) and ( !filter_var($arr[$field], $validation))) {
                 $errors[] = $field;
                 continue;
             }
 
-            if(is_string($validation) and ( $validation{0} == '/') and ( preg_match($validation, $arr[$field]) == false)) {
+            if (is_string($validation) and ( $validation{0} == '/') and ( preg_match($validation, $arr[$field]) == false)) {
                 $errors[] = $field;
                 continue;
             }
         }
 
-        if(empty($errors)) {
+        if (empty($errors)) {
             return true;
         }
         return $errors;
@@ -282,7 +334,7 @@ if(!function_exists('array_validate')) {
 
 }
 
-if(!function_exists('base64_encode_safe')) {
+if (!function_exists('base64_encode_safe')) {
 
     /**
      * Base64 encode (Binary to ASCII or btoa in javascript)
@@ -293,7 +345,7 @@ if(!function_exists('base64_encode_safe')) {
     function base64_encode_safe($data, $url_safe = false)
     {
         $data = base64_encode($data);
-        if($url_safe) {
+        if ($url_safe) {
             $data = str_replace(array('+', '/', '='), array('-', '_', ''), $data);
         }
         return $data;
@@ -301,7 +353,7 @@ if(!function_exists('base64_encode_safe')) {
 
 }
 
-if(!function_exists('base64_decode_safe')) {
+if (!function_exists('base64_decode_safe')) {
 
     /**
      * Base64 decode (ASCII to binary or atob in javascript)
@@ -311,10 +363,10 @@ if(!function_exists('base64_decode_safe')) {
      */
     function base64_decode_safe($data, $url_safe = false)
     {
-        if($url_safe) {
+        if ($url_safe) {
             $data = str_replace(array('-', '_'), array('+', '/'), $data);
             $mod4 = strlen($data) % 4;
-            if($mod4) {
+            if ($mod4) {
                 $data .= substr('====', $mod4);
             }
         }
@@ -323,7 +375,7 @@ if(!function_exists('base64_decode_safe')) {
 
 }
 
-if(!function_exists('str_is_regex')) {
+if (!function_exists('str_is_regex')) {
 
     function str_is_regex($str)
     {
@@ -332,7 +384,7 @@ if(!function_exists('str_is_regex')) {
 
 }
 
-if(!function_exists('str_is_json')) {
+if (!function_exists('str_is_json')) {
 
     function str_is_json($str)
     {
@@ -341,7 +393,7 @@ if(!function_exists('str_is_json')) {
 
 }
 
-if(!function_exists('str_is_html')) {
+if (!function_exists('str_is_html')) {
 
     function str_is_html($str)
     {

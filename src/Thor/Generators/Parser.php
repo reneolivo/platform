@@ -5,7 +5,7 @@ namespace Thor\Generators;
 use Config,
     Str;
 
-class ResourceResolver implements \ArrayAccess
+class Parser implements \ArrayAccess
 {
 
     public $singular;

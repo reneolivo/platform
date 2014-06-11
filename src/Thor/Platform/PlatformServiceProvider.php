@@ -6,7 +6,7 @@ use Illuminate\Support\Facades;
 use Illuminate\Support\ServiceProvider,
     View,
     Backend,
-    Pageable;
+    Config;
 
 class PlatformServiceProvider extends ServiceProvider
 {
@@ -59,6 +59,7 @@ class PlatformServiceProvider extends ServiceProvider
     public function register()
     {
         // IoC
+        $this->registerModels();
         $this->registerTranslator();
         $this->registerRouter();
         $this->registerUrlGenerator();
@@ -69,7 +70,7 @@ class PlatformServiceProvider extends ServiceProvider
         $this->registerBench();
         $this->registerDocument();
         $this->registerBackend();
-        $this->registerCrudBuilder();
+        $this->registerModuleBuilder();
         $this->registerLangPublisher();
 
         // Commands
@@ -95,7 +96,7 @@ class PlatformServiceProvider extends ServiceProvider
             'thor.bench',
             'thor.document',
             'thor.backend',
-            'thor.crud',
+            'thor.module',
             'thor.lang.publisher',
             'command.thor.lang.publish',
             'command.thor.install',
@@ -209,10 +210,10 @@ class PlatformServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerCrudBuilder()
+    protected function registerModuleBuilder()
     {
-        $this->app->bindShared('thor.crud', function($app) {
-            return new \Thor\Generators\CrudBuilder($app);
+        $this->app->bindShared('thor.module', function($app) {
+            return new \Thor\Generators\ModuleBuilder($app);
         });
     }
 
@@ -221,6 +222,30 @@ class PlatformServiceProvider extends ServiceProvider
         $this->app->bindShared('thor.lang.publisher', function($app) {
             return new \Thor\I18n\LangPublisher($app['files'], $app['path'] . '/lang');
         });
+    }
+
+    protected function registerModels()
+    {
+        $makeModel = function($model){
+            return function($app, $params = array()) use($model) {
+                $classname = $app['thor.models.'.$model.'.class'];
+                $attributes = (isset($params[0]) ? $params[0] : array());
+                $validator = (isset($params[1]) ? $params[1] : null);
+                return new $classname($attributes, $validator);
+            };
+        };
+        
+        $this->app->bindShared('thor.models.file.class', function() {
+            return '\\Thor\Models\\File';
+        });
+        $this->app->bind('thor.models.file', $makeModel('file'));
+        
+        $this->app->bindShared('thor.models.language.class', function() {
+            return '\\Thor\Models\\Language';
+        });
+        $this->app->bind('thor.models.language', $makeModel('language'));
+        
+        // User, Role and Permission are handled ny Condide and Entrust
     }
 
     protected function registerThorLangPublishCommand()

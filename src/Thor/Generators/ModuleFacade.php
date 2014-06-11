@@ -2,7 +2,7 @@
 
 namespace Thor\Generators;
 
-class CrudFacade extends \Illuminate\Support\Facades\Facade
+class ModuleFacade extends \Illuminate\Support\Facades\Facade
 {
 
     /**
@@ -12,7 +12,7 @@ class CrudFacade extends \Illuminate\Support\Facades\Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'thor.crud';
+        return 'thor.module';
     }
 
 }

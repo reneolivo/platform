@@ -32,19 +32,19 @@ Route::langGroup(array('prefix' => $backend_basepath, 'before' => 'auth.backend'
 });
 
 // Base modules
-CRUD::routes('permission', true);
-CRUD::routes('role', true);
-CRUD::routes('user', true);
-CRUD::routes('language', true);
-CRUD::routes('module', true);
+Module::routes('permission', true);
+Module::routes('role', true);
+Module::routes('user', true);
+Module::routes('language', true);
+//CRUD::routes('module', true);
 
 // Registered modules
-foreach (Backend::modules() as $module) {
-    CRUD::routes($module->name, true, $module->controller_class, $module->module_class);
-    if($module->is_pageable){
-        Route::registerPageable($module->model_class);
-    }
-}
+//foreach (Backend::modules() as $module) {
+//    CRUD::routes($module->name, true, $module->controller_class, $module->module_class);
+//    if($module->is_pageable){
+//        Route::registerPageable($module->model_class);
+//    }
+//}
 
 // Site 404
 App::missing(function($e) {

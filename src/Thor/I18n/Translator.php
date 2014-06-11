@@ -42,12 +42,15 @@ class Translator extends \Illuminate\Translation\Translator
         $this->fallback = $app['config']->get('app.fallback_locale');
         $this->language = null;
 
-        if($app['config']->get('thor::i18n.enabled') === true) {
+        if ($app['config']->get('thor::i18n.enabled') === true) {
             $this->resolve();
         } else {
-            $this->language = Language::byCodeOrLocale($this->locale)->first();
-            if(!is_object($this->language) or !$this->language->exists()) {
-                $this->language = new Language(array('id' => -1, 'name' => $this->locale,
+            $langclass = $this->app->make('thor.models.language.class');
+            if ($this->app['thor.backend']->isInstalled()) {
+                $this->language = $langclass::byCodeOrLocale($this->locale)->first();
+            }
+            if (!is_object($this->language) or ! $this->language->exists()) {
+                $this->language = $this->app->make('thor.models.language', array('id' => -1, 'name' => $this->locale,
                     'code' => preg_replace('/[_-].+$/', '', $this->locale), 'locale' => $this->locale));
             }
         }
@@ -64,10 +67,15 @@ class Translator extends \Illuminate\Translation\Translator
 
     /**
      * The current Language model ISO 639-1 code
+     * @param int $id Language id to retrieve the code from
      * @return type
      */
-    public function code()
+    public function code($id = null)
     {
+        if ($id > 0) {
+            $langclass = $this->app->make('thor.models.language.class');
+            return $langclass::find($id)->code;
+        }
         return $this->language->code;
     }
 
@@ -105,7 +113,7 @@ class Translator extends \Illuminate\Translation\Translator
      */
     public function resolveWith($langCode)
     {
-        if(($this->app['config']->get('thor::i18n.use_database') === true) and ( \Schema::hasTable('languages'))) {
+        if (($this->app['config']->get('thor::i18n.use_database') === true) and ( \Schema::hasTable('languages'))) {
             return $this->resolveFromDb($langCode);
         } else {
             return $this->resolveFromConfig($langCode);
@@ -120,7 +128,7 @@ class Translator extends \Illuminate\Translation\Translator
     public function setLanguage(Language $language, $changeInternalLocale = true)
     {
         $this->language = $language;
-        if($changeInternalLocale === true) {
+        if ($changeInternalLocale === true) {
             $this->setInternalLocale($language->locale ? $language->locale : $language->code);
         }
     }
@@ -190,8 +198,9 @@ class Translator extends \Illuminate\Translation\Translator
 
     protected function resolveFromDb($langCode)
     {
-        $this->activeLanguages = Language::sorted()->active()->get();
-        if(count($this->activeLanguages) > 0) {
+        $langclass = $this->app->make('thor.models.language.class');
+        $this->activeLanguages = $langclass::sorted()->active()->get();
+        if (count($this->activeLanguages) > 0) {
             // Set the first language as the fallback
             $this->app['config']->set('app.fallback_locale', $this->activeLanguages[0]->locale);
             // Override available locales
@@ -200,15 +209,15 @@ class Translator extends \Illuminate\Translation\Translator
             $fallbackLang = $this->activeLanguages[0];
             $isFound = false;
             // Lookup for a matching language code
-            foreach($this->activeLanguages as $ln) {
-                if($ln->code == $langCode) {
+            foreach ($this->activeLanguages as $ln) {
+                if ($ln->code == $langCode) {
                     $isFound = true;
                     $this->setLanguage($ln, true);
                     break;
                 }
             }
             // If not found, set the current to the fallback language
-            if($isFound === false) {
+            if ($isFound === false) {
                 $this->setLanguage($fallbackLang, true);
             }
         } else {
@@ -221,19 +230,19 @@ class Translator extends \Illuminate\Translation\Translator
     {
         $availableLocales = $this->getAvailableLocales();
         $isFound = false;
-        foreach($availableLocales as $code => $locale) {
-            if($code == $langCode) {
+        foreach ($availableLocales as $code => $locale) {
+            if ($code == $langCode) {
                 $isFound = true;
-                $this->setLanguage(new Language(array('id' => -1, 'name' => $code,
-                    'code' => $code, 'locale' => $locale)), true);
+                $this->setLanguage($this->app->make('thor.models.language', array('id' => -1, 'name' => $code,
+                            'code' => $code, 'locale' => $locale)), true);
                 break;
             }
         }
-        if($isFound === false) {
+        if ($isFound === false) {
             $fallbackLocale = $this->app['config']->get('app.fallback_locale');
             $locale = isset($availableLocales[$fallbackLocale]) ? $availableLocales[$fallbackLocale] : $langCode;
-            $this->setLanguage(new Language(array('id' => -1, 'name' => $fallbackLocale,
-                'code' => $fallbackLocale, 'locale' => $locale)), true);
+            $this->setLanguage($this->app->make('thor.models.language', array('id' => -1, 'name' => $fallbackLocale,
+                        'code' => $fallbackLocale, 'locale' => $locale)), true);
         }
         return $this->language;
     }
@@ -248,11 +257,11 @@ class Translator extends \Illuminate\Translation\Translator
         $fallbackLangCode = $this->app['config']->get('thor::i18n.use_header') ? $this->getCodeFromHeader() : null;
         $langCode = $this->getCodeFromSegment($segmentIndex);
 
-        if($langCode === null) {
+        if ($langCode === null) {
             //if no language is specified in the url, use the default one
             $langCode = $fallbackLangCode;
         }
-        if(!$this->isValidCode($langCode)) {
+        if (!$this->isValidCode($langCode)) {
             $this->app['events']->fire('thor::i18n.invalid_language', array($langCode, $fallbackLangCode), false);
             // The following line is commented because we want the app to throw a NotFoundException
             // $langCode = null;
