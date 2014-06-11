@@ -25,13 +25,12 @@ class PlatformServiceProvider extends ServiceProvider
         $package_src = realpath(__DIR__ . '/../../');
         
         
-
+        //dd(\Thor::model('user'));
         include_once $package_src . '/filters.php';
         
         if(file_exists(app_path('routes/backend.php'))){
             include_once app_path('routes/backend.php');
         }
-        die('vale');
     }
 
     /**
@@ -61,7 +60,13 @@ class PlatformServiceProvider extends ServiceProvider
     protected function registerThor()
     {
         $this->app->bindShared('thor.thor', function($app) {
-            return new \Thor\Platform\Thor($app);
+            return new Thor($app);
+        });
+    }
+    protected function registerEntrust()
+    {
+        $this->app->bind('thor.sentinel', function($app) {
+            return new Sentinel($app);
         });
     }
 
