@@ -1,6 +1,8 @@
 <?php
 
 return array(
+    'basepath' => 'backend',
+    'title' => 'Thor CMS',
     'behaviours_selector' => array(
         'translatable' => 'Translatable',
         'pageable' => 'Pageable',

@@ -34,8 +34,24 @@ class Sentinel
      */
     public function hasRole($permission)
     {
-        if ($this->user()) {
+        if ($this->check()) {
             return $this->user()->hasRole($permission);
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 
+     * Check if the current user has the 'backend_access' permission
+     *
+     * @param string $permission Permission name.
+     * @return boolean
+     */
+    public function hasBackendAccess($permission)
+    {
+        if ($this->check()) {
+            return $this->user()->hasPermission('backend_access');
         } else {
             return false;
         }
@@ -50,7 +66,7 @@ class Sentinel
      */
     public function hasPermission($permission)
     {
-        if ($this->user()) {
+        if ($this->check()) {
             return $this->user()->hasPermission($permission);
         } else {
             return false;
@@ -59,14 +75,14 @@ class Sentinel
 
     /**
      * 
-     * Shortcut function for Sentinel::hasPermission
+     * Shortcut function for SentinelFacade::hasPermission
      *
      * @param string $permission Permission name.
      * @return boolean
      */
     public function can($permission)
     {
-        if ($this->user()) {
+        if ($this->check()) {
             return $this->user()->hasPermission($permission);
         } else {
             return false;
@@ -81,6 +97,27 @@ class Sentinel
     public function user()
     {
         return $this->app['auth']->user();
+    }
+
+    /**
+     * Determine if the current user is authenticated.
+     *
+     * @return bool
+     * @static 
+     */
+    public function check()
+    {
+        return $this->app['auth']->check();
+    }
+
+    /**
+     * Log the user out of the application.
+     *
+     * @return void
+     */
+    public function logout()
+    {
+        $this->app['auth']->logout();
     }
 
     /**

@@ -7,7 +7,7 @@ class ThorFacade extends \Illuminate\Support\Facades\Facade
 
     protected static function getFacadeAccessor()
     {
-        return 'thor.thor';
+        return 'thor';
     }
 
 }

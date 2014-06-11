@@ -3,7 +3,7 @@
 namespace Thor\Models\Seeders;
 
 use Seeder,
-    Thor;
+    Thor\Platform\ThorFacade;
 
 class PermissionsTableSeeder extends Seeder
 {
@@ -13,7 +13,7 @@ class PermissionsTableSeeder extends Seeder
         $date = date('Y-m-d H:i:s');
 
         $perms = array(
-            'access_backend',
+            'backend_access',
             'list_languages', 'create_languages', 'read_languages', 'update_languages', 'delete_languages',
             'list_pages', 'create_pages', 'read_pages', 'update_pages', 'delete_pages',
             'list_roles', 'create_roles', 'read_roles', 'update_roles', 'delete_roles',
@@ -24,7 +24,7 @@ class PermissionsTableSeeder extends Seeder
         $perms_ids = array();
 
         foreach ($perms as $i => $name) {
-            $perms_ids[$name] = Thor::model('permission')->create(array(
+            $perms_ids[$name] = ThorFacade::model('permission')->create(array(
                         'name' => $name,
                         'display_name' => \Str::title(str_replace('_', ' ', $name)),
                         'created_at' => $date,
@@ -32,11 +32,11 @@ class PermissionsTableSeeder extends Seeder
                     ))->id;
         }
 
-        $administratorRole = Thor::model('user')->where('name', '=', 'administrator')->first();
-        $developerRole = Thor::model('user')->where('name', '=', 'developer')->first();
+        $administratorRole = ThorFacade::model('user')->where('name', '=', 'administrator')->first();
+        $developerRole = ThorFacade::model('user')->where('name', '=', 'developer')->first();
 
         $administratorRole->perms()->sync(array_merge(
-                        array($perms_ids['access_backend'])
+                        array($perms_ids['backend_access'])
                         , $this->resourcePerms($perms_ids, 'languages')
                         , $this->resourcePerms($perms_ids, 'pages')
                         , $this->resourcePerms($perms_ids, 'users')

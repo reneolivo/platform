@@ -3,7 +3,8 @@
 namespace Thor\Models;
 
 use Exception,
-    DB;
+    DB,
+    Thor\Platform\ThorFacade;
 
 class Permission extends Base
 {
@@ -48,7 +49,7 @@ class Permission extends Base
      */
     public function roles()
     {
-        return $this->belongsToMany(Thor::modelClass('role'), 'role_permissions');
+        return $this->belongsToMany(ThorFacade::modelClass('role'), 'role_permissions');
     }
 
 }

@@ -3,7 +3,7 @@
 namespace Thor\Models\Seeders;
 
 use Seeder,
-    Thor;
+    Thor\Platform\ThorFacade;
 
 class RolesTableSeeder extends Seeder
 {
@@ -22,7 +22,7 @@ class RolesTableSeeder extends Seeder
         );
 
         foreach ($roles as $name => $v) {
-            $roles[$name] = Thor::model('role')->create(array(
+            $roles[$name] = ThorFacade::model('role')->create(array(
                 'name' => $name,
                 'display_name' => \Str::title(str_replace('_', ' ', $name)),
                 'created_at' => $date,
@@ -30,10 +30,10 @@ class RolesTableSeeder extends Seeder
             ));
         }
 
-        $developer = Thor::model('user')->where('username', '=', 'developer')->first();
+        $developer = ThorFacade::model('user')->where('username', '=', 'developer')->first();
         $developer->attachRole($roles['developer']);
 
-        $admin = Thor::model('user')->where('username', '=', 'admin')->first();
+        $admin = ThorFacade::model('user')->where('username', '=', 'admin')->first();
         $admin->attachRole($roles['administrator']);
     }
 

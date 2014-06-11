@@ -4,7 +4,7 @@ namespace Thor\Models\Seeders;
 
 use Seeder,
     Hash,
-    Thor;
+    Thor\Platform\ThorFacade;
 
 class UsersTableSeeder extends Seeder
 {
@@ -37,7 +37,7 @@ class UsersTableSeeder extends Seeder
         );
 
         foreach ($users as $data) {
-            Thor::model('user')->create($data);
+            ThorFacade::model('user')->create($data);
         }
     }
 

@@ -2,7 +2,7 @@
 
 namespace Thor\Models\Seeders;
 
-use Thor;
+use Thor\Platform\ThorFacade;
 
 class LanguagesTableSeeder extends \Seeder
 {
@@ -16,7 +16,7 @@ class LanguagesTableSeeder extends \Seeder
     {
         \DB::table('languages')->delete();
 
-        $langclass = Thor::modelClass('languages');
+        $langclass = ThorFacade::modelClass('languages');
 
         $langclass::create(array('name' => 'English', 'code' => 'en', 'locale' => 'en_US', 'is_active' => true,
             'sorting' => 1));

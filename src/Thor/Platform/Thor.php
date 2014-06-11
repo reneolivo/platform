@@ -13,6 +13,7 @@ class Thor
      * @var \Illuminate\Container\Container 
      */
     protected $app;
+    protected $installed = null;
 
     /**
      * 
@@ -24,6 +25,14 @@ class Thor
         foreach ($this->config('models.classes') as $name => $className) {
             $this->bindModel($name, $className);
         }
+    }
+
+    public function isInstalled()
+    {
+        if ($this->installed === null) {
+            $this->installed = (\Schema::hasTable('languages') === true);
+        }
+        return $this->installed;
     }
 
     /**
@@ -75,7 +84,7 @@ class Thor
      */
     public function modelMake($name, array $attributes = array(), Validator $validator = null)
     {
-        return $this->app->make('thor.models.' . $name, array('attributes' => $attributes, 'validator' => $validator));
+        return $this->app->make('thor.models.' . $name, array($attributes, $validator));
     }
 
     /**

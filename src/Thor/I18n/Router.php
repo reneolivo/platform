@@ -4,13 +4,12 @@ namespace Thor\I18n;
 
 use Closure,
     Lang,
-    Config,
-    Illuminate\Routing\Router as IlluminateRouter;
+    Config;
 
 /**
  * A Router with multilingual resolver features
  */
-class Router extends IlluminateRouter
+class Router extends \Illuminate\Routing\Router
 {
 
     /**
