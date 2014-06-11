@@ -33,39 +33,39 @@ class Bench
     /**
      * Returns the elapsed time, readable or not
      *
-     * @param  boolean $readable Whether the result must be human readable
+     * @param  boolean $raw Whether the result must be in raw format or human readable
      * @param  string  $format   The format to display (printf format)
      * @return string|float
      */
-    public function getTime($raw = false, $format = null)
+    public function time($raw = false, $format = null)
     {
-        return $raw ? ($this->end_time - $this->start_time) : $this->getFormattedElapsedTime($this->start_time, $this->end_time, $format);
+        return $raw ? ($this->end_time - $this->start_time) : $this->formattedElapsedTime($this->start_time, $this->end_time, $format);
     }
 
     /**
      * Returns the memory usage at the end checkpoint
      *
-     * @param  boolean $readable Whether the result must be human readable
+     * @param  boolean $raw Whether the result must be in raw format or human readable
      * @param  string  $format   The format to display (printf format)
      * @return string|float
      */
-    public function getMemoryUsage($raw = false, $format = null)
+    public function memoryUsage($raw = false, $format = null)
     {
-        return $raw ? $this->memory_usage : $this->getFormattedMemorySize($this->memory_usage, $format);
+        return $raw ? $this->memory_usage : $this->formattedMemorySize($this->memory_usage, $format);
     }
 
     /**
      * Returns the memory peak, readable or not
      *
-     * @param  boolean $readable Whether the result must be human readable
+     * @param  boolean $raw Whether the result must be in raw format or human readable
      * @param  string  $format   The format to display (printf format)
      * @return string|float
      */
-    public function getMemoryPeak($raw = false, $format = null)
+    public function memoryPeak($raw = false, $format = null)
     {
         $memory = memory_get_peak_usage(true);
 
-        return $raw ? $memory : $this->getFormattedMemorySize($memory, $format);
+        return $raw ? $memory : $this->formattedMemorySize($memory, $format);
     }
 
     /**
@@ -76,7 +76,7 @@ class Bench
      * @param   int    $round
      * @return  string
      */
-    public function getFormattedMemorySize($size, $format = null, $round = 3)
+    public function formattedMemorySize($size, $format = null, $round = 3)
     {
         $mod = 1024;
 
@@ -105,7 +105,7 @@ class Bench
      * @param int $round Decimal precision
      * @return string 
      */
-    public function getFormattedElapsedTime($start_microtime, $end_microtime = null, $format = null, $round = 3)
+    public function formattedElapsedTime($start_microtime, $end_microtime = null, $format = null, $round = 3)
     {
         if (empty($end_microtime)) {
             $end_microtime = microtime(true);

@@ -1,25 +1,7 @@
 <?php
 
-/*
-  |--------------------------------------------------------------------------
-  | Backend Filters
-  |--------------------------------------------------------------------------
-  |
- */
-
-/*
- * Backend user
- */
-Route::filter('auth.backend', function() {
-    if(!Backend::canBeAccessed()) {
-        $ctrl = new Thor\Backend\MainController();
-        return $ctrl->login();
-    }
-});
-
-/*
- * Website user
- */
-Route::filter('auth.profile', function() {
-    
+// Always expose the current view name and slug
+View::composer('*', function($view) {
+    View::share('current_view', $view->getName());
+    View::share('current_view_slug', Str::slug(str_replace(array('.', '::'), '-', $view->getName()), '-'));
 });

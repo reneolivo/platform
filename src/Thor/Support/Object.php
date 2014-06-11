@@ -2,7 +2,7 @@
 
 namespace Thor\Support;
 
-class Object implements \ArrayAccess, \Countable
+class Object implements \ArrayAccess
 {
 
     /**
@@ -18,47 +18,42 @@ class Object implements \ArrayAccess, \Countable
 
     public function __call($name, $arguments)
     {
-        if(method_exists($this, $name)) {
-            return call_user_func_array(array($this, $name), $arguments);
-        } else if(isset($this->props[$name]) and is_callable($this->props[$name])) {
+        if (isset($this->props[$name]) and is_callable($this->props[$name])) {
             return call_user_func_array($this->props[$name], $arguments);
+        } else {
+            throw \BadFunctionCallException(get_clas($this) . '::' . $name . ' method does not exist');
         }
+    }
+
+    public function __get($name)
+    {
+        return $this->props[$name];
+    }
+
+    public function __set($name, $value)
+    {
+        $this->props[$name] = $value;
     }
 
     public function __isset($name)
     {
         return isset($this->props[$name]);
     }
-    
-    public function count()
-    {
-        return count($this->props);
-    }
-
-    public function get($name)
-    {
-        return $this->props[$name];
-    }
-
-    public function set($name, $value)
-    {
-        $this->props[$name] = $value;
-        return $this;
-    }
-
-    public function __get($name)
-    {
-        return $this->get($name);
-    }
-
-    public function __set($name, $value)
-    {
-        $this->set($name, $value);
-    }
 
     public function __unset($name)
     {
         unset($this->props[$name]);
+    }
+
+    public function get($name)
+    {
+        return $this->__get($name);
+    }
+
+    public function set($name, $value)
+    {
+        $this->__set($name, $value);
+        return $this;
     }
 
     public function offsetExists($offset)
@@ -68,22 +63,17 @@ class Object implements \ArrayAccess, \Countable
 
     public function offsetGet($offset)
     {
-        return $this->get($offset);
+        return $this->__get($offset);
     }
 
     public function offsetSet($offset, $value)
     {
-        $this->set($offset, $value);
+        $this->__set($offset, $value);
     }
 
     public function offsetUnset($offset)
     {
         return $this->__unset($offset);
-    }
-
-    public function keys()
-    {
-        return array_keys($this->props);
     }
 
     public function has($key)
@@ -101,13 +91,28 @@ class Object implements \ArrayAccess, \Countable
      * @param array $properties
      * @return static
      */
-    public function fromArray(array $properties)
+    public function merge(array $properties)
     {
         $this->props = array_merge($this->props, $properties);
         return $this;
     }
 
-    public function toArray()
+    /**
+     * 
+     * @param array $properties
+     * @return static
+     */
+    public function import(array $properties)
+    {
+        $this->props = $properties;
+        return $this;
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    public function export()
     {
         return $this->props;
     }
