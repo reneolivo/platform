@@ -40,7 +40,8 @@
                     <td>{{{ $item->status }}}</td>
                     <td class="al-r">
                         @if(Entrust::can('read_pages'))
-                        {{ link_to_route('backend.pages.show', 'Show', array($item->id), array('class' => 'btn btn-sm btn-default')) }}
+                        {{ _d(link_to($item->url, 'Show <i class="fa fa-share"></i> ', 
+                                    array('class' => 'btn btn-sm btn-default', 'target'=>'_blank'))) }}
                         @endif
 
                         @if(Entrust::can('update_pages'))

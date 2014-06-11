@@ -59,7 +59,6 @@
                 ?>
                 {{Form::bsFields([
     //label, name, attributes, type, value, containerAttributes
-                    //['Behaviours:', 'behaviours', ['placeholder'=>'pageable, imageable, treeable and/or translatable'], 'text', null, []],
                     ['General Fields:', 'general_fields', [
                         'placeholder'=>'columnName:blueprintMethod:formControlType:foreignTable,columnName2:blueprintMethod,columnName3'
                     ], 'text', null, []],

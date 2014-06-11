@@ -188,9 +188,9 @@ class ResourceResolver implements \ArrayAccess
         $this[$classType . 'Namespace'] = implode('\\', $parts);
         $this[$classType . 'Path'] = app_path() . '/src/' . trim(implode('/', $parts), '/\\ ');
         $this[$classType . 'File'] = $this[$classType . 'Path'] . '/' . $this[$classType . 'ShortName'];
-        if (file_exists($this[$classType . 'File'] . '.php')) {
+        /*if (file_exists($this[$classType . 'File'] . '.php')) {
             $this[$classType . 'File'] .= '_' . date('Y_m_d_His');
-        }
+        }*/
     }
 
     protected function fillFields()

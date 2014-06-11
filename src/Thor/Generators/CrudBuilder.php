@@ -122,15 +122,51 @@ class CrudBuilder
             $input['is_pageable'] = $resolver->hasBehaviour('pageable');
             $input['controller_class'] = $resolver->controllerFullName;
             $input['model_class'] = $resolver->modelFullName;
-            $input['metadata'] = $resolver->export();
-            unset($input['metadata']['resolver']);
-            $input['metadata'] = (serialize($input['metadata']));
-            
+            $exportedResolver = $resolver->export();
+            unset($exportedResolver['resolver']);
+            $input['metadata'] = serialize(array('input' => $input, 'resolver' => $exportedResolver));
+
             $module = $module->create($input);
-            
+
             return $module;
         }
         return $module;
+    }
+
+    public function updateModule(\Thor\Models\Module $module, array $input, $behaviours = false, $generalFields = false, $translatableFields = false, $listableFields = false)
+    {
+        $module = new \Thor\Models\Module();
+        if (empty($input['name'])) {
+            $input['name'] = \Str::singular($input['name']);
+        }
+        if (empty($input['display_name'])) {
+            $input['display_name'] = \Str::plural(ucfirst($input['name']));
+        }
+        if (empty($input['icon'])) {
+            $input['icon'] = 'fa-cube';
+        }
+        $input['name'] = strtolower(trim($input['name']));
+
+        if ($module->validate($input)) {
+            $resolver = new ResourceResolver($input['name'], $behaviours, $generalFields, $translatableFields, $listableFields);
+            //dd($module->metadata['resolver']);
+            file_put_contents($module->metadata['resolver']->migrationFile . '.php', 
+                    View::make('thor::generators.migration', $resolver->export())->render());
+            $this->createModelFile($resolver);
+            $this->createControllerFile($resolver);
+            $this->createViewFiles($resolver);
+
+            // finally:
+            $input['is_pageable'] = $resolver->hasBehaviour('pageable');
+            $input['controller_class'] = $resolver->controllerFullName;
+            $input['model_class'] = $resolver->modelFullName;
+            $exportedResolver = $resolver->export();
+            unset($exportedResolver['resolver']);
+            $input['metadata'] = serialize(array('input' => $input, 'resolver' => $exportedResolver));
+            unset($input['behaviours']);
+            return $module->update(array_only($input, $module->getFillable()));
+        }
+        return false;
     }
 
     /**
@@ -193,9 +229,6 @@ class CrudBuilder
 
         if ($res->isTranslatable) {
             $textClassFile = $res->modelFile . 'Text';
-            if (file_exists($textClassFile . '.php')) {
-                $textClassFile .= '_' . date('Y_m_d_His');
-            }
             file_put_contents($textClassFile . '.php', View::make('thor::generators.model_text', $res->export())->render());
         }
     }
@@ -213,7 +246,7 @@ class CrudBuilder
      * 
      * @param ResourceResolver $res Resource resolver
      */
-    public function createViewFiles(ResourceResolver $res)
+    public function createViewFiles(ResourceResolver $res, $force = false)
     {
         $viewsPath = app_path() . '/views/' . (trim($res->viewBasepath, '/ ')) . '/' . $res->plural . '/';
         if (!is_dir($viewsPath)) {
@@ -222,9 +255,6 @@ class CrudBuilder
         $views = array('create', 'edit', 'index', 'show');
         foreach ($views as $v) {
             $viewFile = $viewsPath . $v;
-            if (file_exists($viewFile . '.blade.php')) {
-                $viewFile .= '_' . date('Y_m_d_His');
-            }
             file_put_contents($viewFile . '.blade.php', View::make('thor::generators.html.' . $v, $res->export())->render());
         }
     }

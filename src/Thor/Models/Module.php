@@ -31,6 +31,10 @@ class Module extends Base
         'name', 'display_name', 'icon', 'is_pageable', 'description',
         'model_class', 'controller_class', 'is_active', 'sorting', 'metadata'
     );
+    
+    public function getMetadataAttribute($value){
+        return unserialize($value);
+    }
 
     public function singular()
     {

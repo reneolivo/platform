@@ -35,7 +35,11 @@
                     <?php endforeach; ?>
                     <td class="al-r">
                         @if(Entrust::can('read_<?php echo $plural; ?>'))
+                        <?php if($resolver->hasBehaviour('pageable')): ?>
+                        {{ _d(link_to($record->url, 'Show <i class="fa fa-share"></i> ',  array('class' => 'btn btn-sm btn-default', 'target'=>'_blank'))) }}
+                        <?php else: ?>
                         {{ link_to_route('<?php echo ('backend.' . $plural . '.show'); ?>', 'Show', array($record->id), array('class' => 'btn btn-sm btn-default')) }}
+                        <?php endif; ?>
                         @endif
                         
                         @if(Entrust::can('update_<?php echo $plural; ?>'))

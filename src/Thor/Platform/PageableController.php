@@ -29,7 +29,10 @@ class PageableController extends Controller
     protected function make(array $data = array())
     {
         $data['page'] = $this->pageable;
-        $viewname = ($this->pageable->view ? $this->pageable->view : Config::get('thor::pageable_default_view)'));
+        $viewname = $this->pageable->view;
+        if(!View::exists($viewname)){
+            $viewname = Config::get('thor::pageable_default_view', 'default');
+        }
         return View::make($viewname, $data);
     }
 

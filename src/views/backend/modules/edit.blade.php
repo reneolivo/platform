@@ -43,6 +43,49 @@
             </div>-->
         </div>
         
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                Model definition
+            </div>
+            <div class="panel-body">
+                <?php
+                $meta = $module->metadata;
+                echo Form::bsField('Behaviours', 'behaviours[]', array(
+                    'placeholder' => '---',
+                    'multiple', 'selected' => $meta['input']['behaviours']
+                        ), 'select2', array(
+                    'translatable' => 'Translatable',
+                    'pageable' => 'Pageable',
+                    'publishable' => 'Publishable',
+                    'treeable' => 'Treeable',
+                    'imageable' => 'Imageable',
+                    'attachable' => 'Attachable',
+                    'taggable' => 'Taggable',
+                    'flaggable' => 'Flaggable',
+                    'sortable' => 'Sortable',
+                ));
+                ?>
+                {{Form::bsFields([
+    //label, name, attributes, type, value, containerAttributes
+                    ['General Fields:', 'general_fields', [
+                        'placeholder'=>'columnName:blueprintMethod:formControlType:foreignTable,columnName2:blueprintMethod,columnName3'
+                    ], 'text', $meta['input']['general_fields'], []],
+                    ['Translatable Fields:', 'translatable_fields', [
+                        'placeholder'=>'columnName:blueprintMethod:formControlType:foreignTable,columnName2:blueprintMethod,columnName3'
+                    ], 'text', $meta['input']['translatable_fields'], []],
+                    ['Listable Fields:', 'listable_fields', ['placeholder'=>'Comma separated list of column names (general or/and translatable)'], 'text', $meta['input']['listable_fields'], []],
+                ])}}
+        
+                {{Form::bsCheckbox('Regenerate files', 'regenerate_files', 'yes')}}
+            </div>
+            <div class="panel-footer">
+                Definitions format are the same as in <code>thor:generate</code> command.
+                Separate fields with commas, and field options with colons.<br>
+                <code>formControlType</code> can be an input compatible with <code>Form::bsField</code> e.g.:
+                text, textarea, checkbox, radio, email, colorpicker, datepicker, select, select2, ...
+            </div>
+        </div>
+        
         
         <div class="panel panel-default">
             <div class="panel-heading">

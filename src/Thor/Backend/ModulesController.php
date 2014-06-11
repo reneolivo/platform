@@ -114,21 +114,21 @@ class ModulesController extends Controller
      */
     public function do_edit(\Thor\Models\Module $module)
     {
-        $input = array_merge(array(// for unchecked checkboxes:
-            'is_pageable' => false,
-            'is_translatable' => false,
-            'is_imageable' => false,
-            'is_active' => false,
-                ), \Input::all());
+        $input = \Input::all();
 
         if (isset($input['name'])) {
             $input['name'] = strtolower($input['name']);
         }
 
         if ($module->validate($input)) {
-            $module->update($input);
-
-            return Redirect::route('backend.modules.edit', $module->id);
+            if(\Input::get('regenerate_files')=='yes'){
+                CRUD::updateModule($module, \Input::all(), \Input::get('behaviours')
+                            , \Input::get('general_fields'), \Input::get('translatable_fields')
+                            , \Input::get('listable_fields'));
+            }
+            if(!$module->hasErrors()){
+                return Redirect::route('backend.modules.edit', $module->id);
+            }
         }
 
         return Redirect::route('backend.modules.edit', $module->id)
