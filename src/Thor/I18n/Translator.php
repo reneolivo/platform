@@ -45,7 +45,9 @@ class Translator extends \Illuminate\Translation\Translator
         if($app['config']->get('thor::i18n.enabled') === true) {
             $this->resolve();
         } else {
-            $this->language = Language::byCodeOrLocale($this->locale)->first();
+            if(\Schema::hasTable('languages')){
+                $this->language = Language::byCodeOrLocale($this->locale)->first();
+            }
             if(!is_object($this->language) or !$this->language->exists()) {
                 $this->language = new Language(array('id' => -1, 'name' => $this->locale,
                     'code' => preg_replace('/[_-].+$/', '', $this->locale), 'locale' => $this->locale));
