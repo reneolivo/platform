@@ -2,6 +2,8 @@
 
 namespace Thor\Backend;
 
+use Str;
+
 class Backend
 {
 
@@ -84,7 +86,8 @@ class Backend
      */
     public function resourceRoutes($singular, $guard = false, $controllerClass = null, $modelClass = null, $onFail = null)
     {
-        $this->app['thor.router']->langGroup(array('prefix' => Config::get('thor::backend.basepath'), 'before' => 'auth.backend'), function()
+        $this->app['thor.router']->langGroup(array('prefix' => $this->app['config']->get('thor::backend.basepath')
+            , 'before' => 'auth.backend'), function()
                 use($singular, $guard, $controllerClass, $modelClass, $onFail) {
 
             $plural = Str::plural($singular);
@@ -101,31 +104,31 @@ class Backend
 
             // index
             $this->app['thor.router']->get($plural, array('as' => $rt . '.index'
-                , 'uses' => $c . '@index', 'before' => 'entrust.list_' . $plural));
+                , 'uses' => $c . '@index', 'before' => 'sentinel.list_' . $plural));
 
             // create
             $this->app['thor.router']->get($plural . '/create'
-                    , array('as' => $rt . '.create', 'uses' => $c . '@create', 'before' => 'entrust.create_' . $plural));
+                    , array('as' => $rt . '.create', 'uses' => $c . '@create', 'before' => 'sentinel.create_' . $plural));
 
             // store
             $this->app['thor.router']->post($plural, array('as' => $rt . '.store'
-                , 'uses' => $c . '@store', 'before' => 'entrust.create_' . $plural));
+                , 'uses' => $c . '@store', 'before' => 'sentinel.create_' . $plural));
 
             // show
             $this->app['thor.router']->get($plural . '/{' . $singular . '}/show'
-                    , array('as' => $rt . '.show', 'uses' => $c . '@show', 'before' => 'entrust.read_' . $plural));
+                    , array('as' => $rt . '.show', 'uses' => $c . '@show', 'before' => 'sentinel.read_' . $plural));
 
             // edit
             $this->app['thor.router']->get($plural . '/{' . $singular . '}'
-                    , array('as' => $rt . '.edit', 'uses' => $c . '@edit', 'before' => 'entrust.update_' . $plural));
+                    , array('as' => $rt . '.edit', 'uses' => $c . '@edit', 'before' => 'sentinel.update_' . $plural));
 
             // update
             $this->app['thor.router']->patch($plural . '/{' . $singular . '}'
-                    , array('as' => $rt . '.update', 'uses' => $c . '@update', 'before' => 'entrust.update_' . $plural));
+                    , array('as' => $rt . '.update', 'uses' => $c . '@update', 'before' => 'sentinel.update_' . $plural));
 
             // destroy
             $this->app['thor.router']->delete($plural . '/{' . $singular . '}'
-                    , array('as' => $rt . '.destroy', 'uses' => $c . '@destroy', 'before' => 'entrust.delete_' . $plural));
+                    , array('as' => $rt . '.destroy', 'uses' => $c . '@destroy', 'before' => 'sentinel.delete_' . $plural));
         });
     }
 

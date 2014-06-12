@@ -29,6 +29,13 @@
             </ul>
         </li>
         @endif
+        
+        @if(Sentinel::can('generate_code'))
+        <li @if(Backend::requestIs('generator')) class="active"@endif>
+            <a href="{{Backend::url('generator')}}"><i class="fa fa-magic fa-fw"></i> Code generator</a>
+        </li>
+        @endif
+        
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                 <i class="fa fa-user fa-fw"></i> {{Auth::user()->username}}  <i class="fa fa-caret-down"></i>

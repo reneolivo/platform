@@ -39,7 +39,7 @@
                     <td class="al-r">
                         {{ link_to_route('backend.users.show', 'Show', array($user->id), array('class' => 'btn btn-sm btn-default')) }}
                         {{ link_to_route('backend.users.edit', 'Edit', array($user->id), array('class' => 'btn btn-sm btn-primary')) }}
-                        {{ Form::open(array('method' => 'DELETE', 'class' => 'inl-bl', 'route' => array('backend.users.do_delete', $user->id))) }}
+                        {{ Form::open(array('method' => 'DELETE', 'class' => 'inl-bl', 'route' => array('backend.users.destroy', $user->id))) }}
                         {{ Form::submit('Delete', array('class' => 'btn btn-sm btn-danger btn-destroy')) }}
                         {{ Form::close() }}
                     </td>

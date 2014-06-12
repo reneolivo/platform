@@ -14,7 +14,7 @@
         @endif
 
         {{ Form::model($language, array('method' => 'PATCH'
-    , 'route' => array('backend.languages.do_edit', $language->id), 'role'=>'form')) }}
+    , 'route' => array('backend.languages.update', $language->id), 'role'=>'form')) }}
 
         <!-- Form fields here -->
         {{Form::bsFields([

@@ -43,7 +43,7 @@
                     <td class="al-r">
                         {{ link_to_route('backend.languages.show', 'Show', array($language->id), array('class' => 'btn btn-sm btn-default')) }}
                         {{ link_to_route('backend.languages.edit', 'Edit', array($language->id), array('class' => 'btn btn-sm btn-primary')) }}
-                        {{ Form::open(array('method' => 'DELETE', 'class' => 'inl-bl', 'route' => array('backend.languages.do_delete', $language->id))) }}
+                        {{ Form::open(array('method' => 'DELETE', 'class' => 'inl-bl', 'route' => array('backend.languages.destroy', $language->id))) }}
                         {{ Form::submit('Delete', array('class' => 'btn btn-sm btn-danger btn-destroy')) }}
                         {{ Form::close() }}
                     </td>

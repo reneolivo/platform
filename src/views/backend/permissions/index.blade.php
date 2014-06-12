@@ -37,7 +37,7 @@
                     <td class="al-r">
                         {{ link_to_route('backend.permissions.show', 'Show', array($permission->id), array('class' => 'btn btn-sm btn-default')) }}
                         {{ link_to_route('backend.permissions.edit', 'Edit', array($permission->id), array('class' => 'btn btn-sm btn-primary')) }}
-                        {{ Form::open(array('method' => 'DELETE', 'class' => 'inl-bl', 'route' => array('backend.permissions.do_delete', $permission->id))) }}
+                        {{ Form::open(array('method' => 'DELETE', 'class' => 'inl-bl', 'route' => array('backend.permissions.destroy', $permission->id))) }}
                         {{ Form::submit('Delete', array('class' => 'btn btn-sm btn-danger btn-destroy')) }}
                         {{ Form::close() }}
                     </td>

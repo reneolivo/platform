@@ -1,20 +1,22 @@
 <?php
+
 namespace Thor\Backend;
 
 use View,
-    Redirect,
-    Validator,
-    Form;
+    Redirect;
+
 /*
-|--------------------------------------------------------------------------
-| \Thor\Models\Language backend controller
-|--------------------------------------------------------------------------
-|
-| This is a default Thor CMS backend controller template for resource management.
-| Feel free to change it to your needs.
-|
-*/
-class LanguagesController extends Controller {
+  |--------------------------------------------------------------------------
+  | \Thor\Models\Language backend controller
+  |--------------------------------------------------------------------------
+  |
+  | This is a default Thor CMS backend controller template for resource management.
+  | Feel free to change it to your needs.
+  |
+ */
+
+class LanguagesController extends Controller
+{
 
     /**
      * Repository
@@ -22,7 +24,8 @@ class LanguagesController extends Controller {
      * @var \Thor\Models\Language     */
     protected $language;
 
-    public function __construct(\Thor\Models\Language $language) {
+    public function __construct(\Thor\Models\Language $language)
+    {
         $this->language = $language;
     }
 
@@ -31,7 +34,8 @@ class LanguagesController extends Controller {
      *
      * @return Response
      */
-    public function index() {
+    public function index()
+    {
         $languages = $this->language->all();
 
         return View::make('thor::backend.languages.index', compact('languages'));
@@ -42,7 +46,8 @@ class LanguagesController extends Controller {
      *
      * @return Response
      */
-    public function create() {
+    public function create()
+    {
         return View::make('thor::backend.languages.create');
     }
 
@@ -51,9 +56,10 @@ class LanguagesController extends Controller {
      *
      * @return Response
      */
-    public function do_create() {
+    public function store()
+    {
         $input = \Input::all();
-        
+
         if ($this->language->validate($input)) {
             $this->language->create($input);
             return Redirect::route('backend.languages.index');
@@ -71,7 +77,8 @@ class LanguagesController extends Controller {
      * @param  \Thor\Models\Language  $language 
      * @return Response
      */
-    public function show(\Thor\Models\Language $language) {
+    public function show(\Thor\Models\Language $language)
+    {
 
         return View::make('thor::backend.languages.show', compact('language'));
     }
@@ -82,7 +89,8 @@ class LanguagesController extends Controller {
      * @param  \Thor\Models\Language  $language 
      * @return Response
      */
-    public function edit(\Thor\Models\Language $language) {
+    public function edit(\Thor\Models\Language $language)
+    {
 
         if (is_null($language)) {
             return Redirect::route('backend.languages.index');
@@ -97,7 +105,8 @@ class LanguagesController extends Controller {
      * @param  \Thor\Models\Language  $language 
      * @return Response
      */
-    public function do_edit(\Thor\Models\Language $language) {
+    public function update(\Thor\Models\Language $language)
+    {
         $input = \Input::all();
 
         if ($language->validate($input)) {
@@ -105,7 +114,7 @@ class LanguagesController extends Controller {
 
             return Redirect::route('backend.languages.edit', $language->id);
         }
-        
+
         return Redirect::route('backend.languages.edit', $language->id)
                         ->withInput()
                         ->withErrors($language->errors())
@@ -118,7 +127,8 @@ class LanguagesController extends Controller {
      * @param  \Thor\Models\Language  $language 
      * @return Response
      */
-    public function do_delete(\Thor\Models\Language $language) {
+    public function destroy(\Thor\Models\Language $language)
+    {
         $language->delete();
 
         return Redirect::route('backend.languages.index');

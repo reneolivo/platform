@@ -1,20 +1,24 @@
 <?php
+
 namespace Thor\Backend;
 
 use View,
     Redirect,
-    Validator,
-    Form, Input;
+    Input,
+    \Thor\Platform\ThorFacade;
+
 /*
-|--------------------------------------------------------------------------
-| \Thor\Models\User backend controller
-|--------------------------------------------------------------------------
-|
-| This is a default Thor CMS backend controller template for resource management.
-| Feel free to change it to your needs.
-|
-*/
-class UsersController extends Controller {
+  |--------------------------------------------------------------------------
+  | \Thor\Models\User backend controller
+  |--------------------------------------------------------------------------
+  |
+  | This is a default Thor CMS backend controller template for resource management.
+  | Feel free to change it to your needs.
+  |
+ */
+
+class UsersController extends Controller
+{
 
     /**
      * Repository
@@ -22,7 +26,8 @@ class UsersController extends Controller {
      * @var \Thor\Models\User     */
     protected $user;
 
-    public function __construct(\Thor\Models\User $user) {
+    public function __construct(\Thor\Models\User $user)
+    {
         $this->user = $user;
     }
 
@@ -31,7 +36,8 @@ class UsersController extends Controller {
      *
      * @return Response
      */
-    public function index() {
+    public function index()
+    {
         $users = $this->user->all();
 
         return View::make('thor::backend.users.index', compact('users'));
@@ -42,7 +48,8 @@ class UsersController extends Controller {
      *
      * @return Response
      */
-    public function create() {
+    public function create()
+    {
         return View::make('thor::backend.users.create');
     }
 
@@ -51,7 +58,7 @@ class UsersController extends Controller {
      *
      * @return Response
      */
-    public function do_create()
+    public function store()
     {
         $this->user->username = Input::get('username');
         $this->user->email = Input::get('email');
@@ -82,7 +89,8 @@ class UsersController extends Controller {
      * @param  \Thor\Models\User  $user 
      * @return Response
      */
-    public function show(\Thor\Models\User $user) {
+    public function show(\Thor\Models\User $user)
+    {
 
         return View::make('thor::backend.users.show', compact('user'));
     }
@@ -93,13 +101,14 @@ class UsersController extends Controller {
      * @param  \Thor\Models\User  $user 
      * @return Response
      */
-    public function edit(\Thor\Models\User $user) {
+    public function edit(\Thor\Models\User $user)
+    {
 
         if (is_null($user)) {
             return Redirect::route('backend.users.index');
         }
-        
-        $roles = \Role::all();
+
+        $roles = ThorFacade::model('role')->all();
         $user_roles = $user->roles()->get()->lists('id');
 
         return View::make('thor::backend.users.edit', compact('user', 'roles', 'user_roles'));
@@ -111,10 +120,11 @@ class UsersController extends Controller {
      * @param  \Thor\Models\User  $user 
      * @return Response
      */
-    public function do_edit(\Thor\Models\User $user) {
+    public function update(\Thor\Models\User $user)
+    {
         $user->username = Input::get('username');
         $user->email = Input::get('email');
-        if(strlen(Input::get('password')) > 0){
+        if (strlen(Input::get('password')) > 0) {
             $user->password = Input::get('password');
 
             // The password confirmation will be removed from model
@@ -125,7 +135,7 @@ class UsersController extends Controller {
 
         // Save if valid. Password field will be hashed before save
         if ($user->save()) {
-            if(\Entrust::can('update_roles')){
+            if (\Sentinel::can('update_roles')) {
                 $user->roles()->sync(\Input::get('roles', array()));
             }
             return Redirect::route('backend.users.edit', $user->id);
@@ -143,7 +153,8 @@ class UsersController extends Controller {
      * @param  \Thor\Models\User  $user 
      * @return Response
      */
-    public function do_delete(\Thor\Models\User $user) {
+    public function destroy(\Thor\Models\User $user)
+    {
         $user->delete();
 
         return Redirect::route('backend.users.index');

@@ -35,6 +35,8 @@ class PlatformServiceProvider extends ServiceProvider
 
         if (file_exists(app_path('routes/backend.php'))) {
             include_once app_path('routes/backend.php');
+        } else {
+            include_once $package_src . '/routes.php';
         }
     }
 

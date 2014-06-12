@@ -6,6 +6,7 @@ use View,
     Input,
     Lang,
     Redirect,
+    Auth,
     Thor\Platform\SentinelFacade,
     Password;
 
@@ -52,8 +53,18 @@ class AuthController extends Controller
      */
     public function do_login()
     {
-        $input = Input::only(['email', 'password', 'remember']);
-        $input['username'] = $input['email'];
+
+        $input = array(
+            'username' => Input::get('email'),
+            'password' => Input::get('password'),
+        );
+
+        /* Try to authenticate the credentials */
+        if (Auth::attempt($input, Input::get('remember'))) {
+            return Redirect::route('backend.home');
+        } else {
+            return Redirect::route('backend.login');
+        }
     }
 
     /**

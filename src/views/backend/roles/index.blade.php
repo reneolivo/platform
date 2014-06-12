@@ -35,7 +35,7 @@
                     <td class="al-r">
                         {{ link_to_route('backend.roles.show', 'Show', array($role->id), array('class' => 'btn btn-sm btn-default')) }}
                         {{ link_to_route('backend.roles.edit', 'Edit', array($role->id), array('class' => 'btn btn-sm btn-primary')) }}
-                        {{ Form::open(array('method' => 'DELETE', 'class' => 'inl-bl', 'route' => array('backend.roles.do_delete', $role->id))) }}
+                        {{ Form::open(array('method' => 'DELETE', 'class' => 'inl-bl', 'route' => array('backend.roles.destroy', $role->id))) }}
                         {{ Form::submit('Delete', array('class' => 'btn btn-sm btn-danger btn-destroy')) }}
                         {{ Form::close() }}
                     </td>

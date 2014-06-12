@@ -63,6 +63,9 @@ abstract class Base extends Eloquent
         parent::boot();
 
         static::saving(function($model) {
+            if (static::$unguarded) {
+                return true;
+            }
             return $model->validate();
         });
     }

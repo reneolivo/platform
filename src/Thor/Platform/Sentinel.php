@@ -48,7 +48,7 @@ class Sentinel
      * @param string $permission Permission name.
      * @return boolean
      */
-    public function hasBackendAccess($permission)
+    public function hasBackendAccess()
     {
         if ($this->check()) {
             return $this->user()->hasPermission('backend_access');

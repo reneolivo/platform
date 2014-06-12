@@ -5,7 +5,7 @@
     <div class="col-lg-12">
         <h1 class="page-header clearfix">@if($module)<i class="module-icon fa {{$module->icon}}"></i>@endif  All <?php echo ucfirst($plural); ?>
             
-        @if(Entrust::can('create_<?php echo $plural; ?>'))
+        @if(Sentinel::can('create_<?php echo $plural; ?>'))
 {{ _d(link_to_route('<?php echo ('backend.' . $plural . '.create'); ?>', '<i class="fa fa-plus"></i> Add new <?php echo $singular; ?>',[],['class'=>'btn btn-success pull-right'])) }}
 @endif
         </h1>
@@ -34,7 +34,7 @@
                         <td>{{{ $record-><?php echo $name; ?> }}}</td>
                     <?php endforeach; ?>
                     <td class="al-r">
-                        @if(Entrust::can('read_<?php echo $plural; ?>'))
+                        @if(Sentinel::can('read_<?php echo $plural; ?>'))
                         <?php if($resolver->hasBehaviour('pageable')): ?>
                         {{ _d(link_to($record->url, 'Show <i class="fa fa-share"></i> ',  array('class' => 'btn btn-sm btn-default', 'target'=>'_blank'))) }}
                         <?php else: ?>
@@ -42,11 +42,11 @@
                         <?php endif; ?>
                         @endif
                         
-                        @if(Entrust::can('update_<?php echo $plural; ?>'))
+                        @if(Sentinel::can('update_<?php echo $plural; ?>'))
                         {{ link_to_route('<?php echo ('backend.' . $plural . '.edit'); ?>', 'Edit', array($record->id), array('class' => 'btn btn-sm btn-primary')) }}
                         @endif
                         
-                        @if(Entrust::can('delete_<?php echo $plural; ?>'))
+                        @if(Sentinel::can('delete_<?php echo $plural; ?>'))
                         {{ Form::open(array('method' => 'DELETE', 'class' => 'inl-bl', 'route' => array('<?php echo ('backend.' . $plural . '.do_delete'); ?>', $record->id))) }}
                         {{ Form::submit('Delete', array('class' => 'btn btn-sm btn-danger btn-destroy')) }}
                         {{ Form::close() }}

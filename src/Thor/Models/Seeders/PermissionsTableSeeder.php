@@ -13,13 +13,11 @@ class PermissionsTableSeeder extends Seeder
         $date = date('Y-m-d H:i:s');
 
         $perms = array(
-            'backend_access',
+            'backend_access', 'generate_code',
             'list_languages', 'create_languages', 'read_languages', 'update_languages', 'delete_languages',
-            'list_pages', 'create_pages', 'read_pages', 'update_pages', 'delete_pages',
             'list_roles', 'create_roles', 'read_roles', 'update_roles', 'delete_roles',
             'list_permissions', 'create_permissions', 'read_permissions', 'update_permissions', 'delete_permissions',
-            'list_users', 'create_users', 'read_users', 'update_users', 'delete_users',
-            'list_modules', 'create_modules', 'read_modules', 'update_modules', 'delete_modules',
+            'list_users', 'create_users', 'read_users', 'update_users', 'delete_users'
         );
         $perms_ids = array();
 
@@ -32,17 +30,16 @@ class PermissionsTableSeeder extends Seeder
                     ))->id;
         }
 
-        $administratorRole = ThorFacade::model('user')->where('name', '=', 'administrator')->first();
-        $developerRole = ThorFacade::model('user')->where('name', '=', 'developer')->first();
+        $administratorRole = ThorFacade::model('role')->where('name', '=', 'administrator')->first();
+        $developerRole = ThorFacade::model('role')->where('name', '=', 'developer')->first();
 
-        $administratorRole->permissions->sync(array_merge(
+        $administratorRole->permissions()->sync(array_merge(
                         array($perms_ids['backend_access'])
                         , $this->resourcePerms($perms_ids, 'languages')
-                        , $this->resourcePerms($perms_ids, 'pages')
                         , $this->resourcePerms($perms_ids, 'users')
         ));
 
-        $developerRole->permissions->sync(array_values($perms_ids));
+        $developerRole->permissions()->sync(array_values($perms_ids));
     }
 
     protected function resourcePerms($perms, $plural)

@@ -14,7 +14,7 @@
         @endif
 
         {{ Form::model($role, array('method' => 'PATCH'
-    , 'route' => array('backend.roles.do_edit', $role->id), 'role'=>'form')) }}
+    , 'route' => array('backend.roles.update', $role->id), 'role'=>'form')) }}
 
         <!-- Form fields here -->
         {{Form::bsFields([
@@ -39,7 +39,7 @@
                             $attrs = array();
                             $containerAttrs = array();
                             if(((in_array($role->name, array('developer', 'administrator'))) and ($perm->name=='backend_access') )
-                                    or (!Entrust::can('update_permissions'))){
+                                    or (!Sentinel::can('update_permissions'))){
                                 $containerAttrs['class']='form-group text-muted';
                             }
                             if(in_array($perm->id, $role_permissions)){
@@ -75,7 +75,7 @@
                             $attrs = array();
                             $containerAttrs = array();
                             if(((in_array($role->name, array('developer'))) and ($user->name=='developer') )
-                                    or (!Entrust::can('update_roles'))){
+                                    or (!Sentinel::can('update_roles'))){
                                 //$attrs['disabled']='disabled';
                                 $containerAttrs['class']='form-group text-muted';
                             }

@@ -13,7 +13,7 @@
 
         @endif
 
-        {{ Form::open(array('method' => 'POST', 'route' => array('backend.roles.do_create'), 'role'=>'form')) }}
+        {{ Form::open(array('method' => 'POST', 'route' => array('backend.roles.store'), 'role'=>'form')) }}
 
         <!-- Form fields here -->
         {{Form::bsFields([
