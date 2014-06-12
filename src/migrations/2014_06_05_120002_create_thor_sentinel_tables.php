@@ -29,7 +29,7 @@ class CreateThorSentinelTables extends Migration
             $table->integer('role_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users'); // assumes a users table
             $table->foreign('role_id')->references('id')->on('roles');
-            $table->timestamps();
+            //$table->timestamps();
         });
 
         // Creates the permissions table
@@ -48,7 +48,7 @@ class CreateThorSentinelTables extends Migration
             $table->integer('permission_id')->unsigned();
             $table->foreign('role_id')->references('id')->on('roles');
             $table->foreign('permission_id')->references('id')->on('permissions');
-            $table->timestamps();
+            //$table->timestamps();
         });
     }
 

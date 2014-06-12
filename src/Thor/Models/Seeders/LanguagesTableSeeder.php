@@ -16,7 +16,7 @@ class LanguagesTableSeeder extends \Seeder
     {
         \DB::table('languages')->delete();
 
-        $langclass = ThorFacade::modelClass('languages');
+        $langclass = ThorFacade::modelClass('language');
 
         $langclass::create(array('name' => 'English', 'code' => 'en', 'locale' => 'en_US', 'is_active' => true,
             'sorting' => 1));

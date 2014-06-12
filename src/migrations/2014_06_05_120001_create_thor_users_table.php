@@ -17,11 +17,9 @@ class CreateThorUsersTable extends Migration
         Schema::create('users', function(Blueprint $table) {
             $table->increments('id');
             $table->string('username')->index();
-            $table->string('display_name');
+            $table->string('display_name')->nullable()->default(null);
             $table->string('email')->index();
             $table->string('password');
-            $table->string('confirmation_code');
-            $table->boolean('confirmed')->default(false);
             $table->string('remember_token')->nullable()->default(null);
             $table->timestamps();
         });

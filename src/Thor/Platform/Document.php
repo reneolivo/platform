@@ -1,6 +1,6 @@
 <?php
 
-namespace Thor\Support;
+namespace Thor\Platform;
 
 /**
  * Helper for HTML common variables

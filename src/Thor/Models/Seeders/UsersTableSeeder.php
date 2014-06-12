@@ -13,14 +13,16 @@ class UsersTableSeeder extends Seeder
     {
         $date = date('Y-m-d H:i:s');
 
+        $pass1 = Hash::make('developer');
+        $pass2 = Hash::make('admin');
+        
         $users = array(
             array(
                 'username' => 'developer',
                 'display_name' => 'Developer',
                 'email' => 'developer@example.com',
-                'password' => Hash::make('developer'),
-                'confirmed' => 1,
-                'confirmation_code' => md5(microtime() . \Config::get('app.key') . 1),
+                'password' => $pass1,
+                //'password_confirmation' => $pass1,
                 'created_at' => $date,
                 'updated_at' => $date,
             ),
@@ -28,9 +30,8 @@ class UsersTableSeeder extends Seeder
                 'username' => 'admin',
                 'display_name' => 'Administrator',
                 'email' => 'admin@example.com',
-                'password' => Hash::make('admin'),
-                'confirmed' => 1,
-                'confirmation_code' => md5(microtime() . \Config::get('app.key') . 2),
+                'password' => $pass2,
+                //'password_confirmation' => $pass2,
                 'created_at' => $date,
                 'updated_at' => $date,
             )

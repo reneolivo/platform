@@ -54,6 +54,7 @@ class PlatformServiceProvider extends ServiceProvider
         $this->registerFormBuilder();
         $this->registerBackend();
         $this->registerLangPublisher();
+        $this->registerDocument();
         // Commands:
         $this->registerThorLangPublishCommand();
         $this->registerThorInstallCommand();
@@ -76,6 +77,7 @@ class PlatformServiceProvider extends ServiceProvider
             'thor.form',
             'thor.backend',
             'thor.lang.publisher',
+            'thor.document',
             // Commands:
             'thor.commands.lang.publish',
             'thor.commands.install',
@@ -173,6 +175,17 @@ class PlatformServiceProvider extends ServiceProvider
     {
         $this->app->bindShared('thor.lang.publisher', function($app) {
             return new \Thor\I18n\LangPublisher($app['files'], $app['path'] . '/lang');
+        });
+    }
+
+    /**
+     *
+     * @return void
+     */
+    protected function registerDocument()
+    {
+        $this->app->bindShared('thor.document', function($app) {
+            return new \Thor\Platform\Document();
         });
     }
 

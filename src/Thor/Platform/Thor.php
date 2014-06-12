@@ -14,6 +14,7 @@ class Thor
      */
     protected $app;
     protected $installed = null;
+    protected $modelRepository = array();
 
     /**
      * 
@@ -22,9 +23,6 @@ class Thor
     public function __construct(Container $app)
     {
         $this->app = $app;
-        foreach ($this->config('models.classes') as $name => $className) {
-            $this->bindModel($name, $className);
-        }
     }
 
     public function isInstalled()
@@ -36,24 +34,13 @@ class Thor
     }
 
     /**
-     * Binds a named model to the IoC, one shared and other not shared
+     * Returns the class name of the given named model (defined in thor::models.classes)
      * @param string $name
-     * @param string $className
+     * @return string
      */
-    public function bindModel($name, $className)
+    public function modelClass($name)
     {
-        $makeModel = function($app, $params = array()) use($name) {
-            $className = $app->make('thor.models.' . $name . '.class');
-            $attributes = (isset($params[0]) ? $params[0] : array());
-            $validator = (isset($params[1]) ? $params[1] : null);
-            return new $className($attributes, $validator);
-        };
-
-        $this->app->bindShared('thor.models.' . $name . '.class', function() use($className) {
-            return $className;
-        });
-        $this->app->bind('thor.models.' . $name, $makeModel);
-        $this->app->bindShared('thor.models.' . $name . '.static', $makeModel);
+        return $this->config('models.classes.'.$name);
     }
 
     /**
@@ -63,17 +50,11 @@ class Thor
      */
     public function model($name)
     {
-        return $this->app->make('thor.models.' . $name . '.static');
-    }
-
-    /**
-     * Returns the class name of the given named model (defined in thor::models.classes)
-     * @param string $name
-     * @return string
-     */
-    public function modelClass($name)
-    {
-        return $this->app->make('thor.models.' . $name . '.class');
+        $className = $this->modelClass($name);
+        if(!isset($this->modelRepository[$className])){
+            $this->modelRepository[$className] = new $className();
+        }
+        return $this->modelRepository[$className];
     }
 
     /**
@@ -84,7 +65,8 @@ class Thor
      */
     public function modelMake($name, array $attributes = array(), Validator $validator = null)
     {
-        return $this->app->make('thor.models.' . $name, array($attributes, $validator));
+        $className = $this->modelClass($name);
+        return new $className($attributes, $validator);
     }
 
     /**

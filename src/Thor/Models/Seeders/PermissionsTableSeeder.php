@@ -35,14 +35,14 @@ class PermissionsTableSeeder extends Seeder
         $administratorRole = ThorFacade::model('user')->where('name', '=', 'administrator')->first();
         $developerRole = ThorFacade::model('user')->where('name', '=', 'developer')->first();
 
-        $administratorRole->perms()->sync(array_merge(
+        $administratorRole->permissions->sync(array_merge(
                         array($perms_ids['backend_access'])
                         , $this->resourcePerms($perms_ids, 'languages')
                         , $this->resourcePerms($perms_ids, 'pages')
                         , $this->resourcePerms($perms_ids, 'users')
         ));
 
-        $developerRole->perms()->sync(array_values($perms_ids));
+        $developerRole->permissions->sync(array_values($perms_ids));
     }
 
     protected function resourcePerms($perms, $plural)

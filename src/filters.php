@@ -2,9 +2,9 @@
 
 // Always expose the current view name and slug
 View::composer('*', function($view) {
-    Thor\Support\DocumentFacade::view($view->getName());
-    Thor\Support\DocumentFacade::view_slug(Str::slug(str_replace(array('.', '::'), '-', $view->getName()), '-'));
-    View::share(array_key_prefix(Thor\Support\DocumentFacade::toArray(), 'doc_'));
+    Thor\Platform\DocumentFacade::view($view->getName());
+    Thor\Platform\DocumentFacade::view_slug(Str::slug(str_replace(array('.', '::'), '-', $view->getName()), '-'));
+    View::share(array_key_prefix(Thor\Platform\DocumentFacade::toArray(), 'doc_'));
 });
 
 

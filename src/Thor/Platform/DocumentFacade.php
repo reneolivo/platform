@@ -1,6 +1,6 @@
 <?php
 
-namespace Thor\Support;
+namespace Thor\Platform;
 
 class DocumentFacade extends \Illuminate\Support\Facades\Facade
 {

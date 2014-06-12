@@ -1,6 +1,6 @@
 <?php
 
-namespace Thor\Support;
+namespace Thor\Platform;
 
 class Object implements \ArrayAccess
 {
@@ -115,6 +115,15 @@ class Object implements \ArrayAccess
     public function export()
     {
         return $this->props;
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->export();
     }
 
 }
