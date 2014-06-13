@@ -75,6 +75,17 @@ class Backend
     }
 
     /**
+     * Check if the current user has the 'backend_access' permission
+     *
+     * @return boolean
+     * @static 
+     */
+    public function hasAccess()
+    {
+        return $this->app['thor.sentinel']->hasBackendAccess();
+    }
+
+    /**
      * Defines routes for a given resource name
      * @param string $singular
      * @param boolean $guard If true, routes will be guarded applying SentinelFacade::resourceFilters
@@ -104,31 +115,31 @@ class Backend
 
             // index
             $this->app['thor.router']->get($plural, array('as' => $rt . '.index'
-                , 'uses' => $c . '@index', 'before' => 'sentinel.list_' . $plural));
+                , 'uses' => $c . '@index', 'before' => 'sentinel.perm_list_' . $plural));
 
             // create
             $this->app['thor.router']->get($plural . '/create'
-                    , array('as' => $rt . '.create', 'uses' => $c . '@create', 'before' => 'sentinel.create_' . $plural));
+                    , array('as' => $rt . '.create', 'uses' => $c . '@create', 'before' => 'sentinel.perm_create_' . $plural));
 
             // store
             $this->app['thor.router']->post($plural, array('as' => $rt . '.store'
-                , 'uses' => $c . '@store', 'before' => 'sentinel.create_' . $plural));
+                , 'uses' => $c . '@store', 'before' => 'sentinel.perm_create_' . $plural));
 
             // show
             $this->app['thor.router']->get($plural . '/{' . $singular . '}/show'
-                    , array('as' => $rt . '.show', 'uses' => $c . '@show', 'before' => 'sentinel.read_' . $plural));
+                    , array('as' => $rt . '.show', 'uses' => $c . '@show', 'before' => 'sentinel.perm_read_' . $plural));
 
             // edit
             $this->app['thor.router']->get($plural . '/{' . $singular . '}'
-                    , array('as' => $rt . '.edit', 'uses' => $c . '@edit', 'before' => 'sentinel.update_' . $plural));
+                    , array('as' => $rt . '.edit', 'uses' => $c . '@edit', 'before' => 'sentinel.perm_update_' . $plural));
 
             // update
             $this->app['thor.router']->patch($plural . '/{' . $singular . '}'
-                    , array('as' => $rt . '.update', 'uses' => $c . '@update', 'before' => 'sentinel.update_' . $plural));
+                    , array('as' => $rt . '.update', 'uses' => $c . '@update', 'before' => 'sentinel.perm_update_' . $plural));
 
             // destroy
             $this->app['thor.router']->delete($plural . '/{' . $singular . '}'
-                    , array('as' => $rt . '.destroy', 'uses' => $c . '@destroy', 'before' => 'sentinel.delete_' . $plural));
+                    , array('as' => $rt . '.destroy', 'uses' => $c . '@destroy', 'before' => 'sentinel.perm_delete_' . $plural));
         });
     }
 

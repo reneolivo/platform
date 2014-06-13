@@ -40,5 +40,18 @@
         $('.widget-datepicker').datepicker({
             "format": "yyyy-mm-dd"
         });
+
+        var alertCloseInterval = setInterval(function() {
+            if ($('.alerts.auto-hide .alert').length > 0) {
+                $('.alerts.auto-hide .alert:first').animate({
+                    opacity: 0,
+                    marginTop: '-60px'
+                }, 500, 'swing', function() {
+                    $(this).remove();
+                });
+            } else {
+                clearInterval(alertCloseInterval);
+            }
+        }, 3000);
     });
 })(window.jQuery);

@@ -5,9 +5,10 @@ namespace Thor\Models;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use \InvalidArgumentException,
-    Thor\Platform\ThorFacade;
+    Thor\Platform\ThorFacade,
+    Hash;
 
-class User extends \Eloquent implements UserInterface, RemindableInterface
+class User extends Base implements UserInterface, RemindableInterface
 {
 
     /**
@@ -26,20 +27,38 @@ class User extends \Eloquent implements UserInterface, RemindableInterface
     protected $fillable = array(
         'usename', 'email', 'password', 'display_name'
     );
-
-
-    /**
-     * Validation rules
-     *
-     * @var array
-     */
     protected static $rules = array(
         'username' => 'required|alpha_dash|between:4,32|unique:users,username,{id}',
         'email' => 'required|email|unique:users,email,{id}',
         'password' => 'required|min:4|confirmed',
         'password_confirmation' => 'min:4',
     );
-   
+    protected static $updatingRules = array(
+        'username' => 'required|alpha_dash|between:4,32|unique:users,username,{id}',
+        'email' => 'required|email|unique:users,email,{id}',
+        'password' => 'required|min:4'
+    );
+    
+    
+    public function beforeCreate()
+    {
+        $this->preparePassword();
+    }
+    
+    public function beforeUpdate()
+    {
+        $this->preparePassword();
+    }
+
+    protected function preparePassword()
+    {
+        if (isset($this->attributes['password_confirmation'])) {
+            unset($this->attributes['password_confirmation']);
+        }
+        if ($this->isDirty('password')) {
+            $this->attributes['password'] = Hash::make($this->attributes['password']);
+        }
+    }
 
     /**
      * Many-to-Many relations with Role

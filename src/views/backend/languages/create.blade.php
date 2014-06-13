@@ -7,11 +7,7 @@
 
         <p>{{ link_to_route('backend.languages.index', 'Return to all languages') }}</p>
 
-        @if ($errors->any())
-
-        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
-
-        @endif
+        
 
         {{ Form::open(array('method' => 'POST', 'route' => array('backend.languages.store'), 'role'=>'form')) }}
 

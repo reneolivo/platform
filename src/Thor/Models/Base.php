@@ -3,8 +3,7 @@
 namespace Thor\Models;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
-use Illuminate\Validation\Validator,
-    App;
+use Illuminate\Validation\Validator;
 
 /**
  * Base model with auto-validation 
@@ -23,11 +22,18 @@ abstract class Base extends Eloquent
     protected $errors;
 
     /**
-     * Validation rules
+     * General validation rules
      *
      * @var Array
      */
     protected static $rules = array();
+
+    /**
+     * Validation rules for when updating
+     *
+     * @var Array|null If null, default $rules array will be used
+     */
+    protected static $updatingRules = null;
 
     /**
      * Custom error messages
@@ -37,22 +43,21 @@ abstract class Base extends Eloquent
     protected static $messages = array();
 
     /**
-     * Validator instance
-     *
-     * @var Illuminate\Validation\Validators
+     * 
+     * @return array
      */
-    protected $validator;
+    public static function getValidationRules()
+    {
+        return static::$rules;
+    }
 
     /**
-     *
-     * @var array 
+     * 
+     * @return array
      */
-    //protected $guarded = array();
-
-    public function __construct(array $attributes = array(), Validator $validator = null)
+    public static function getValidationUpdatingRules()
     {
-        parent::__construct($attributes);
-        $this->validator = ($validator ? : App::make('validator'));
+        return static::$updatingRules;
     }
 
     /**
@@ -62,25 +67,109 @@ abstract class Base extends Eloquent
     {
         parent::boot();
 
+        // BEFORE:
+
         static::saving(function($model) {
-            if (static::$unguarded) {
-                return true;
+            if($model->exists()){
+                $validates = $model->validate(null, $model->getValidationUpdatingRules());
+                $before = $model->beforeUpdate();
+                return $validates && (($before===null) ? true : false);
+            }else{
+                $validates = $model->validate(null, $model->getValidationRules());
+                $before = $model->beforeCreate();
+                return $validates && (($before===null) ? true : false);
             }
-            return $model->validate();
+        });
+
+        static::deleting(function($model) {
+            return $model->beforeDelete();
+        });
+
+        static::restoring(function($model) {
+            return $model->beforeRestored();
+        });
+        
+        // AFTER:
+
+        static::created(function($model) {
+            return $model->afterCreate();
+        });
+
+        static::updated(function($model) {
+            return $model->afterUpdate();
+        });
+
+        static::deleted(function($model) {
+            return $model->afterDelete();
+        });
+
+        static::restored(function($model) {
+            return $model->afterRestore();
         });
     }
 
-    /**
-     * Validates current attributes against rules
-     */
-    public function validate(array $attributes = null)
+    public function beforeCreate()
     {
-        $replace = ($this->getKey() > 0) ? $this->getKey() : '';
-        foreach (static::$rules as $key => $rule) {
-            static::$rules[$key] = str_replace('{id}', $replace, $rule);
-        }
+        return null;
+    }
 
-        $validator = $this->validator->make(($attributes == null) ? $this->attributes : $attributes, static::$rules, static::$messages);
+    public function afterCreate()
+    {
+        return null;
+    }
+
+    public function beforeUpdate()
+    {
+        return null;
+    }
+
+    public function afterUpdate()
+    {
+        return null;
+    }
+
+    public function beforeDelete()
+    {
+        return null;
+    }
+
+    public function afterDelete()
+    {
+        return null;
+    }
+
+    public function beforeRestore()
+    {
+        return null;
+    }
+
+    public function afterRestore()
+    {
+        return null;
+    }
+
+    /**
+     * Validates current or given attributes against current or given rules and validator
+     * 
+     * @param array $attributes (defaults to model attributes)
+     * @param array $rules (defaults to model static rules)
+     * @param \Illuminate\Validation\Validator $validator (defaults to Validator facade)
+     * @return boolean
+     */
+    public function validate(array $attributes = null, array $rules = null, Validator $validator = null)
+    {
+        if (!is_array($rules)) {
+            $rules = static::$rules;
+        }
+        if (empty($validator)) {
+            $validator = \App::make('validator');
+        }
+        $replace = ($this->getKey() > 0) ? $this->getKey() : '';
+        foreach ($rules as $key => $rule) {
+            $rules[$key] = str_replace('{id}', $replace, $rule);
+        }
+    
+        $validator = $validator->make(($attributes == null) ? $this->attributes : $attributes, $rules, static::$messages);
 
         $this->setErrors($validator->messages());
 

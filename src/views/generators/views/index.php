@@ -10,11 +10,7 @@
 @endif
         </h1>
 
-        @if ($errors->any())
-
-        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
-
-        @endif
+        
         
         @if ($records->count())
         <table class="table table-striped table-hover table-responsive widget-datatable">

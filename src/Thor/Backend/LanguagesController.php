@@ -60,9 +60,9 @@ class LanguagesController extends Controller
     {
         $input = \Input::all();
 
-        if ($this->language->validate($input)) {
-            $this->language->create($input);
-            return Redirect::route('backend.languages.index');
+        if ($this->language->create($input)) {
+            return Redirect::route('backend.languages.index')
+                    ->with('success_message', 'Language created successfully.');
         }
 
         return Redirect::route('backend.languages.create')
@@ -109,10 +109,10 @@ class LanguagesController extends Controller
     {
         $input = \Input::all();
 
-        if ($language->validate($input)) {
-            $language->update($input);
+        if ($language->update($input)) {
 
-            return Redirect::route('backend.languages.edit', $language->id);
+            return Redirect::route('backend.languages.edit', $language->id)
+                    ->with('info_message', 'Language updated successfully.');
         }
 
         return Redirect::route('backend.languages.edit', $language->id)

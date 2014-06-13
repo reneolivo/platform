@@ -61,9 +61,9 @@ class PermissionsController extends Controller
     {
         $input = \Input::all();
 
-        if ($this->permission->validate($input)) {
-            $this->permission->create($input);
-            return Redirect::route('backend.permissions.edit', array($this->permission->id));
+        if ($this->permission->create($input)) {
+            return Redirect::route('backend.permissions.edit', array($this->permission->id))
+                            ->with('success_message', 'Permission created successfully.');
         }
 
         return Redirect::route('backend.permissions.create')
@@ -113,13 +113,13 @@ class PermissionsController extends Controller
     {
         $input = \Input::all();
 
-        if ($permission->validate($input)) {
-            $permission->update($input);
+        if ($permission->update($input)) {
             if (\Sentinel::can('update_roles')) {
                 $permission->roles()->sync(\Input::get('roles', array()));
             }
 
-            return Redirect::route('backend.permissions.edit', $permission->id);
+            return Redirect::route('backend.permissions.edit', $permission->id)
+                            ->with('info_message', 'Permission updated successfully.');
         }
 
         return Redirect::route('backend.permissions.edit', $permission->id)

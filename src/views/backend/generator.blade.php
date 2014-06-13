@@ -5,11 +5,7 @@
     <div class="col-lg-12">
         <h1 class="page-header">Create Module</h1>
 
-        @if ($errors->any())
-
-        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
-
-        @endif
+        
 
         {{ Form::open(array('method' => 'POST', 'route' => array('backend.generator'), 'role'=>'form')) }}
         <div class="panel panel-default">

@@ -61,9 +61,9 @@ class RolesController extends Controller
     {
         $input = \Input::all();
 
-        if ($this->role->validate($input)) {
-            $this->role->create($input);
-            return Redirect::route('backend.roles.edit', array($this->role->id));
+        if ($this->role->create($input)) {
+            return Redirect::route('backend.roles.edit', array($this->role->id))
+                    ->with('success_message', 'Role created successfully.');
         }
 
         return Redirect::route('backend.roles.create')
@@ -116,16 +116,15 @@ class RolesController extends Controller
     {
         $input = \Input::all();
 
-        if ($role->validate($input)) {
-            $role->update($input);
-
+        if ($role->update($input)) {
             if (\Sentinel::can('update_permissions')) {
                 $role->permissions()->sync(\Input::get('perms', array()));
             }
             if (\Sentinel::can('update_users')) {
                 $role->users()->sync(\Input::get('users', array()));
             }
-            return Redirect::route('backend.roles.edit', $role->id);
+            return Redirect::route('backend.roles.edit', $role->id)
+                    ->with('info_message', 'Role updated successfully.');
         }
 
         return Redirect::route('backend.roles.edit', $role->id)

@@ -7,26 +7,26 @@
 
         <p>{{ link_to_route('backend.permissions.index', 'Return to all permissions') }}</p>
 
-        @if ($errors->any())
-
-        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
-
-        @endif
+        
 
         <section class="resource-show">
             <div class="form-group">
                 {{ Form::label(null, 'ID:') }}
                 <pre class="well well-sm">{{{ $permission->id }}}</pre>
             </div>
-                            <div class="form-group">
-                    {{ Form::label(null, 'Name:') }}
-                    <pre class="well well-sm">{{{ $permission->name }}}</pre>
-                </div>
-                            <div class="form-group">
-                    {{ Form::label(null, 'Display_Name:') }}
-                    <pre class="well well-sm">{{{ $permission->display_name }}}</pre>
-                </div>
-                                    <div class="form-group">
+            <div class="form-group">
+                {{ Form::label(null, 'Name:') }}
+                <pre class="well well-sm">{{{ $permission->name }}}</pre>
+            </div>
+            <div class="form-group">
+                {{ Form::label(null, 'Display_Name:') }}
+                <pre class="well well-sm">{{{ $permission->display_name }}}</pre>
+            </div>
+            <div class="form-group">
+                {{ Form::label(null, 'Description:') }}
+                <pre class="well well-sm">{{{ $permission->description }}}</pre>
+            </div>
+            <div class="form-group">
                 {{ Form::label(null, 'Created at:') }}
                 <pre class="well well-sm">{{{ $permission->created_at }}}</pre>
             </div>

@@ -7,11 +7,7 @@
 
         <p>{{ link_to_route('backend.permissions.index', 'Return to all permissions') }}</p>
 
-        @if ($errors->any())
-
-        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
-
-        @endif
+        
 
         {{ Form::model($permission, array('method' => 'PATCH'
     , 'route' => array('backend.permissions.update', $permission->id), 'role'=>'form')) }}
@@ -19,8 +15,9 @@
         <!-- Form fields here -->
         {{Form::bsFields([
     //label, name, attributes, type, value, containerAttributes
-                    ['Name:', 'name', [], 'text', null, []],
-                    ['Display_Name:', 'display_name', [], 'text', null, []],
+                    ['Name *', 'name', [], 'text', null, []],
+                    ['Display name', 'display_name', [], 'text', null, []],
+                    ['Description', 'description', [], 'text', null, []],
         ])}}
         
         
@@ -33,8 +30,7 @@
                         <?php
                             $attrs = array();
                             $containerAttrs = array();
-                            if(((in_array($role->name, array('developer', 'administrator'))) and ($permission->name=='backend_access') )
-                                    or (!Sentinel::can('update_roles'))){
+                            if(!Sentinel::can('update_roles')){
                                 //$attrs['disabled']='disabled';
                                 $containerAttrs['class']='form-group text-muted';
                             }
@@ -42,7 +38,7 @@
                                 $attrs[]='checked';
                             }
                         ?>
-                    {{Form::bsField($role->name, 'roles[]', $attrs, 'checkbox', $role->id, $containerAttrs)}}
+                    {{Form::bsField($role->display_name, 'roles[]', $attrs, 'checkbox', $role->id, $containerAttrs)}}
                     @endforeach
             </div>
 <!--            <div class="panel-footer">
@@ -51,6 +47,10 @@
         </div>
         
         
+        
+        <p class="help-block">
+            * Required fields
+        </p>
         <div class="form-group">
             {{ Form::button('<i class="fa fa-floppy-o"></i> Save', array('class' => 'btn btn-primary', 'type'=>'submit', 'value'=>'update')) }}
             {{ link_to_route('backend.permissions.index', 'Cancel', array($permission->id), array('class' => 'btn btn-default')) }}

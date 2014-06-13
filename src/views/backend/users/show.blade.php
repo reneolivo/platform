@@ -7,11 +7,7 @@
 
         <p>{{ link_to_route('backend.users.index', 'Return to all users') }}</p>
 
-        @if ($errors->any())
-
-        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
-
-        @endif
+        
 
         <section class="resource-show">
             <div class="form-group">

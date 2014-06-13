@@ -16,24 +16,24 @@ trait TTranslatable
 
     public function __get($key)
     {
-        if(isset($this->$key)) {
-            return parent::__get($key); // look in the master model
-        } elseif($this->hasTranslation() and isset($this->translation()->$key)) {
-            return $this->translation()->$key; // look in the translation model
+        if (isset($this->$key)) {
+            return parent::__get($key); // look in the translatable model
+        } elseif ($this->hasTranslation() and isset($this->translation()->$key)) {
+            return $this->translated($key); // look in the translation model
         } else {
-            return parent::__get($key); // if not set rely on eloquent
+            return parent::__get($key); // else .. rely on parent class
         }
     }
 
     /**
      * 
-     * @param string $name
+     * @param string $field
      * @param int $langId
      * @return mixed
      */
-    public function text($name, $langId = null)
+    public function translated($field, $langId = null)
     {
-        return $this->translation($langId)->$name;
+        return $this->translation($langId)->$field;
     }
 
     /**
@@ -49,43 +49,46 @@ trait TTranslatable
     /**
      * 
      * @param int $langId
-     * @return BaseText
+     * @return BaseTranslation
      */
     public function translation($langId = null)
     {
-        if(empty($langId)) {
+        if (empty($langId)) {
             $langId = \Lang::id();
         }
-        if(isset($this->translations[$langId])) {
+        if (isset($this->translations[$langId])) {
             return $this->translations[$langId];
         }
         $transl = $this->translations()->where('language_id', '=', $langId)->first();
-        $trClass = (get_class($this) . 'Text');
-        $this->translations[$langId] = ($transl ? $transl : new $trClass); // return existant or a new empty model
+        $transClass = (get_class($this) . 'Translation');
+        $this->translations[$langId] = ($transl ? $transl : new $transClass); // return existant or a new empty model
         return $this->translations[$langId];
     }
 
     /**
      * 
-     * @return BaseText[]
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function translations()
     {
-        return $this->hasMany((get_class($this) . 'Text'))->orderBy('language_id', 'asc');
-    }
-
-    public function clearTranslationsCache()
-    {
-        $this->translations = array();
+        return $this->hasMany((get_class($this) . 'Translation'))->orderBy('language_id', 'asc');
     }
 
     /**
-     * Returns an array with the translation and master merged fields
+     * Returns an array with the translation and translatable merged fields
      * @return array
      */
     public function toMergedArray()
     {
         return array_merge($this->toArray(), $this->translation()->toArray());
+    }
+
+    /**
+     * 
+     */
+    public function clearTranslationsCache()
+    {
+        $this->translations = array();
     }
 
 }

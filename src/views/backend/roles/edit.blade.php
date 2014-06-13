@@ -7,11 +7,7 @@
 
         <p>{{ link_to_route('backend.roles.index', 'Return to all roles') }}</p>
 
-        @if ($errors->any())
-
-        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
-
-        @endif
+        
 
         {{ Form::model($role, array('method' => 'PATCH'
     , 'route' => array('backend.roles.update', $role->id), 'role'=>'form')) }}
@@ -19,7 +15,9 @@
         <!-- Form fields here -->
         {{Form::bsFields([
     //label, name, attributes, type, value, containerAttributes
-                    ['Name:', 'name', [], 'text', null, []],
+                    ['Name *', 'name', [], 'text', null, []],
+                    ['Display name', 'display_name', [], 'text', null, []],
+                    ['Description', 'description', [], 'text', null, []],
         ])}}
         
         
@@ -38,8 +36,7 @@
                         <?php
                             $attrs = array();
                             $containerAttrs = array();
-                            if(((in_array($role->name, array('developer', 'administrator'))) and ($perm->name=='backend_access') )
-                                    or (!Sentinel::can('update_permissions'))){
+                            if(!Sentinel::can('update_permissions')){
                                 $containerAttrs['class']='form-group text-muted';
                             }
                             if(in_array($perm->id, $role_permissions)){
@@ -74,8 +71,7 @@
                         <?php
                             $attrs = array();
                             $containerAttrs = array();
-                            if(((in_array($role->name, array('developer'))) and ($user->name=='developer') )
-                                    or (!Sentinel::can('update_roles'))){
+                            if(!Sentinel::can('update_roles')){
                                 //$attrs['disabled']='disabled';
                                 $containerAttrs['class']='form-group text-muted';
                             }
@@ -95,6 +91,10 @@
             </div>-->
         </div>
         
+        
+        <p class="help-block">
+            * Required fields
+        </p>
         <div class="form-group">
             {{ Form::button('<i class="fa fa-floppy-o"></i> Save', array('class' => 'btn btn-primary', 'type'=>'submit', 'value'=>'update')) }}
             {{ link_to_route('backend.roles.index', 'Cancel', array($role->id), array('class' => 'btn btn-default')) }}

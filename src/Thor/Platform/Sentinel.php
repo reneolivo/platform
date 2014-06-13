@@ -208,6 +208,7 @@ class Sentinel
         foreach ($permissions as $perm) {
             $filter = 'sentinel.perm_' . $perm . '_' . $plural;
             $filters[$perm] = $filter;
+            $perm = $perm . '_' . $plural;
             $this->app['router']->filter($filter, function() use($perm, $onFail) {
                 if ($this->can($perm) === false) {
                     if (!$onFail) {

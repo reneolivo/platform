@@ -7,21 +7,22 @@
 
         <p>{{ link_to_route('backend.roles.index', 'Return to all roles') }}</p>
 
-        @if ($errors->any())
-
-        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
-
-        @endif
+        
 
         {{ Form::open(array('method' => 'POST', 'route' => array('backend.roles.store'), 'role'=>'form')) }}
 
         <!-- Form fields here -->
         {{Form::bsFields([
     //label, name, attributes, type, value, containerAttributes
-                    ['Name:', 'name', [], 'text', null, []],
+                    ['Name *', 'name', [], 'text', null, []],
+                    ['Display name', 'display_name', [], 'text', null, []],
+                    ['Description', 'description', [], 'text', null, []],
                 ])}}
         
         
+        <p class="help-block">
+            * Required fields
+        </p>
         <div class="form-group">
             {{ Form::button('<i class="fa fa-plus"></i> Create', array('class' => 'btn btn-primary', 'type'=>'submit', 'value'=>'create')) }}
             {{ link_to_route('backend.roles.index', 'Cancel', null, array('class' => 'btn btn-default')) }}

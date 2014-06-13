@@ -7,22 +7,26 @@
 
         <p>{{ link_to_route('backend.roles.index', 'Return to all roles') }}</p>
 
-        @if ($errors->any())
-
-        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
-
-        @endif
+        
 
         <section class="resource-show">
             <div class="form-group">
                 {{ Form::label(null, 'ID:') }}
                 <pre class="well well-sm">{{{ $role->id }}}</pre>
             </div>
-                            <div class="form-group">
-                    {{ Form::label(null, 'Name:') }}
-                    <pre class="well well-sm">{{{ $role->name }}}</pre>
-                </div>
-                                    <div class="form-group">
+            <div class="form-group">
+                {{ Form::label(null, 'Name:') }}
+                <pre class="well well-sm">{{{ $role->name }}}</pre>
+            </div>
+            <div class="form-group">
+                {{ Form::label(null, 'Display_Name:') }}
+                <pre class="well well-sm">{{{ $role->display_name }}}</pre>
+            </div>
+            <div class="form-group">
+                {{ Form::label(null, 'Description:') }}
+                <pre class="well well-sm">{{{ $role->description }}}</pre>
+            </div>
+            <div class="form-group">
                 {{ Form::label(null, 'Created at:') }}
                 <pre class="well well-sm">{{{ $role->created_at }}}</pre>
             </div>

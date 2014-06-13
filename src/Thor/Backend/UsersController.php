@@ -5,7 +5,7 @@ namespace Thor\Backend;
 use View,
     Redirect,
     Input,
-    \Thor\Platform\ThorFacade;
+    \Thor\Platform\ThorFacade, Hash;
 
 /*
   |--------------------------------------------------------------------------
@@ -65,16 +65,12 @@ class UsersController extends Controller
         $this->user->password = Input::get('password');
 
         // The password confirmation will be removed from model
-        // before saving. This field will be used in Ardent's
-        // auto validation.
+        // before saving. This field will be used in Thor auto validation.
         $this->user->password_confirmation = Input::get('password_confirmation');
 
-        // Save if valid. Password field will be hashed before save
-        $this->user->save();
-
-        if ($this->user->id) {
-
-            return Redirect::route('backend.users.index');
+        if ($this->user->save()) {
+            return Redirect::route('backend.users.edit', array($this->user->id))
+                    ->with('success_message', 'User created successfully.');
         }
 
         return Redirect::route('backend.users.create')
@@ -109,6 +105,7 @@ class UsersController extends Controller
         }
 
         $roles = ThorFacade::model('role')->all();
+        
         $user_roles = $user->roles()->get()->lists('id');
 
         return View::make('thor::backend.users.edit', compact('user', 'roles', 'user_roles'));
@@ -138,7 +135,8 @@ class UsersController extends Controller
             if (\Sentinel::can('update_roles')) {
                 $user->roles()->sync(\Input::get('roles', array()));
             }
-            return Redirect::route('backend.users.edit', $user->id);
+            return Redirect::route('backend.users.edit', $user->id)
+                    ->with('info_message', 'User updated successfully.');
         }
 
         return Redirect::route('backend.users.edit', $user->id)

@@ -62,12 +62,13 @@ class {{$controllerShortName}} extends \Thor\Backend\Controller {
         $transl_errors = array();
         @endif
 
-        if ($this->record->validate($input)) {
+        if ($this->record->validate($input, null, $this->record->getValidationRules())) {
             $record = $this->record->create($input);
-            @if($isTranslatable)if ($transl_record->validate($transl_input)) {
+            @if($isTranslatable)if ($transl_record->validate($transl_input, null, $transl_record->getValidationRules())) {
                 $transl_record = $transl_record->create(array_merge(array('language_id' => \Lang::id(), '{{$singular}}_id' => $record->id), $transl_input));
             @endif
-                return Redirect::route('backend.{{$plural}}.edit', array($record->id));
+                return Redirect::route('backend.{{$plural}}.edit', array($record->id))
+                    ->with('success_message', '{{ucfirst($singular)}} created successfully.');
             @if($isTranslatable)
             }else{
                 $transl_errors = $transl_record->errors();
@@ -135,9 +136,9 @@ class {{$controllerShortName}} extends \Thor\Backend\Controller {
         $transl_errors = array();
         @endif
 
-        if ($record->validate($input)) {
+        if ($record->validate($input, null, $this->record->getValidationUpdatingRules())) {
             $record->update($input);
-            @if($isTranslatable)if ($transl_record->validate($transl_input)) {
+            @if($isTranslatable)if ($transl_record->validate($transl_input, null, $transl_record->getValidationUpdatingRules())) {
             
                 // Save translation
                 if (Input::get('translation.id')) {
@@ -147,7 +148,8 @@ class {{$controllerShortName}} extends \Thor\Backend\Controller {
                     $transl_record = $transl_record->create(array_merge(array('language_id' => \Lang::id(), '{{$singular}}_id' => $record->id), $transl_input));
                 }
             @endif
-            return Redirect::route('backend.{{$plural}}.edit', $record->id);
+            return Redirect::route('backend.{{$plural}}.edit', $record->id)
+                    ->with('info_message', '{{ucfirst($singular)}} updated successfully.');
             @if($isTranslatable)
             }else{
                 $transl_errors = $transl_record->errors();

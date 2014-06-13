@@ -7,6 +7,7 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">Forgot Password</h3>
                 </div>
+                
                 <div class="panel-body">
                     <form method="POST" action="{{ (Confide::checkAction('\\Thor\\Backend\\AuthController@do_forgot_password')) ?: Backend::url('/auth/forgot_password') }}" accept-charset="UTF-8">
                         <input type="hidden" name="_token" value="{{{ Session::getToken() }}}">

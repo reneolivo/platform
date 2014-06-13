@@ -104,7 +104,7 @@ trait TPageable
         $statement = $modelClass::where($slugField, '=', $slug);
 
         if ($isTranslatable) {
-            $modelClass .= 'Text';
+            $modelClass .= 'Translation';
             $statement = $modelClass::where($slugField, '=', $slug)->where('language_id', '=', empty($langId) ? \Lang::id() : $langId);
         } else {
             $statement = $modelClass::where($slugField, '=', $slug);

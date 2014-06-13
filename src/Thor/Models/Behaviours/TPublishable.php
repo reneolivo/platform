@@ -48,7 +48,7 @@ trait TPublishable
 
     /**
      * 
-     * @param \DB $query
+     * @param mixed $query
      */
     public static function scopePublished($query)
     {

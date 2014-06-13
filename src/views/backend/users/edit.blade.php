@@ -7,11 +7,7 @@
 
         <p>{{ link_to_route('backend.users.index', 'Return to all users') }}</p>
 
-        @if ($errors->any())
-
-        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
-
-        @endif
+        
 
         {{ Form::model($user, array('method' => 'PATCH'
     , 'route' => array('backend.users.update', $user->id), 'role'=>'form')) }}
@@ -19,14 +15,13 @@
         <!-- Form fields here -->
         {{Form::bsFields([
     //label, name, attributes, type, value, containerAttributes
-                    ['Username:', 'username', [], 'text', null, []],
-                    ['Email:', 'email', [], 'text', null, []],
-                    ['New password:', 'password', [], 'text', '', []],
-                    ['New password confirmation:', 'password_confirmation', [], 'text', '', []],
-                    ['Confirmed', 'confirmed', [], 'checkbox', 1, []],
+                    ['Username *', 'username', [], 'text', null, []],
+                    ['Email *', 'email', [], 'text', null, []],
+                    ['New password', 'password', [], 'text', '', []],
+                    ['New password confirmation', 'password_confirmation', [], 'text', '', []],
+                    //['Confirmed', 'confirmed', [], 'checkbox', 1, []],
                     //['Confirmation_Code:', 'confirmation_code', ['readonly', 'disabled'], 'text', null, []],
         ])}}
-        
         
         <div class="panel panel-default panel-checkboxes">
             <div class="panel-heading">
@@ -38,8 +33,7 @@
                             $attrs = array();
                             $containerAttrs = array();
                             //$name
-                            if(((in_array($role->name, array('developer'))) and ($user->username=='developer') )
-                                    or (!Sentinel::can('update_roles'))){
+                            if(!Sentinel::can('update_roles')){
                                 //$attrs['disabled']='disabled';
                                 $containerAttrs['class']='form-group text-muted';
                             }
@@ -47,7 +41,7 @@
                                 $attrs[]='checked';
                             }
                         ?>
-                    {{Form::bsField($role->name, 'roles[]', $attrs, 'checkbox', $role->id, $containerAttrs)}}
+                    {{Form::bsField($role->display_name, 'roles[]', $attrs, 'checkbox', $role->id, $containerAttrs)}}
                     @endforeach
             </div>
 <!--            <div class="panel-footer">
@@ -56,6 +50,9 @@
         </div>
 
 
+        <p class="help-block">
+            * Required fields
+        </p>
         <div class="form-group">
             {{ Form::button('<i class="fa fa-floppy-o"></i> Save', array('class' => 'btn btn-primary', 'type'=>'submit', 'value'=>'update')) }}
             {{ link_to_route('backend.users.index', 'Cancel', array($user->id), array('class' => 'btn btn-default')) }}

@@ -458,3 +458,46 @@ table.dataTable thead .sorting:after {
 .navbar-brand-title img{
     margin: 0 10px 0 5px;
 }
+
+.alerts{
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    z-index: 50;
+    top: 20px;
+    padding:5px 5px 10px 5px;
+    background:rgba(255,255,255,0.5);
+    border-radius:6px;
+    .alert{
+        margin:0 0 10px 0;
+    }
+}
+
+.alert-default{
+    background-image: -webkit-linear-gradient(top, #f5f5f5 0%, #e8e8e8 100%);
+    background-image: linear-gradient(to bottom, #f5f5f5 0%, #e8e8e8 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff5f5f5', endColorstr='#ffe8e8e8', GradientType=0);
+    border-color:#e8e8e8;
+}
+
+.alert-primary{
+    color:#fff;
+    background-image: -webkit-linear-gradient(top, #2b4059 0%, #233448 100%);
+    background-image: linear-gradient(to bottom, #2b4059 0%, #233448 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff2b4059', endColorstr='#ff233448', GradientType=0);
+    border-color:#233448;
+}
+
+.error-page{
+    .page-header{
+        color:@color-primary;
+    }
+    color:@color-primary;
+}
+.page-header .fa.block{
+    display:block;
+    margin:0 0 20px 0;
+    color:@color-secondary;
+}

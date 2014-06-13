@@ -7,26 +7,25 @@
 
         <p>{{ link_to_route('backend.users.index', 'Return to all users') }}</p>
 
-        @if ($errors->any())
-
-        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
-
-        @endif
+        
 
         {{ Form::open(array('method' => 'POST', 'route' => array('backend.users.store'), 'role'=>'form')) }}
 
         <!-- Form fields here -->
         {{Form::bsFields([
     //label, name, attributes, type, value, containerAttributes
-                    ['Username:', 'username', [], 'text', null, []],
-                    ['Email:', 'email', [], 'text', null, []],
-                    ['Password:', 'password', [], 'text', '', []],
-                    ['Password confirmation:', 'password_confirmation', [], 'text', '', []],
-                    ['Confirmed', 'confirmed', ['checked'], 'checkbox', 1, []],
+                    ['Username *', 'username', [], 'text', null, []],
+                    ['Email *', 'email', [], 'text', null, []],
+                    ['Password *', 'password', [], 'text', '', []],
+                    ['Password confirmation *', 'password_confirmation', [], 'text', '', []],
+                    //['Confirmed', 'confirmed', ['checked'], 'checkbox', 1, []],
                     //['Confirmation_Code:', 'confirmation_code', [], 'text', md5(uniqid()), []],
                 ])}}
         
         
+        <p class="help-block">
+            * Required fields
+        </p>
         <div class="form-group">
             {{ Form::button('<i class="fa fa-plus"></i> Create', array('class' => 'btn btn-primary', 'type'=>'submit', 'value'=>'create')) }}
             {{ link_to_route('backend.users.index', 'Cancel', null, array('class' => 'btn btn-default')) }}

@@ -23,6 +23,7 @@
         <div id="wrapper">
             @include('thor::backend.menus')
             <div id="page-wrapper">
+                @include('thor::backend.alerts')
                 @yield('main')
             </div><!-- /#page-wrapper -->
         </div><!-- /#wrapper -->

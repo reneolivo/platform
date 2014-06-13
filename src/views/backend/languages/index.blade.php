@@ -7,11 +7,7 @@
             {{ _d(link_to_route('backend.languages.create', '<i class="fa fa-plus"></i> Add new language', [], ['class'=>'btn btn-success pull-right'])) }}
         </h1>
 
-        @if ($errors->any())
-
-        {{ implode('', $errors->all('<p class="alert alert-danger">:message</p>')) }}
-
-        @endif
+        
 
         @if ($languages->count())
         <table class="table table-striped table-hover table-responsive widget-datatable">
