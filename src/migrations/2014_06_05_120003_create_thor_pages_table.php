@@ -34,7 +34,7 @@ class CreateThorPagesTable extends Migration
             $table->integer('page_id')->unsigned();
             $table->integer('language_id')->unsigned();
             $table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
-            $table->foreign('language_id')->references('language_id')->on('languages')->onDelete('cascade');
+            $table->foreign('language_id')->references('id')->on('languages')->onDelete('cascade');
             $table->string('title')->nullable()->default(null);
             $table->text('content')->nullable()->default(null);
             $table->text('slug')->nullable()->default(null);
